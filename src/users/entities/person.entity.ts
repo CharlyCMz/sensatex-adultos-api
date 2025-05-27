@@ -3,14 +3,22 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DocType } from './doc-type.entity';
+import { Address } from './address.entity';
 
 @Entity({ name: 'persons' })
 export class Person {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ManyToOne(() => DocType, (docType) => docType.persons)
+  docType: DocType;
 
   @Column({ type: 'varchar', length: 10 })
   document: string;
@@ -32,6 +40,11 @@ export class Person {
 
   @Column({ type: 'varchar', length: 156, unique: true })
   phone: string;
+
+  @OneToMany(() => Address, (address) => address.person)
+  addresses: Address[];
+
+  //TODO: add relation with Sell entity when modules are communicated
 
   @CreateDateColumn({
     name: 'created_at',

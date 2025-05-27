@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
-import { Location } from "./location.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import { Location } from './location.entity';
+import { Person } from './person.entity';
 
 @Entity({ name: 'addresses' })
 export class Address {
@@ -26,6 +35,9 @@ export class Address {
 
   @ManyToOne(() => Location, (location) => location.addresses)
   location: Location;
+
+  @ManyToOne(() => Person, (person) => person.addresses)
+  person: Person;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -48,6 +48,8 @@ export class ProductVariant {
   @ManyToOne(() => Product, (product) => product.productVariants)
   product: Product;
 
+  //TODO: Add relations for inline-products, when modules are communicated
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

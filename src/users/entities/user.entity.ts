@@ -3,9 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Person } from './person.entity';
+import { Role } from './role.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -17,6 +21,14 @@ export class User {
 
   @Column({ type: 'varchar', length: 156, unique: false })
   password: string;
+
+  @OneToOne(() => Person, { nullable: false })
+  @JoinColumn()
+  person: Person;
+
+  @OneToOne(() => Role, { nullable: false })
+  @JoinColumn()
+  role: Role;
 
   @CreateDateColumn({
     name: 'created_at',

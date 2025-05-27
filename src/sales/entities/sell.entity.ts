@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { InlineProduct } from './inline-products.entity';
 
 @Entity({ name: 'sales' })
 export class Sell {
@@ -19,6 +28,11 @@ export class Sell {
 
   @Column({ type: 'varchar', length: 24, nullable: true })
   shippingAddress: string;
+
+  @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.sell)
+  inlineProducts: InlineProduct[];
+
+  //TODO: Add relations for person, when modules are communicated
 
   @CreateDateColumn({
     name: 'created_at',

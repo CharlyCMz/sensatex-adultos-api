@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Sell } from './sell.entity';
 
 @Entity({ name: 'inline_products' })
 export class InlineProduct {
@@ -10,6 +19,11 @@ export class InlineProduct {
 
   @Column({ type: 'numeric', precision: 10, scale: 4, nullable: false })
   inlineTotal: string;
+
+  @ManyToOne(() => Sell, (sell) => sell.inlineProducts)
+  sell: Sell;
+
+  //TODO: Add relations for product-variant, when modules are communicated
 
   @CreateDateColumn({
     name: 'created_at',
