@@ -1,4 +1,16 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { VariantAttribute } from './variant-attribute.entity';
+import { Product } from './product.entity';
+import { Image } from './image.entity';
 
 @Entity({ name: 'product_variants' })
 export class ProductVariant {
@@ -11,11 +23,30 @@ export class ProductVariant {
   @Column({ type: 'numeric', precision: 10, scale: 4 })
   price: string;
 
-  @Column({ name: 'discount_price', type: 'numeric', precision: 10, scale: 4, nullable: true, default: null })
+  @Column({
+    name: 'discount_price',
+    type: 'numeric',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+    default: null,
+  })
   discountPrice: string;
 
   @Column({ name: 'is_available', type: 'boolean', default: false })
   isAvailable: boolean;
+
+  @OneToMany(
+    () => VariantAttribute,
+    (variantAttribute) => variantAttribute.attribute,
+  )
+  variantsAttributes: VariantAttribute[];
+
+  @OneToMany(() => Image, (image) => image.productVariant)
+  images: Image[];
+
+  @ManyToOne(() => Product, (product) => product.productVariants)
+  product: Product;
 
   @CreateDateColumn({
     name: 'created_at',

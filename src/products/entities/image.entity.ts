@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ProductVariant } from './product-variant.entity';
 
 @Entity({ name: 'images' })
 export class Image {
@@ -10,6 +19,9 @@ export class Image {
 
   @Column({ type: 'varchar', length: 156, unique: true })
   url: string;
+
+  @ManyToOne(() => ProductVariant, (productVariant) => productVariant.images)
+  productVariant: ProductVariant;
 
   @CreateDateColumn({
     name: 'created_at',

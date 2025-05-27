@@ -3,9 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductVariant } from './product-variant.entity';
+import { Label } from './label.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -26,6 +30,12 @@ export class Product {
 
   @Column({ type: 'varchar', length: 256 })
   status: string;
+
+  @OneToMany(() => ProductVariant, (productVariant) => productVariant.product)
+  productVariants: ProductVariant[];
+
+  @ManyToMany(() => Label, (label) => label.products)
+  labels: Label[];
 
   @CreateDateColumn({
     name: 'created_at',

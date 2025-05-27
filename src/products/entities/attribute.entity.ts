@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { VariantAttribute } from './variant-attribute.entity';
 
 @Entity({ name: 'attributes' })
 export class Attribute {
@@ -7,6 +8,9 @@ export class Attribute {
 
   @Column({ type: 'varchar', length: 156, unique: true })
   name: string;
+
+  @OneToMany(() => VariantAttribute, (variantAttribute) => variantAttribute.attribute)
+  variantsAttributes: VariantAttribute[];
 
   @CreateDateColumn({
     name: 'created_at',

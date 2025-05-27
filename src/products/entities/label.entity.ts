@@ -1,4 +1,15 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Product } from './product.entity';
+import { Category } from './category.entity';
 
 @Entity({ name: 'labels' })
 export class Label {
@@ -10,6 +21,12 @@ export class Label {
 
   @Column({ type: 'text' })
   description: string;
+
+  @ManyToOne(() => Category, (category) => category.labels)
+  category: Category;
+
+  @ManyToMany(() => Product, (product) => product.labels)
+  products: Product[];
 
   @CreateDateColumn({
     name: 'created_at',
