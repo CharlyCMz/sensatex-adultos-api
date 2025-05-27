@@ -16,20 +16,23 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 256, unique: false })
+  @Column({ type: 'varchar', length: 256 })
   name: string;
 
   @Column({ type: 'varchar', length: 256 })
   brand: string;
 
-  @Column({ type: 'text', name: 'short_description' })
-  shortDescription: string;
+  @Column({ type: 'varchar', length: 512 })
+  features: string;
 
   @Column({ type: 'text' })
   description: string;
 
   @Column({ type: 'varchar', length: 256 })
   status: string;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  cautions: string[];
 
   @OneToMany(() => ProductVariant, (productVariant) => productVariant.product)
   productVariants: ProductVariant[];
