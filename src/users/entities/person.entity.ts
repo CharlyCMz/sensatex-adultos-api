@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { DocType } from './doc-type.entity';
 import { Address } from './address.entity';
+import { Sell } from 'src/sales/entities/sell.entity';
 
 @Entity({ name: 'persons' })
 export class Person {
@@ -44,7 +45,8 @@ export class Person {
   @OneToMany(() => Address, (address) => address.person)
   addresses: Address[];
 
-  //TODO: add relation with Sell entity when modules are communicated
+  @OneToMany(() => Sell, (sell) => sell.person)
+  sells: Sell[];
 
   @CreateDateColumn({
     name: 'created_at',

@@ -21,10 +21,10 @@ export class Address {
   @Column({ type: 'varchar', length: 64 })
   reference: string;
 
-  @Column({ type: 'varchar', length: 8 })
+  @Column({ type: 'varchar', length: 8, nullable: true })
   suit: string;
 
-  @Column({ type: 'varchar', name: 'zip_code', length: 8 })
+  @Column({ type: 'varchar', name: 'zip_code', length: 8, nullable: true })
   zipCode: string;
 
   @Column({ name: 'is_billing', type: 'boolean', default: false })

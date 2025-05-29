@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Sell } from './sell.entity';
+import { ProductVariant } from 'src/products/entities/product-variant.entity';
 
 @Entity({ name: 'inline_products' })
 export class InlineProduct {
@@ -23,7 +24,8 @@ export class InlineProduct {
   @ManyToOne(() => Sell, (sell) => sell.inlineProducts)
   sell: Sell;
 
-  //TODO: Add relations for product-variant, when modules are communicated
+  @ManyToOne(() => ProductVariant, (productVariant) => productVariant.inlineProducts)
+  productVariant: ProductVariant;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -11,6 +11,7 @@ import {
 import { VariantAttribute } from './variant-attribute.entity';
 import { Product } from './product.entity';
 import { Image } from './image.entity';
+import { InlineProduct } from 'src/sales/entities/inline-products.entity';
 
 @Entity({ name: 'product_variants' })
 export class ProductVariant {
@@ -48,7 +49,8 @@ export class ProductVariant {
   @ManyToOne(() => Product, (product) => product.productVariants)
   product: Product;
 
-  //TODO: Add relations for inline-products, when modules are communicated
+  @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.productVariant)
+  inlineProducts: InlineProduct[];
 
   @CreateDateColumn({
     name: 'created_at',

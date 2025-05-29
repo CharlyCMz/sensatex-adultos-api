@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { InlineProduct } from './inline-products.entity';
+import { Person } from 'src/users/entities/person.entity';
 
 @Entity({ name: 'sales' })
 export class Sell {
@@ -32,7 +34,8 @@ export class Sell {
   @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.sell)
   inlineProducts: InlineProduct[];
 
-  //TODO: Add relations for person, when modules are communicated
+  @ManyToOne(() => Person, (person) => person.sells)
+  person: Person;
 
   @CreateDateColumn({
     name: 'created_at',
