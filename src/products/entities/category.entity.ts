@@ -20,6 +20,9 @@ export class Category {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'varchar' })
+  imageUrl: string;
+
   @OneToMany(() => Label, (label) => label.category)
   labels: Label[];
 
