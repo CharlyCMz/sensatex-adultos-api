@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -38,6 +39,7 @@ export class Product {
   productVariants: ProductVariant[];
 
   @ManyToMany(() => Label, (label) => label.products)
+  @JoinTable({ name: 'products_labels' })
   labels: Label[];
 
   @CreateDateColumn({

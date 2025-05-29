@@ -10,6 +10,7 @@ build/
 .env
 .env.*.local
 .env.local
+config.yml
 docker-compose.yml
 
 # Logs

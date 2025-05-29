@@ -13,7 +13,7 @@ export class VariantAttribute {
   @ManyToOne(() => Attribute, (attribute) => attribute.variantsAttributes)
   attribute: Attribute;
 
-  @ManyToOne(() => Attribute, (attribute) => attribute.variantsAttributes)
+  @ManyToOne(() => ProductVariant, (productVariant) => productVariant.variantsAttributes)
   productVariant: ProductVariant;
 
   @CreateDateColumn({
