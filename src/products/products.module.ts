@@ -15,7 +15,23 @@ import { ProductService } from './services/product.service';
 import { VariantAttributeService } from './services/variant-attribute.service';
 
 @Module({
-  controllers: [AttributeController, CategoryController, ImageController, LabelController, ProductVariantController, ProductController, VariantAttributeController],
-  providers: [AttributeService, CategoryService, ImageService, LabelService, ProductVariantService, ProductService, VariantAttributeService]
+  controllers: [
+    AttributeController,
+    CategoryController,
+    ImageController,
+    LabelController,
+    ProductVariantController,
+    ProductController,
+    VariantAttributeController,
+  ],
+  providers: [
+    AttributeService,
+    CategoryService,
+    ImageService,
+    LabelService,
+    ProductVariantService,
+    ProductService,
+    VariantAttributeService,
+  ],
 })
 export class ProductsModule {}

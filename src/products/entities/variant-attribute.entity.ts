@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 import { Attribute } from './attribute.entity';
 import { ProductVariant } from './product-variant.entity';
 
@@ -13,7 +21,10 @@ export class VariantAttribute {
   @ManyToOne(() => Attribute, (attribute) => attribute.variantsAttributes)
   attribute: Attribute;
 
-  @ManyToOne(() => ProductVariant, (productVariant) => productVariant.variantsAttributes)
+  @ManyToOne(
+    () => ProductVariant,
+    (productVariant) => productVariant.variantsAttributes,
+  )
   productVariant: ProductVariant;
 
   @CreateDateColumn({

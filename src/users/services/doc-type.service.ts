@@ -1,4 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { DocType } from '../entities/doc-type.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateDocTypeDTO, UpdateDocTypeDTO } from '../dtos/doc-type.dto';
 
 @Injectable()
-export class DocTypeService {}
+export class DocTypeService {
+  constructor(
+    @InjectRepository(DocType)
+    private docTypeRepository: Repository<DocType>,
+  ) {}
+
+  findAll() {
+    return this.docTypeRepository.find();
+  }
+
+  async findOne(id: number) {
+    const docType = await this.docTypeRepository
+      .createQueryBuilder('docType')
+      .where('docType.id = :id', { id })
+      .getOne();
+    if (!docType) {
+      throw new NotFoundException(
+        `The Document Type with ID: ${id} was Not Found`,
+      );
+    }
+    return docType;
+  }
+
+  createEntity(payload: CreateDocTypeDTO) {
+    const newRole = this.docTypeRepository.create(payload);
+    return this.docTypeRepository.save(newRole);
+  }
+
+  async updateEndity(id: number, payload: UpdateDocTypeDTO) {
+    const docType = await this.docTypeRepository.findOneBy({ id });
+    if (!docType) {
+      throw new NotFoundException(
+        `The Document Type with ID: ${id} was Not Found`,
+      );
+    }
+    this.docTypeRepository.merge(docType, payload);
+    return this.docTypeRepository.save(docType);
+  }
+
+  async deleteEntity(id: number) {
+    const exist = await this.docTypeRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(
+        `The Document Type with ID: ${id} was Not Found`,
+      );
+    }
+    return this.docTypeRepository.softDelete(id);
+  }
+
+  async eliminateEntity(id: number) {
+    const exist = await this.docTypeRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(
+        `The Document Type with ID: ${id} was Not Found`,
+      );
+    }
+    return this.docTypeRepository.delete(id);
+  }
+}

@@ -1,4 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Role } from '../entities/role.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateRoleDTO, UpdateRoleDTO } from '../dtos/role.dto';
 
 @Injectable()
-export class RoleService {}
+export class RoleService {
+  constructor(
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
+  ) {}
+
+  findAll() {
+    return this.roleRepository.find({
+      relations: ['users'],
+    });
+  }
+
+  async findOne(id: number) {
+    const role = await this.roleRepository
+      .createQueryBuilder('role')
+      .leftJoinAndSelect('role.users', 'users')
+      .where('role.id = :id', { id })
+      .getOne();
+    if (!role) {
+      throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
+    }
+    return role;
+  }
+
+  createEntity(payload: CreateRoleDTO) {
+    const newRole = this.roleRepository.create(payload);
+    return this.roleRepository.save(newRole);
+  }
+
+  async updateEndity(id: number, payload: UpdateRoleDTO) {
+    const role = await this.roleRepository.findOneBy({ id });
+    if (!role) {
+      throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
+    }
+    this.roleRepository.merge(role, payload);
+    return this.roleRepository.save(role);
+  }
+
+  async deleteEntity(id: number) {
+    const exist = await this.roleRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
+    }
+    return this.roleRepository.softDelete(id);
+  }
+
+  async eliminateEntity(id: number) {
+    const exist = await this.roleRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
+    }
+    return this.roleRepository.delete(id);
+  }
+}

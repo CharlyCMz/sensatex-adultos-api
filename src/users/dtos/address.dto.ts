@@ -1,5 +1,11 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreateAddressDTO {
   @IsNotEmpty()
@@ -38,10 +44,10 @@ export class CreateAddressDTO {
   @ApiProperty()
   readonly locationId: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  readonly personId: string;
+  readonly personId?: string;
 }
 
 export class UpdateAddressDTO extends PartialType(CreateAddressDTO) {}

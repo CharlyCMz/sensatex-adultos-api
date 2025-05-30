@@ -11,9 +11,33 @@ import { LocationService } from './services/location.service';
 import { PersonService } from './services/person.service';
 import { RoleService } from './services/role.service';
 import { UserService } from './services/user.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Role } from './entities/role.entity';
+import { Address } from './entities/address.entity';
+import { DocType } from './entities/doc-type.entity';
+import { Location } from './entities/location.entity';
+import { Person } from './entities/person.entity';
 
 @Module({
-  controllers: [RoleController, UserController, PersonController, DocTypeController, AddressController, LocationController],
-  providers: [AddressService, DocTypeService, LocationService, PersonService, RoleService, UserService]
+  imports: [
+    TypeOrmModule.forFeature([Address, DocType, Location, Person, Role, User]),
+  ],
+  controllers: [
+    RoleController,
+    UserController,
+    PersonController,
+    DocTypeController,
+    AddressController,
+    LocationController,
+  ],
+  providers: [
+    AddressService,
+    DocTypeService,
+    LocationService,
+    PersonService,
+    RoleService,
+    UserService,
+  ],
 })
 export class UsersModule {}

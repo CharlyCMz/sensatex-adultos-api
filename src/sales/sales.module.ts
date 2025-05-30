@@ -6,6 +6,6 @@ import { InlineProductService } from './services/inline-product.service';
 
 @Module({
   controllers: [SellController, InlineProductController],
-  providers: [SellService, InlineProductService]
+  providers: [SellService, InlineProductService],
 })
 export class SalesModule {}

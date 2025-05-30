@@ -18,4 +18,6 @@ export class CreateInlineProductDTO {
   readonly productvariantId: string;
 }
 
-export class UpdateInlineProductDTO extends PartialType(CreateInlineProductDTO) {}
+export class UpdateInlineProductDTO extends PartialType(
+  CreateInlineProductDTO,
+) {}

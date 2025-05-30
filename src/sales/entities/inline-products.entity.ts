@@ -24,7 +24,10 @@ export class InlineProduct {
   @ManyToOne(() => Sell, (sell) => sell.inlineProducts)
   sell: Sell;
 
-  @ManyToOne(() => ProductVariant, (productVariant) => productVariant.inlineProducts)
+  @ManyToOne(
+    () => ProductVariant,
+    (productVariant) => productVariant.inlineProducts,
+  )
   productVariant: ProductVariant;
 
   @CreateDateColumn({

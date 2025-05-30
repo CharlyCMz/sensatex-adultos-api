@@ -22,6 +22,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
-  await app.listen(appConfig.get('sensatexAdultos').port);
+  await app.listen(appConfig.get('sensatexAdultos').port || 3000);
 }
 bootstrap();

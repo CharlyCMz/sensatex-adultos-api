@@ -18,4 +18,6 @@ export class CreateVariantAttributeDTO {
   readonly productvariantId: string;
 }
 
-export class UpdateVariantAttributeDTO extends PartialType(CreateVariantAttributeDTO) {}
+export class UpdateVariantAttributeDTO extends PartialType(
+  CreateVariantAttributeDTO,
+) {}

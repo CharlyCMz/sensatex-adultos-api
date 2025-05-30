@@ -1,4 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Location } from '../entities/location.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateLocationDTO, UpdateLocationDTO } from '../dtos/location.dto';
 
 @Injectable()
-export class LocationService {}
+export class LocationService {
+  constructor(
+    @InjectRepository(Location)
+    private locationRepository: Repository<Location>,
+  ) {}
+
+  findAll() {
+    return this.locationRepository.find();
+  }
+
+  async findOne(id: number) {
+    const location = await this.locationRepository
+      .createQueryBuilder('location')
+      .where('location.id = :id', { id })
+      .getOne();
+    if (!location) {
+      throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
+    }
+    return location;
+  }
+
+  createEntity(payload: CreateLocationDTO) {
+    const newLocation = this.locationRepository.create(payload);
+    return this.locationRepository.save(newLocation);
+  }
+
+  async updateEndity(id: number, payload: UpdateLocationDTO) {
+    const location = await this.locationRepository.findOneBy({ id });
+    if (!location) {
+      throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
+    }
+    this.locationRepository.merge(location, payload);
+    return this.locationRepository.save(location);
+  }
+
+  async deleteEntity(id: number) {
+    const exist = await this.locationRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
+    }
+    return this.locationRepository.softDelete(id);
+  }
+
+  async eliminateEntity(id: number) {
+    const exist = await this.locationRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
+    }
+    return this.locationRepository.delete(id);
+  }
+}

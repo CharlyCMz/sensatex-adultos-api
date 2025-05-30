@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { CreatePersonDTO } from './person.dto';
 
 export class CreateUserDTO {
   @IsNotEmpty()
@@ -13,9 +14,8 @@ export class CreateUserDTO {
   readonly password: string;
 
   @IsNotEmpty()
-  @IsString()
   @ApiProperty()
-  readonly personId: string;
+  readonly person: CreatePersonDTO;
 
   @IsNotEmpty()
   @IsNumber()
