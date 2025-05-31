@@ -13,8 +13,27 @@ import { LabelService } from './services/label.service';
 import { ProductVariantService } from './services/product-variant.service';
 import { ProductService } from './services/product.service';
 import { VariantAttributeService } from './services/variant-attribute.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Attribute } from './entities/attribute.entity';
+import { Category } from './entities/category.entity';
+import { Image } from './entities/image.entity';
+import { Label } from './entities/label.entity';
+import { ProductVariant } from './entities/product-variant.entity';
+import { Product } from './entities/product.entity';
+import { VariantAttribute } from './entities/variant-attribute.entity';
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      Attribute,
+      Category,
+      Image,
+      Label,
+      ProductVariant,
+      Product,
+      VariantAttribute,
+    ]),
+  ],
   controllers: [
     AttributeController,
     CategoryController,

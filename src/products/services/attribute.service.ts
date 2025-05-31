@@ -1,4 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Attribute } from '../entities/attribute.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateAttributeDTO, UpdateAttributeDTO } from '../dtos/attribute.dto';
 
 @Injectable()
-export class AttributeService {}
+export class AttributeService {
+  constructor(
+    @InjectRepository(Attribute)
+    private attributeRepository: Repository<Attribute>,
+  ) {}
+
+  findAll() {
+    return this.attributeRepository.find();
+  }
+
+  async findOne(id: number) {
+    const attribute = await this.attributeRepository
+      .createQueryBuilder('attribute')
+      .where('attribute.id = :id', { id })
+      .getOne();
+    if (!attribute) {
+      throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
+    }
+    return attribute;
+  }
+
+  async createEntity(payload: CreateAttributeDTO) {
+    const newAttribute = this.attributeRepository.create(payload);
+    return this.attributeRepository.save(newAttribute);
+  }
+
+  async updateEndity(id: number, payload: UpdateAttributeDTO) {
+    const attribute = await this.attributeRepository.findOneBy({ id });
+    if (!attribute) {
+      throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
+    }
+    this.attributeRepository.merge(attribute, payload);
+    return this.attributeRepository.save(attribute);
+  }
+
+  async deleteEntity(id: number) {
+    const exist = await this.attributeRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
+    }
+    return this.attributeRepository.softDelete(id);
+  }
+
+  async eliminateEntity(id: number) {
+    const exist = await this.attributeRepository.findOneBy({ id });
+    if (!exist) {
+      throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
+    }
+    return this.attributeRepository.delete(id);
+  }
+}

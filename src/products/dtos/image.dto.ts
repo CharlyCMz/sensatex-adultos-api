@@ -10,11 +10,6 @@ export class CreateImageDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  readonly url: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
   readonly productvariantId: string;
 }
 

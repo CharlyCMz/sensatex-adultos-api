@@ -29,9 +29,9 @@ export class RoleService {
     return role;
   }
 
-  createEntity(payload: CreateRoleDTO) {
+  async createEntity(payload: CreateRoleDTO) {
     const newRole = this.roleRepository.create(payload);
-    return this.roleRepository.save(newRole);
+    return await this.roleRepository.save(newRole);
   }
 
   async updateEndity(id: number, payload: UpdateRoleDTO) {
