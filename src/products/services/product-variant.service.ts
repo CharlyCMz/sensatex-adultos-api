@@ -13,7 +13,7 @@ export class ProductVariantService {
   constructor(
     @InjectRepository(ProductVariant)
     private productVariantRepository: Repository<ProductVariant>,
-    private variantAttributeService: VariantAttributeService,
+    //private variantAttributeService: VariantAttributeService,
   ) {}
 
   findAll() {
