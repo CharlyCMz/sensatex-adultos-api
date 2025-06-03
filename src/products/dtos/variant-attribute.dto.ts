@@ -12,10 +12,10 @@ export class CreateVariantAttributeDTO {
   @ApiProperty()
   readonly attributeId: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  readonly productVariantId: string;
+  readonly productVariantId?: string;
 }
 
 export class UpdateVariantAttributeDTO extends PartialType(

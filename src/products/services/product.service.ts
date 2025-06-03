@@ -10,7 +10,6 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
-    private readonly productVariantService: ProductVariantService,
   ) {}
 
   findAll() {
@@ -40,12 +39,7 @@ export class ProductService {
   }
 
   async createEntity(payload: CreateProductDTO) {
-    let newProduct = await this.productRepository.save(payload);
-    //TODO: Many to Many Labels relation needs to be handled
-    for (const variant of payload.productVariants) {
-      const newProductVariant = await this.productVariantService.createEntity({...variant, productId: newProduct.id });
-    }
-    return await this.findOne(newProduct.id);
+    return await this.productRepository.save(payload);
   }
 
   async updateEndity(id: number, payload: UpdateProductDTO) {

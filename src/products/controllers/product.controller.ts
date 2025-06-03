@@ -1,14 +1,45 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { ProductVariantService } from '../services/product-variant.service';
+import { VariantAttributeService } from '../services/variant-attribute.service';
 
 @Controller('products')
 export class ProductController {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private readonly productVariantService: ProductVariantService,
+    private readonly variantAttributeService: VariantAttributeService,
+  ) {}
 
   @Post()
-  createEntity(@Body() payload: CreateProductDTO) {
-    return this.productService.createEntity(payload);
+  async createEntity(@Body() payload: CreateProductDTO) {
+    let newProduct = await this.productService.createEntity(payload);
+    //TODO: Many to Many Labels relation needs to be handled
+    for (const variant of payload.productVariants) {
+      const newProductVariant = await this.productVariantService.createEntity({
+        ...variant,
+        productId: newProduct.id,
+      });
+      for (const attribute of variant.variantAttributes) {
+        const newVariantAttribute =
+          await this.variantAttributeService.createEntity({
+            ...attribute,
+            productVariantId: newProductVariant.id,
+          });
+      }
+    }
+    let resultingProduct = await this.productService.findOne(newProduct.id);
+    return resultingProduct;
   }
 
   @Get()

@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { VariantAttribute } from '../entities/variant-attribute.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateVariantAttributeDTO, UpdateVariantAttributeDTO } from '../dtos/variant-attribute.dto';
+import {
+  CreateVariantAttributeDTO,
+  UpdateVariantAttributeDTO,
+} from '../dtos/variant-attribute.dto';
 import { AttributeService } from './attribute.service';
 import { ProductVariantService } from './product-variant.service';
 
@@ -26,22 +29,33 @@ export class VariantAttributeService {
       .where('variantAttribute.id = :id', { id })
       .getOne();
     if (!variantAttribute) {
-      throw new NotFoundException(`The Variant-Attribute with ID: ${id} was Not Found`);
+      throw new NotFoundException(
+        `The Variant-Attribute with ID: ${id} was Not Found`,
+      );
     }
     return variantAttribute;
   }
 
   async createEntity(payload: CreateVariantAttributeDTO) {
     const newVariantAttribute = this.variantAttributeRepository.create(payload);
-    newVariantAttribute.attribute = await this.attributeService.findOne(payload.attributeId);
-    newVariantAttribute.productVariant = await this.productVariantService.findOne(payload.productVariantId);
+    newVariantAttribute.attribute = await this.attributeService.findOne(
+      payload.attributeId,
+    );
+    if (payload.productVariantId) {
+      newVariantAttribute.productVariant =
+        await this.productVariantService.findOne(payload.productVariantId);
+    }
     return await this.variantAttributeRepository.save(newVariantAttribute);
   }
 
   async updateEndity(id: number, payload: UpdateVariantAttributeDTO) {
-    const variantAttribute = await this.variantAttributeRepository.findOneBy({ id });
+    const variantAttribute = await this.variantAttributeRepository.findOneBy({
+      id,
+    });
     if (!variantAttribute) {
-      throw new NotFoundException(`The Variant-Attribute with ID: ${id} was Not Found`);
+      throw new NotFoundException(
+        `The Variant-Attribute with ID: ${id} was Not Found`,
+      );
     }
     this.variantAttributeRepository.merge(variantAttribute, payload);
     return this.variantAttributeRepository.save(variantAttribute);
@@ -50,7 +64,9 @@ export class VariantAttributeService {
   async deleteEntity(id: number) {
     const exist = await this.variantAttributeRepository.findOneBy({ id });
     if (!exist) {
-      throw new NotFoundException(`The Variant-Attribute with ID: ${id} was Not Found`);
+      throw new NotFoundException(
+        `The Variant-Attribute with ID: ${id} was Not Found`,
+      );
     }
     return this.variantAttributeRepository.softDelete(id);
   }
@@ -58,7 +74,9 @@ export class VariantAttributeService {
   async eliminateEntity(id: number) {
     const exist = await this.variantAttributeRepository.findOneBy({ id });
     if (!exist) {
-      throw new NotFoundException(`The Variant-Attribute with ID: ${id} was Not Found`);
+      throw new NotFoundException(
+        `The Variant-Attribute with ID: ${id} was Not Found`,
+      );
     }
     return this.variantAttributeRepository.delete(id);
   }

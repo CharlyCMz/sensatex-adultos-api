@@ -7,13 +7,15 @@ import {
   UpdateProductVariantDTO,
 } from '../dtos/product-variant.dto';
 import { VariantAttributeService } from './variant-attribute.service';
+import { ProductService } from './product.service';
 
 @Injectable()
 export class ProductVariantService {
   constructor(
     @InjectRepository(ProductVariant)
     private productVariantRepository: Repository<ProductVariant>,
-    //private variantAttributeService: VariantAttributeService,
+    private variantAttributeService: VariantAttributeService,
+    private productService: ProductService,
   ) {}
 
   findAll() {
@@ -44,6 +46,11 @@ export class ProductVariantService {
   }
 
   async createEntity(payload: CreateProductVariantDTO) {
+    const newProductVariant = this.productVariantRepository.create(payload);
+    if (payload.productId) {
+      const product = await this.productService.findOne(payload.productId);
+      newProductVariant.product = product;
+    }
     return await this.productVariantRepository.save(payload);
   }
 
