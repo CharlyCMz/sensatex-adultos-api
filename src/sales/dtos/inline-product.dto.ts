@@ -1,21 +1,21 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateInlineProductDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  readonly quantity: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly sellId: string;
+  readonly quantity: number;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly productvariantId: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  readonly sellId?: string;
 }
 
 export class UpdateInlineProductDTO extends PartialType(

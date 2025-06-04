@@ -23,12 +23,21 @@ export class AddressService {
     const address = await this.addressRepository
       .createQueryBuilder('address')
       .leftJoinAndSelect('address.person', 'person')
+      .leftJoinAndSelect('address.location', 'location')
       .where('address.id = :id', { id })
       .getOne();
     if (!address) {
       throw new NotFoundException(`The Address with ID: ${id} was Not Found`);
     }
     return address;
+  }
+
+  async findOneToString(id: string) {
+    const address = await this.addressRepository.findOneBy({ id });
+    if (!address) {
+      throw new NotFoundException(`The Address with ID: ${id} was Not Found`);
+    }
+    return `${address.street}, ${address.reference}, ${address.suit} \n${address.zipCode} - ${address.location.cityName}, ${address.location.stateName}`;
   }
 
   async createEntity(payload: CreateAddressDTO) {

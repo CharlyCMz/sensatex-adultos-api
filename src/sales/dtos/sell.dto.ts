@@ -1,21 +1,22 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { CreateAddressDTO } from 'src/users/dtos/address.dto';
+import { CreatePersonDTO } from 'src/users/dtos/person.dto';
+import { CreateInlineProductDTO } from './inline-product.dto';
 
 export class CreateSellDTO {
   @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly billingAddressId: string;
+  @ApiProperty({ type: CreatePersonDTO })
+  readonly person: CreatePersonDTO;
+
+  @IsOptional()
+  @ApiProperty({ type: CreateAddressDTO || null })
+  readonly billingAddress?: CreateAddressDTO;
 
   @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly shippingAddressId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly personId: string;
+  @IsArray()
+  @ApiProperty({ type: [CreateInlineProductDTO] })
+  readonly inlineProducts: CreateInlineProductDTO[];
 }
 
 export class UpdateSellDTO extends PartialType(CreateSellDTO) {}
