@@ -31,7 +31,7 @@ export class PersonController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: UpdatePersonDTO) {
-    return this.personService.updateEndity(id, payload);
+    return this.personService.updateEntity(id, payload);
   }
 
   @Delete(':id')

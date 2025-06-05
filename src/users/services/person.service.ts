@@ -47,7 +47,7 @@ export class PersonService {
     return await this.findOne(newPerson.id);
   }
 
-  async updateEndity(id: string, payload: UpdatePersonDTO) {
+  async updateEntity(id: string, payload: UpdatePersonDTO) {
     const person = await this.personRepository.findOneBy({ id });
     if (!person) {
       throw new NotFoundException(`The Person with ID: ${id} was Not Found`);

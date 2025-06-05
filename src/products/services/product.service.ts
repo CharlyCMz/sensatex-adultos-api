@@ -42,7 +42,7 @@ export class ProductService {
     return await this.productRepository.save(payload);
   }
 
-  async updateEndity(id: number, payload: UpdateProductDTO) {
+  async updateEntity(id: number, payload: UpdateProductDTO) {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);

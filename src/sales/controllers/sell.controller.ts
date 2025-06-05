@@ -47,7 +47,8 @@ export class SellController {
         sellId: sell.id,
       });
     }
-    return 'Sell created successfully';
+    sell = await this.sellService.updateEntity(sell.id);
+    return sell;
   }
 
   @Get()
@@ -62,7 +63,7 @@ export class SellController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: UpdateSellDTO) {
-    return this.sellService.updateEndity(id, payload);
+    return this.sellService.updateEntity(id);
   }
 
   @Delete(':id')

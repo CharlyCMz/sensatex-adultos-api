@@ -33,7 +33,7 @@ export class DocTypeService {
     return this.docTypeRepository.save(newRole);
   }
 
-  async updateEndity(id: number, payload: UpdateDocTypeDTO) {
+  async updateEntity(id: number, payload: UpdateDocTypeDTO) {
     const docType = await this.docTypeRepository.findOneBy({ id });
     if (!docType) {
       throw new NotFoundException(

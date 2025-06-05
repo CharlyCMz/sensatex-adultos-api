@@ -48,7 +48,7 @@ export class ImageService {
     return await this.imageRepository.save(newImage);
   }
 
-  async updateEndity(id: string, payload: UpdateImageDTO) {
+  async updateEntity(id: string, payload: UpdateImageDTO) {
     const image = await this.imageRepository.findOneBy({ id });
     if (!image) {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);

@@ -35,7 +35,7 @@ export class AttributeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateAttributeDTO,
   ) {
-    return this.attributeService.updateEndity(id, payload);
+    return this.attributeService.updateEntity(id, payload);
   }
 
   @Delete(':id')

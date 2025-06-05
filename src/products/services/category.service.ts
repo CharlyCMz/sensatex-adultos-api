@@ -34,7 +34,7 @@ export class CategoryService {
     return this.categoryRepository.save(newCategory);
   }
 
-  async updateEndity(id: number, payload: UpdateCategoryDTO) {
+  async updateEntity(id: number, payload: UpdateCategoryDTO) {
     const category = await this.categoryRepository.findOneBy({ id });
     if (!category) {
       throw new NotFoundException(`The Category with ID: ${id} was Not Found`);

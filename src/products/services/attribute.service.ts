@@ -31,7 +31,7 @@ export class AttributeService {
     return this.attributeRepository.save(newAttribute);
   }
 
-  async updateEndity(id: number, payload: UpdateAttributeDTO) {
+  async updateEntity(id: number, payload: UpdateAttributeDTO) {
     const attribute = await this.attributeRepository.findOneBy({ id });
     if (!attribute) {
       throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);

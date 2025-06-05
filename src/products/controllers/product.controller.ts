@@ -57,7 +57,7 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateProductDTO,
   ) {
-    return this.productService.updateEndity(id, payload);
+    return this.productService.updateEntity(id, payload);
   }
 
   @Delete(':id')

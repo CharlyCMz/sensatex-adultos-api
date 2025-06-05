@@ -39,7 +39,7 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  async updateEndity(id: number, payload: UpdateUserDTO) {
+  async updateEntity(id: number, payload: UpdateUserDTO) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`The User with ID: ${id} was Not Found`);

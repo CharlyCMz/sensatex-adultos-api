@@ -31,7 +31,7 @@ export class AddressController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: UpdateAddressDTO) {
-    return this.addressService.updateEndity(id, payload);
+    return this.addressService.updateEntity(id, payload);
   }
 
   @Delete(':id')

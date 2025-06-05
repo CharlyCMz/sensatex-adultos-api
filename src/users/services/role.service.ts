@@ -34,7 +34,7 @@ export class RoleService {
     return await this.roleRepository.save(newRole);
   }
 
-  async updateEndity(id: number, payload: UpdateRoleDTO) {
+  async updateEntity(id: number, payload: UpdateRoleDTO) {
     const role = await this.roleRepository.findOneBy({ id });
     if (!role) {
       throw new NotFoundException(`The Role with ID: ${id} was Not Found`);

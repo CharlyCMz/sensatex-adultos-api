@@ -26,7 +26,7 @@ export class InlineProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateInlineProductDTO,
   ) {
-    return this.inlineProductService.updateEndity(id, payload);
+    return this.inlineProductService.updateEntity(id, payload);
   }
 
   @Delete(':id')

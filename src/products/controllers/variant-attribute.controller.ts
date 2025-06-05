@@ -38,7 +38,7 @@ export class VariantAttributeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateVariantAttributeDTO,
   ) {
-    return this.variantAttributeService.updateEndity(id, payload);
+    return this.variantAttributeService.updateEntity(id, payload);
   }
 
   @Delete(':id')

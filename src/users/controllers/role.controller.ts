@@ -35,7 +35,7 @@ export class RoleController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateRoleDTO,
   ) {
-    return this.roleService.updateEndity(id, payload);
+    return this.roleService.updateEntity(id, payload);
   }
 
   @Delete(':id')

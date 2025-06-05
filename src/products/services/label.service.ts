@@ -31,7 +31,7 @@ export class LabelService {
     return await this.labelRepository.save(newLabel);
   }
 
-  async updateEndity(id: number, payload: UpdateLabelDTO) {
+  async updateEntity(id: number, payload: UpdateLabelDTO) {
     const label = await this.labelRepository.findOneBy({ id });
     if (!label) {
       throw new NotFoundException(`The Label with ID: ${id} was Not Found`);

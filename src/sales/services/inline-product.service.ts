@@ -8,6 +8,7 @@ import {
 } from '../dtos/inline-product.dto';
 import { ProductVariantService } from 'src/products/services/product-variant.service';
 import { SellService } from './sell.service';
+import Decimal from 'decimal.js';
 
 @Injectable()
 export class InlineProductService {
@@ -52,10 +53,12 @@ export class InlineProductService {
       newInlineProduct.productVariant =
         await this.productVariantService.findOne(payload.productvariantId);
     }
+    const unitPrice = new Decimal(newInlineProduct.productVariant.price);
+    newInlineProduct.inlineTotal = unitPrice.mul(payload.quantity).toFixed(4);
     return await this.inlineProductRepository.save(newInlineProduct);
   }
 
-  async updateEndity(id: number, payload: UpdateInlineProductDTO) {
+  async updateEntity(id: number, payload: UpdateInlineProductDTO) {
     const inlineProduct = await this.inlineProductRepository.findOneBy({ id });
     if (!inlineProduct) {
       throw new NotFoundException(

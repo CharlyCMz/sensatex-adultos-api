@@ -55,7 +55,7 @@ export class ProductVariantService {
   }
 
   //TODO: Update logic depending on Admin panel requirements
-  async updateEndity(id: string, payload: UpdateProductVariantDTO) {
+  async updateEntity(id: string, payload: UpdateProductVariantDTO) {
     const productVariant = await this.productVariantRepository.findOneBy({ id });
     if (!productVariant) {
       throw new NotFoundException(

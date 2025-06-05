@@ -26,7 +26,7 @@ export class ProductVariantController {
       @Param('id') id: string,
       @Body() payload: UpdateProductVariantDTO,
     ) {
-      return this.productVariantService.updateEndity(id, payload);
+      return this.productVariantService.updateEntity(id, payload);
     }
 
     @Delete(':id')

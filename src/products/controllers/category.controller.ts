@@ -26,7 +26,7 @@ export class CategoryController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateCategoryDTO,
   ) {
-    return this.categoryService.updateEndity(id, payload);
+    return this.categoryService.updateEntity(id, payload);
   }
 
   @Delete(':id')

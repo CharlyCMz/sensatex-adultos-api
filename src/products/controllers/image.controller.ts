@@ -26,7 +26,7 @@ export class ImageController {
     @Param('id') id: string,
     @Body() payload: UpdateImageDTO,
   ) {
-    return this.imageService.updateEndity(id, payload);
+    return this.imageService.updateEntity(id, payload);
   }
 
   @Delete(':id')

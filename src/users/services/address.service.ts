@@ -47,7 +47,7 @@ export class AddressService {
     return this.addressRepository.save(newAddress);
   }
 
-  async updateEndity(id: string, payload: UpdateAddressDTO) {
+  async updateEntity(id: string, payload: UpdateAddressDTO) {
     const address = await this.addressRepository.findOneBy({ id });
     if (!address) {
       throw new NotFoundException(`The Address with ID: ${id} was Not Found`);

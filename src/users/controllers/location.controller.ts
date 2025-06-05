@@ -35,7 +35,7 @@ export class LocationController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateLocationDTO,
   ) {
-    return this.locationService.updateEndity(id, payload);
+    return this.locationService.updateEntity(id, payload);
   }
 
   @Delete(':id')

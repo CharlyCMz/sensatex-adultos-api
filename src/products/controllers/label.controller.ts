@@ -26,7 +26,7 @@ export class LabelController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateLabelDTO,
   ) {
-    return this.labelService.updateEndity(id, payload);
+    return this.labelService.updateEntity(id, payload);
   }
 
   @Delete(':id')

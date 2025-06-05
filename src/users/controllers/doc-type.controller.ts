@@ -35,7 +35,7 @@ export class DocTypeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateDocTypeDTO,
   ) {
-    return this.docTypeService.updateEndity(id, payload);
+    return this.docTypeService.updateEntity(id, payload);
   }
 
   @Delete(':id')

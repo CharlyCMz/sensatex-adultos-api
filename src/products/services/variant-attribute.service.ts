@@ -48,7 +48,7 @@ export class VariantAttributeService {
     return await this.variantAttributeRepository.save(newVariantAttribute);
   }
 
-  async updateEndity(id: number, payload: UpdateVariantAttributeDTO) {
+  async updateEntity(id: number, payload: UpdateVariantAttributeDTO) {
     const variantAttribute = await this.variantAttributeRepository.findOneBy({
       id,
     });

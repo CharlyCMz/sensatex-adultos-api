@@ -31,7 +31,7 @@ export class LocationService {
     return this.locationRepository.save(newLocation);
   }
 
-  async updateEndity(id: number, payload: UpdateLocationDTO) {
+  async updateEntity(id: number, payload: UpdateLocationDTO) {
     const location = await this.locationRepository.findOneBy({ id });
     if (!location) {
       throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
