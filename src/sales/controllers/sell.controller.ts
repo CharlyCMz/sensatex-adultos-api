@@ -39,6 +39,7 @@ export class SellController {
     let sell = await this.sellService.createEntity(
       person.id,
       shippingAddress.id,
+      payload.status,
       payload.billingAddress ? billingAddress.id : undefined,
     );
     for (const inlineProduct of payload.inlineProducts) {
@@ -63,7 +64,7 @@ export class SellController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: UpdateSellDTO) {
-    return this.sellService.updateEntity(id);
+    return this.sellService.updateEntity(id, payload);
   }
 
   @Delete(':id')

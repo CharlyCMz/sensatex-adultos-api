@@ -31,6 +31,9 @@ export class Sell {
   @Column({ type: 'varchar', length: 24, nullable: true })
   shippingAddress: string;
 
+  @Column({ type: 'varchar', length: 24, nullable: true })
+  status: string;
+
   @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.sell)
   inlineProducts: InlineProduct[];
 

@@ -17,6 +17,11 @@ export class CreateSellDTO {
   @IsArray()
   @ApiProperty({ type: [CreateInlineProductDTO] })
   readonly inlineProducts: CreateInlineProductDTO[];
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  readonly status: string;
 }
 
 export class UpdateSellDTO extends PartialType(CreateSellDTO) {}

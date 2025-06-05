@@ -39,9 +39,11 @@ export class SellService {
   async createEntity(
     personId: string,
     addressId: string,
+    status: string,
     billingAddressId?: string,
   ) {
     const newSell: Sell = new Sell();
+    newSell.status = status;
     newSell.person = await this.personService.findOne(personId);
     newSell.shippingAddress =
       await this.addressService.findOneToString(addressId);
@@ -54,6 +56,9 @@ export class SellService {
 
   async updateEntity(id: string, payload?: UpdateSellDTO) {
     const sell = await this.findOne(id);
+    if (payload?.status) {
+      sell.status = payload.status;
+    }
     if (!sell) {
       throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
     }
@@ -66,7 +71,6 @@ export class SellService {
     sell.shippingTotal = shipping.toFixed(4);
     sell.purchaseTotal = purchase.toFixed(4);
     sell.total = purchase.plus(shipping).toFixed(4);
-    // Update the sell entity with any additional payload data management
     await this.sellRepository.save(sell);
     return sell;
   }
