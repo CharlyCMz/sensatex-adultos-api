@@ -52,5 +52,9 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
     ProductService,
     VariantAttributeService,
   ],
+  exports: [
+    ProductVariantService,
+    ProductService,
+  ],
 })
 export class ProductsModule {}

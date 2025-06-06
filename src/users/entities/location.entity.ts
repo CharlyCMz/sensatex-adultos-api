@@ -14,22 +14,22 @@ export class Location {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'country_code', type: 'varchar', length: 4 })
+  @Column({ name: 'country_code', type: 'varchar', length: 16 })
   countryCode: string;
 
-  @Column({ name: 'country_name', type: 'varchar', length: 48 })
+  @Column({ name: 'country_name', type: 'varchar', length: 128 })
   countryName: string;
 
-  @Column({ name: 'state_code', type: 'varchar', length: 4 })
+  @Column({ name: 'state_code', type: 'varchar', length: 16 })
   stateCode: string;
 
-  @Column({ name: 'state_name', type: 'varchar', length: 4 })
+  @Column({ name: 'state_name', type: 'varchar', length: 128 })
   stateName: string;
 
-  @Column({ name: 'city_code', type: 'varchar', length: 8 })
+  @Column({ name: 'city_code', type: 'varchar', length: 16 })
   cityCode: string;
 
-  @Column({ name: 'city_name', type: 'varchar', length: 24 })
+  @Column({ name: 'city_name', type: 'varchar', length: 128 })
   cityName: string;
 
   @OneToMany(() => Address, (address) => address.location)

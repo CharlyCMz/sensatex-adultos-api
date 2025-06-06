@@ -55,4 +55,27 @@ export class LocationService {
     }
     return this.locationRepository.delete(id);
   }
+
+  async massiveUpload(payload: CreateLocationDTO[]) {
+    const processedLocations: Location[] = [];
+    const rejectedLocations: any[] = [];
+
+    for (const location of payload) {
+      try {
+        const newLocation = await this.locationRepository.save(location);
+        processedLocations.push(newLocation);
+      } catch (error) {
+        rejectedLocations.push({
+          location: location,
+          reason: error.message || 'Unknown error',
+        });
+      }
+    }
+    return {
+      total: payload.length,
+      processed: processedLocations.length,
+      rejected: rejectedLocations.length,
+      rejectedProducts: rejectedLocations,
+    };
+  }
 }
