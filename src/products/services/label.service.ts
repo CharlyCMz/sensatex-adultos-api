@@ -30,9 +30,11 @@ export class LabelService {
 
   async createEntity(payload: CreateLabelDTO) {
     const newLabel = this.labelRepository.create(payload);
-    newLabel.category = await this.categoryService.findOne(
-      payload.categoryId,
-    );
+    if (payload.categoryId) {
+      newLabel.category = await this.categoryService.findOne(
+        payload.categoryId,
+      );
+    }
     return await this.labelRepository.save(newLabel);
   }
 

@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateLabelDTO {
   @IsNotEmpty()
@@ -12,10 +12,10 @@ export class CreateLabelDTO {
   @ApiProperty()
   readonly description: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsOptional()
+  @IsNumber()
   @ApiProperty()
-  readonly categoryId: number;
+  readonly categoryId?: number;
 }
 
 export class UpdateLabelDTO extends PartialType(CreateLabelDTO) {}
