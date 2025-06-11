@@ -20,7 +20,7 @@ export class Category {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
 
   @OneToMany(() => Label, (label) => label.category)

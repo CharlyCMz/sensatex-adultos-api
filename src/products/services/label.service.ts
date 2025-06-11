@@ -3,12 +3,14 @@ import { Label } from '../entities/label.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateLabelDTO, UpdateLabelDTO } from '../dtos/label.dto';
+import { CategoryService } from './category.service';
 
 @Injectable()
 export class LabelService {
   constructor(
     @InjectRepository(Label)
     private labelRepository: Repository<Label>,
+    private categoryService: CategoryService,
   ) {}
 
   findAll() {
@@ -28,6 +30,9 @@ export class LabelService {
 
   async createEntity(payload: CreateLabelDTO) {
     const newLabel = this.labelRepository.create(payload);
+    newLabel.category = await this.categoryService.findOne(
+      payload.categoryId,
+    );
     return await this.labelRepository.save(newLabel);
   }
 

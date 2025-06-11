@@ -17,7 +17,7 @@ export class DocType {
   @Column({ type: 'varchar', length: 10 })
   code: string;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'varchar', length: 48 })
   name: string;
 
   @OneToMany(() => Person, (person) => person.docType)
