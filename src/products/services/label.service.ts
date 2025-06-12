@@ -20,6 +20,7 @@ export class LabelService {
   async findOne(id: number) {
     const label = await this.labelRepository
       .createQueryBuilder('label')
+      .leftJoinAndSelect('label.products', 'products')
       .where('label.id = :id', { id })
       .getOne();
     if (!label) {

@@ -24,7 +24,6 @@ export class ProductController {
   @Post()
   async createEntity(@Body() payload: CreateProductDTO) {
     let newProduct = await this.productService.createEntity(payload);
-    //TODO: Many to Many Labels relation needs to be handled
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({
         ...variant,
@@ -68,5 +67,21 @@ export class ProductController {
   @Delete('eliminate/:id')
   eliminateEntity(@Param('id', ParseIntPipe) id: number) {
     return this.productService.eliminateEntity(id);
+  }
+
+  @Delete(':id/label/:labelId')
+  deleteLabel(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ) {
+    return this.productService.removeLabelFromProduct(id, labelId);
+  }
+
+  @Put(':id/label/:labelId')
+  addLabel(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ) {
+    return this.productService.addLabelToProduct(id, labelId);
   }
 }
