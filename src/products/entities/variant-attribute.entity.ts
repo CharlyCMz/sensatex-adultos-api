@@ -6,14 +6,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToMany,
 } from 'typeorm';
 import { Attribute } from './attribute.entity';
 import { ProductVariant } from './product-variant.entity';
 
 @Entity({ name: 'variants_attributes' })
 export class VariantAttribute {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 156, unique: false })
   value: string;
@@ -21,11 +22,11 @@ export class VariantAttribute {
   @ManyToOne(() => Attribute, (attribute) => attribute.variantsAttributes)
   attribute: Attribute;
 
-  @ManyToOne(
+  @ManyToMany(
     () => ProductVariant,
     (productVariant) => productVariant.variantsAttributes,
   )
-  productVariant: ProductVariant;
+  productVariants: ProductVariant[];
 
   @CreateDateColumn({
     name: 'created_at',

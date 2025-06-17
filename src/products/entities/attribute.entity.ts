@@ -11,8 +11,8 @@ import { VariantAttribute } from './variant-attribute.entity';
 
 @Entity({ name: 'attributes' })
 export class Attribute {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 156, unique: true })
   name: string;

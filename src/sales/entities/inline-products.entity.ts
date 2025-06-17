@@ -12,8 +12,8 @@ import { ProductVariant } from 'src/products/entities/product-variant.entity';
 
 @Entity({ name: 'inline_products' })
 export class InlineProduct {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'int', nullable: false })
   quantity: number;

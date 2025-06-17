@@ -47,31 +47,31 @@ export class ProductController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
   }
 
   @Put(':id')
   updateEntity(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() payload: UpdateProductDTO,
   ) {
     return this.productService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.productService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.productService.eliminateEntity(id);
   }
 
   @Delete(':id/label/:labelId')
   deleteLabel(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Param('labelId', ParseIntPipe) labelId: number,
   ) {
     return this.productService.removeLabelFromProduct(id, labelId);
@@ -79,7 +79,7 @@ export class ProductController {
 
   @Put(':id/label/:labelId')
   addLabel(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Param('labelId', ParseIntPipe) labelId: number,
   ) {
     return this.productService.addLabelToProduct(id, labelId);

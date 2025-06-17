@@ -11,8 +11,8 @@ import { Address } from './address.entity';
 
 @Entity({ name: 'locations' })
 export class Location {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ name: 'country_code', type: 'varchar', length: 16 })
   countryCode: string;

@@ -11,8 +11,8 @@ import { Person } from './person.entity';
 
 @Entity({ name: 'documentation_types' })
 export class DocType {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 10 })
   code: string;

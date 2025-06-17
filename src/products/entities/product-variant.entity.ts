@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -37,9 +38,9 @@ export class ProductVariant {
   @Column({ name: 'is_available', type: 'boolean', default: false })
   isAvailable: boolean;
 
-  @OneToMany(
+  @ManyToMany(
     () => VariantAttribute,
-    (variantAttribute) => variantAttribute.attribute,
+    (variantAttribute) => variantAttribute.productVariants,
   )
   variantsAttributes: VariantAttribute[];
 

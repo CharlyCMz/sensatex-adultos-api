@@ -26,7 +26,7 @@ export class CreateProductVariantDTO {
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  readonly productId?: number;
+  readonly productId?: string;
 
   @IsNotEmpty()
   @IsArray()

@@ -21,18 +21,18 @@ export class ProductService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const product = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
       .leftJoinAndSelect('productVariants.images', 'images')
       .leftJoinAndSelect(
-        'productVariants.variantAttributes',
-        'variantAttributes',
+        'productVariants.variantsAttributes',
+        'variantsAttributes',
       )
-      .leftJoinAndSelect('variantAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .leftJoinAndSelect('product.labels', 'labels')
-      .leftJoinAndSelect('product.categories', 'categories')
+      .leftJoinAndSelect('labels.category', 'category')
       .where('product.id = :id', { id })
       .getOne();
     if (!product) {
@@ -50,7 +50,7 @@ export class ProductService {
     return await this.productRepository.save(payload);
   }
 
-  async updateEntity(id: number, payload: UpdateProductDTO) {
+  async updateEntity(id: string, payload: UpdateProductDTO) {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
@@ -65,7 +65,7 @@ export class ProductService {
     return this.productRepository.save(product);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.productRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
@@ -73,7 +73,7 @@ export class ProductService {
     return this.productRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.productRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
@@ -82,7 +82,7 @@ export class ProductService {
   }
 
   //#region Label Management
-  async removeLabelFromProduct(productId: number, labelId: number) {
+  async removeLabelFromProduct(productId: string, labelId: number) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
       relations: ['labels'],
@@ -98,7 +98,7 @@ export class ProductService {
     return this.productRepository.save(product);
   }
 
-  async addLabelToProduct(productId: number, labelId: number) {
+  async addLabelToProduct(productId: string, labelId: number) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
       relations: ['labels'],

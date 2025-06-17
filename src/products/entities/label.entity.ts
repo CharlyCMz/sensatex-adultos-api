@@ -13,8 +13,8 @@ import { Category } from './category.entity';
 
 @Entity({ name: 'labels' })
 export class Label {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 156, unique: true })
   title: string;

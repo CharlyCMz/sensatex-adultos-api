@@ -14,8 +14,8 @@ import { Label } from './label.entity';
 
 @Entity({ name: 'products' })
 export class Product {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 256 })
   name: string;
