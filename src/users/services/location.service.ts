@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Location } from '../entities/location.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateLocationDTO, UpdateLocationDTO } from '../dtos/location.dto';
+import {
+  CreateLocationDTO,
+  RejectedLocationDTO,
+  UpdateLocationDTO,
+} from '../dtos/location.dto';
 
 @Injectable()
 export class LocationService {
@@ -15,7 +19,7 @@ export class LocationService {
     return this.locationRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const location = await this.locationRepository
       .createQueryBuilder('location')
       .where('location.id = :id', { id })
@@ -31,7 +35,7 @@ export class LocationService {
     return this.locationRepository.save(newLocation);
   }
 
-  async updateEntity(id: number, payload: UpdateLocationDTO) {
+  async updateEntity(id: string, payload: UpdateLocationDTO) {
     const location = await this.locationRepository.findOneBy({ id });
     if (!location) {
       throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
@@ -40,7 +44,7 @@ export class LocationService {
     return this.locationRepository.save(location);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.locationRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
@@ -48,7 +52,7 @@ export class LocationService {
     return this.locationRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.locationRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Location with ID: ${id} was Not Found`);
@@ -58,7 +62,7 @@ export class LocationService {
 
   async massiveUpload(payload: CreateLocationDTO[]) {
     const processedLocations: Location[] = [];
-    const rejectedLocations: any[] = [];
+    const rejectedLocations: RejectedLocationDTO[] = [];
 
     for (const location of payload) {
       try {

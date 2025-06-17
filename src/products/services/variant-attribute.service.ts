@@ -7,7 +7,6 @@ import {
   UpdateVariantAttributeDTO,
 } from '../dtos/variant-attribute.dto';
 import { AttributeService } from './attribute.service';
-import { ProductVariantService } from './product-variant.service';
 
 @Injectable()
 export class VariantAttributeService {
@@ -15,14 +14,13 @@ export class VariantAttributeService {
     @InjectRepository(VariantAttribute)
     private variantAttributeRepository: Repository<VariantAttribute>,
     private attributeService: AttributeService,
-    private productVariantService: ProductVariantService,
   ) {}
 
   findAll() {
     return this.variantAttributeRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const variantAttribute = await this.variantAttributeRepository
       .createQueryBuilder('variantAttribute')
       .leftJoinAndSelect('variantAttribute.attribute', 'attribute')
@@ -41,14 +39,10 @@ export class VariantAttributeService {
     newVariantAttribute.attribute = await this.attributeService.findOne(
       payload.attributeId,
     );
-    if (payload.productVariantId) {
-      newVariantAttribute.productVariant =
-        await this.productVariantService.findOne(payload.productVariantId);
-    }
     return await this.variantAttributeRepository.save(newVariantAttribute);
   }
 
-  async updateEntity(id: number, payload: UpdateVariantAttributeDTO) {
+  async updateEntity(id: string, payload: UpdateVariantAttributeDTO) {
     const variantAttribute = await this.variantAttributeRepository.findOneBy({
       id,
     });
@@ -61,7 +55,7 @@ export class VariantAttributeService {
     return this.variantAttributeRepository.save(variantAttribute);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.variantAttributeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(
@@ -71,7 +65,7 @@ export class VariantAttributeService {
     return this.variantAttributeRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.variantAttributeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(

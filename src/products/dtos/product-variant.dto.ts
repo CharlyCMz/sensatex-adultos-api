@@ -1,6 +1,12 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CreateVariantAttributeDTO } from './variant-attribute.dto';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductVariantDTO {
   @IsNotEmpty()
@@ -30,8 +36,8 @@ export class CreateProductVariantDTO {
 
   @IsNotEmpty()
   @IsArray()
-  @ApiProperty({ type: [CreateVariantAttributeDTO], required: false })
-  variantAttributes: CreateVariantAttributeDTO[];
+  @ApiProperty({ type: [Number] })
+  readonly variantAttributeIds: number[];
 }
 
 export class UpdateProductVariantDTO extends PartialType(

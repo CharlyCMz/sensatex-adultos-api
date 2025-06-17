@@ -1,9 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
-import { ProductVariantService } from './product-variant.service';
 import { Label } from '../entities/label.entity';
 
 @Injectable()
@@ -82,36 +85,46 @@ export class ProductService {
   }
 
   //#region Label Management
-  async removeLabelFromProduct(productId: string, labelId: number) {
+  async removeLabelFromProduct(productId: string, labelId: string) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
       relations: ['labels'],
     });
     if (!product) {
-      throw new NotFoundException(`The Product with ID: ${productId} was Not Found`);
+      throw new NotFoundException(
+        `The Product with ID: ${productId} was Not Found`,
+      );
     }
     const label = await this.labelRepository.findOneBy({ id: labelId });
     if (!label) {
-      throw new NotFoundException(`The Label with ID: ${labelId} was Not Found`);
+      throw new NotFoundException(
+        `The Label with ID: ${labelId} was Not Found`,
+      );
     }
     product.labels = product.labels.filter((l) => l.id !== labelId);
     return this.productRepository.save(product);
   }
 
-  async addLabelToProduct(productId: string, labelId: number) {
+  async addLabelToProduct(productId: string, labelId: string) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
       relations: ['labels'],
     });
     if (!product) {
-      throw new NotFoundException(`The Product with ID: ${productId} was Not Found`);
+      throw new NotFoundException(
+        `The Product with ID: ${productId} was Not Found`,
+      );
     }
     const label = await this.labelRepository.findOneBy({ id: labelId });
     if (!label) {
-      throw new NotFoundException(`The Label with ID: ${labelId} was Not Found`);
+      throw new NotFoundException(
+        `The Label with ID: ${labelId} was Not Found`,
+      );
     }
     if (product.labels.some((l) => l.id === labelId)) {
-      throw new BadRequestException(`The Label with ID: ${labelId} is already associated with this Product`);
+      throw new BadRequestException(
+        `The Label with ID: ${labelId} is already associated with this Product`,
+      );
     }
     product.labels.push(label);
     return this.productRepository.save(product);

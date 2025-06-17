@@ -4,9 +4,9 @@ import { CreateAddressDTO } from './address.dto';
 
 export class CreatePersonDTO {
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  readonly docTypeId: number;
+  readonly docTypeId: string;
 
   @IsNotEmpty()
   @IsString()

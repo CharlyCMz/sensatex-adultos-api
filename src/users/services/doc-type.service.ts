@@ -15,7 +15,7 @@ export class DocTypeService {
     return this.docTypeRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const docType = await this.docTypeRepository
       .createQueryBuilder('docType')
       .where('docType.id = :id', { id })
@@ -33,7 +33,7 @@ export class DocTypeService {
     return this.docTypeRepository.save(newRole);
   }
 
-  async updateEntity(id: number, payload: UpdateDocTypeDTO) {
+  async updateEntity(id: string, payload: UpdateDocTypeDTO) {
     const docType = await this.docTypeRepository.findOneBy({ id });
     if (!docType) {
       throw new NotFoundException(
@@ -44,7 +44,7 @@ export class DocTypeService {
     return this.docTypeRepository.save(docType);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.docTypeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(
@@ -54,7 +54,7 @@ export class DocTypeService {
     return this.docTypeRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.docTypeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(

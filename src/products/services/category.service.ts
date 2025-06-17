@@ -17,7 +17,7 @@ export class CategoryService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const category = await this.categoryRepository
       .createQueryBuilder('category')
       .leftJoinAndSelect('category.labels', 'labels')
@@ -34,7 +34,7 @@ export class CategoryService {
     return this.categoryRepository.save(newCategory);
   }
 
-  async updateEntity(id: number, payload: UpdateCategoryDTO) {
+  async updateEntity(id: string, payload: UpdateCategoryDTO) {
     const category = await this.categoryRepository.findOneBy({ id });
     if (!category) {
       throw new NotFoundException(`The Category with ID: ${id} was Not Found`);
@@ -43,7 +43,7 @@ export class CategoryService {
     return this.categoryRepository.save(category);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.categoryRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Category with ID: ${id} was Not Found`);
@@ -51,7 +51,7 @@ export class CategoryService {
     return this.categoryRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.categoryRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Category with ID: ${id} was Not Found`);

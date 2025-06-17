@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -29,25 +28,25 @@ export class VariantAttributeController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.variantAttributeService.findOne(id);
   }
 
   @Put(':id')
   updateEntity(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() payload: UpdateVariantAttributeDTO,
   ) {
     return this.variantAttributeService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.variantAttributeService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.variantAttributeService.eliminateEntity(id);
   }
 }

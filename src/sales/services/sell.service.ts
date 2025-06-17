@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Sell } from '../entities/sell.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
+import { UpdateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import Decimal from 'decimal.js';

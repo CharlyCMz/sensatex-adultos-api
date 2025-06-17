@@ -19,7 +19,7 @@ export class UserService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
@@ -39,7 +39,7 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  async updateEntity(id: number, payload: UpdateUserDTO) {
+  async updateEntity(id: string, payload: UpdateUserDTO) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`The User with ID: ${id} was Not Found`);
@@ -48,7 +48,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.userRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The User with ID: ${id} was Not Found`);
@@ -56,7 +56,7 @@ export class UserService {
     return this.userRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.userRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The User with ID: ${id} was Not Found`);

@@ -1,6 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { InlineProductService } from '../services/inline-product.service';
-import { CreateInlineProductDTO, UpdateInlineProductDTO } from '../dtos/inline-product.dto';
+import {
+  CreateInlineProductDTO,
+  UpdateInlineProductDTO,
+} from '../dtos/inline-product.dto';
 
 @Controller('inline-products')
 export class InlineProductController {
@@ -17,25 +28,25 @@ export class InlineProductController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.inlineProductService.findOne(id);
   }
 
   @Put(':id')
   updateEntity(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() payload: UpdateInlineProductDTO,
   ) {
     return this.inlineProductService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.inlineProductService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.inlineProductService.eliminateEntity(id);
   }
 }

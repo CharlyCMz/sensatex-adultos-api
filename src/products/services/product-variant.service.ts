@@ -1,26 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductVariant } from '../entities/product-variant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
   CreateProductVariantDTO,
   UpdateProductVariantDTO,
 } from '../dtos/product-variant.dto';
-import { VariantAttributeService } from './variant-attribute.service';
 import { ProductService } from './product.service';
+import { VariantAttribute } from '../entities/variant-attribute.entity';
 
 @Injectable()
 export class ProductVariantService {
   constructor(
     @InjectRepository(ProductVariant)
     private productVariantRepository: Repository<ProductVariant>,
+    @InjectRepository(VariantAttribute)
+    private variantAttributeRepository: Repository<VariantAttribute>,
     private productService: ProductService,
   ) {}
 
   findAll() {
     //TODO: Implement pagination and filtering if needed
     return this.productVariantRepository.find({
-      relations: ['labels', 'categories'], // Confirm the relations are working as expected
+      relations: ['product', 'labels', 'categories'], // Confirm the relations are working as expected
     });
   }
 
@@ -30,10 +36,10 @@ export class ProductVariantService {
       .leftJoinAndSelect('productVariant.product', 'product')
       .leftJoinAndSelect('productVariant.images', 'images')
       .leftJoinAndSelect(
-        'productVariant.variantAttributes',
-        'variantAttributes',
+        'productVariant.variantsAttributes',
+        'variantsAttributes',
       )
-      .leftJoinAndSelect('variantAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .where('productVariant.id = :id', { id })
       .getOne();
     if (!productVariant) {
@@ -50,12 +56,18 @@ export class ProductVariantService {
       const product = await this.productService.findOne(payload.productId);
       newProductVariant.product = product;
     }
-    return await this.productVariantRepository.save(payload);
+    const variants = await this.variantAttributeRepository.findBy({
+      id: In(payload.variantAttributeIds),
+    });
+    newProductVariant.variantsAttributes = variants;
+    return await this.productVariantRepository.save(newProductVariant);
   }
 
   //TODO: Update logic depending on Admin panel requirements
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
-    const productVariant = await this.productVariantRepository.findOneBy({ id });
+    const productVariant = await this.productVariantRepository.findOneBy({
+      id,
+    });
     if (!productVariant) {
       throw new NotFoundException(
         `The Product-Variant with ID: ${id} was Not Found`,
@@ -84,4 +96,56 @@ export class ProductVariantService {
     }
     return this.productVariantRepository.delete(id);
   }
+
+  //#region Variant Management
+  async removeVariantFromProduct(productId: string, variantId: string) {
+    const productVariant = await this.productVariantRepository.findOne({
+      where: { id: productId },
+      relations: ['variantsAttributes'],
+    });
+    if (!productVariant) {
+      throw new NotFoundException(
+        `The Product-Variant with ID: ${productId} was Not Found`,
+      );
+    }
+    const variant = await this.variantAttributeRepository.findOneBy({
+      id: variantId,
+    });
+    if (!variant) {
+      throw new NotFoundException(
+        `The Variant with ID: ${variantId} was Not Found`,
+      );
+    }
+    productVariant.variantsAttributes =
+      productVariant.variantsAttributes.filter((l) => l.id !== variantId);
+    return this.productVariantRepository.save(productVariant);
+  }
+
+  async addVariantToProduct(productId: string, variantId: string) {
+    const productVariant = await this.productVariantRepository.findOne({
+      where: { id: productId },
+      relations: ['variantsAttributes'],
+    });
+    if (!productVariant) {
+      throw new NotFoundException(
+        `The Product-Variant with ID: ${productId} was Not Found`,
+      );
+    }
+    const variant = await this.variantAttributeRepository.findOneBy({
+      id: variantId,
+    });
+    if (!variant) {
+      throw new NotFoundException(
+        `The Variant with ID: ${variantId} was Not Found`,
+      );
+    }
+    if (productVariant.variantsAttributes.some((l) => l.id === variantId)) {
+      throw new BadRequestException(
+        `The Variant with ID: ${variantId} is already associated with this Product`,
+      );
+    }
+    productVariant.variantsAttributes.push(variant);
+    return this.productVariantRepository.save(productVariant);
+  }
+  //#endregion
 }

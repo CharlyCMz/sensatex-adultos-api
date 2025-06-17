@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { LabelService } from '../services/label.service';
 import { CreateLabelDTO, UpdateLabelDTO } from '../dtos/label.dto';
 
@@ -17,25 +25,22 @@ export class LabelController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.labelService.findOne(id);
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: UpdateLabelDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateLabelDTO) {
     return this.labelService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.labelService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.labelService.eliminateEntity(id);
   }
 }

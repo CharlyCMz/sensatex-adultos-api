@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -23,22 +22,14 @@ export class ProductController {
 
   @Post()
   async createEntity(@Body() payload: CreateProductDTO) {
-    let newProduct = await this.productService.createEntity(payload);
+    const newProduct = await this.productService.createEntity(payload);
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({
         ...variant,
         productId: newProduct.id,
       });
-      for (const attribute of variant.variantAttributes) {
-        const newVariantAttribute =
-          await this.variantAttributeService.createEntity({
-            ...attribute,
-            productVariantId: newProductVariant.id,
-          });
-      }
     }
-    let resultingProduct = await this.productService.findOne(newProduct.id);
-    return resultingProduct;
+    return await this.productService.findOne(newProduct.id);
   }
 
   @Get()
@@ -52,10 +43,7 @@ export class ProductController {
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id') id: string,
-    @Body() payload: UpdateProductDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateProductDTO) {
     return this.productService.updateEntity(id, payload);
   }
 
@@ -70,18 +58,12 @@ export class ProductController {
   }
 
   @Delete(':id/label/:labelId')
-  deleteLabel(
-    @Param('id') id: string,
-    @Param('labelId', ParseIntPipe) labelId: number,
-  ) {
+  deleteLabel(@Param('id') id: string, @Param('labelId') labelId: string) {
     return this.productService.removeLabelFromProduct(id, labelId);
   }
 
   @Put(':id/label/:labelId')
-  addLabel(
-    @Param('id') id: string,
-    @Param('labelId', ParseIntPipe) labelId: number,
-  ) {
+  addLabel(@Param('id') id: string, @Param('labelId') labelId: string) {
     return this.productService.addLabelToProduct(id, labelId);
   }
 }

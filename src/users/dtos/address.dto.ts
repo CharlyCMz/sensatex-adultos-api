@@ -39,10 +39,9 @@ export class CreateAddressDTO {
   readonly isShipping: boolean;
 
   @IsNotEmpty()
-  @IsNumber()
-  @IsPositive()
+  @IsString()
   @ApiProperty()
-  readonly locationId: number;
+  readonly locationId: string;
 
   @IsOptional()
   @IsString()

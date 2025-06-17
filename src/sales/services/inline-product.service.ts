@@ -23,7 +23,7 @@ export class InlineProductService {
     return this.inlineProductRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const inlineProduct = await this.inlineProductRepository
       .createQueryBuilder('inlineProduct')
       .leftJoinAndSelect('inlineProduct.productVariant', 'productVariant')
@@ -58,7 +58,7 @@ export class InlineProductService {
     return await this.inlineProductRepository.save(newInlineProduct);
   }
 
-  async updateEntity(id: number, payload: UpdateInlineProductDTO) {
+  async updateEntity(id: string, payload: UpdateInlineProductDTO) {
     const inlineProduct = await this.inlineProductRepository.findOneBy({ id });
     if (!inlineProduct) {
       throw new NotFoundException(
@@ -69,7 +69,7 @@ export class InlineProductService {
     return this.inlineProductRepository.save(inlineProduct);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.inlineProductRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(
@@ -79,7 +79,7 @@ export class InlineProductService {
     return this.inlineProductRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.inlineProductRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -26,25 +25,22 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: UpdateUserDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateUserDTO) {
     return this.userService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.userService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.userService.eliminateEntity(id);
   }
 }

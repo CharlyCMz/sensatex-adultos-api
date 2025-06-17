@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -26,25 +25,22 @@ export class RoleController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.roleService.findOne(id);
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: UpdateRoleDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateRoleDTO) {
     return this.roleService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.roleService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.roleService.eliminateEntity(id);
   }
 }

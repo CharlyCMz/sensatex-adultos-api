@@ -15,7 +15,7 @@ export class AttributeService {
     return this.attributeRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const attribute = await this.attributeRepository
       .createQueryBuilder('attribute')
       .where('attribute.id = :id', { id })
@@ -31,7 +31,7 @@ export class AttributeService {
     return this.attributeRepository.save(newAttribute);
   }
 
-  async updateEntity(id: number, payload: UpdateAttributeDTO) {
+  async updateEntity(id: string, payload: UpdateAttributeDTO) {
     const attribute = await this.attributeRepository.findOneBy({ id });
     if (!attribute) {
       throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
@@ -40,7 +40,7 @@ export class AttributeService {
     return this.attributeRepository.save(attribute);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.attributeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);
@@ -48,7 +48,7 @@ export class AttributeService {
     return this.attributeRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.attributeRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Attribute with ID: ${id} was Not Found`);

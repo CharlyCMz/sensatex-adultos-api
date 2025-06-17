@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UploadedFile,
@@ -34,25 +33,22 @@ export class LocationController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.locationService.findOne(id);
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: UpdateLocationDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateLocationDTO) {
     return this.locationService.updateEntity(id, payload);
   }
 
   @Delete(':id')
-  deleteEntity(@Param('id', ParseIntPipe) id: number) {
+  deleteEntity(@Param('id') id: string) {
     return this.locationService.deleteEntity(id);
   }
 
   @Delete('eliminate/:id')
-  eliminateEntity(@Param('id', ParseIntPipe) id: number) {
+  eliminateEntity(@Param('id') id: string) {
     return this.locationService.eliminateEntity(id);
   }
 

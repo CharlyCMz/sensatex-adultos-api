@@ -17,7 +17,7 @@ export class LabelService {
     return this.labelRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const label = await this.labelRepository
       .createQueryBuilder('label')
       .leftJoinAndSelect('label.products', 'products')
@@ -39,7 +39,7 @@ export class LabelService {
     return await this.labelRepository.save(newLabel);
   }
 
-  async updateEntity(id: number, payload: UpdateLabelDTO) {
+  async updateEntity(id: string, payload: UpdateLabelDTO) {
     const label = await this.labelRepository.findOneBy({ id });
     if (!label) {
       throw new NotFoundException(`The Label with ID: ${id} was Not Found`);
@@ -48,7 +48,7 @@ export class LabelService {
     return this.labelRepository.save(label);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.labelRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Label with ID: ${id} was Not Found`);
@@ -56,7 +56,7 @@ export class LabelService {
     return this.labelRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.labelRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Label with ID: ${id} was Not Found`);

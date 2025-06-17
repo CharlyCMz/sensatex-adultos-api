@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -42,6 +43,7 @@ export class ProductVariant {
     () => VariantAttribute,
     (variantAttribute) => variantAttribute.productVariants,
   )
+  @JoinTable({ name: 'product_variant_variant_attribute' })
   variantsAttributes: VariantAttribute[];
 
   @OneToMany(() => Image, (image) => image.productVariant)

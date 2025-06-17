@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ImageService } from '../services/image.service';
 import { CreateImageDTO, UpdateImageDTO } from '../dtos/image.dto';
 
@@ -17,15 +25,12 @@ export class ImageController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.imageService.findOne(id);
   }
 
   @Put(':id')
-  updateEntity(
-    @Param('id') id: string,
-    @Body() payload: UpdateImageDTO,
-  ) {
+  updateEntity(@Param('id') id: string, @Body() payload: UpdateImageDTO) {
     return this.imageService.updateEntity(id, payload);
   }
 

@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CreateAddressDTO } from 'src/users/dtos/address.dto';
 import { CreatePersonDTO } from 'src/users/dtos/person.dto';
 import { CreateInlineProductDTO } from './inline-product.dto';

@@ -25,7 +25,7 @@ export class ImageService {
     return query.getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const image = await this.imageRepository
       .createQueryBuilder('image')
       .leftJoinAndSelect('image.productvariant', 'productvariant')

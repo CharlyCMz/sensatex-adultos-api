@@ -12,6 +12,7 @@ import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import { InlineProductService } from '../services/inline-product.service';
+import { Address } from 'src/users/entities/address.entity';
 
 @Controller('sales')
 export class SellController {
@@ -29,12 +30,14 @@ export class SellController {
       ...payload.person.address,
       personId: person.id,
     });
-    let billingAddress;
+    let billingAddress: Address;
     if (payload.billingAddress) {
       billingAddress = await this.addressService.createEntity({
         ...payload.billingAddress,
         personId: person.id,
       });
+    } else {
+      billingAddress = shippingAddress;
     }
     let sell = await this.sellService.createEntity(
       person.id,
@@ -43,10 +46,12 @@ export class SellController {
       payload.billingAddress ? billingAddress.id : undefined,
     );
     for (const inlineProduct of payload.inlineProducts) {
-      const createdInlineProduct = await this.inlineProductService.createEntity({
-        ...inlineProduct,
-        sellId: sell.id,
-      });
+      const createdInlineProduct = await this.inlineProductService.createEntity(
+        {
+          ...inlineProduct,
+          sellId: sell.id,
+        },
+      );
     }
     sell = await this.sellService.updateEntity(sell.id);
     return sell;

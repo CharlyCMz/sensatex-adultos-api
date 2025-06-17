@@ -17,7 +17,7 @@ export class RoleService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const role = await this.roleRepository
       .createQueryBuilder('role')
       .leftJoinAndSelect('role.users', 'users')
@@ -34,7 +34,7 @@ export class RoleService {
     return await this.roleRepository.save(newRole);
   }
 
-  async updateEntity(id: number, payload: UpdateRoleDTO) {
+  async updateEntity(id: string, payload: UpdateRoleDTO) {
     const role = await this.roleRepository.findOneBy({ id });
     if (!role) {
       throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
@@ -43,7 +43,7 @@ export class RoleService {
     return this.roleRepository.save(role);
   }
 
-  async deleteEntity(id: number) {
+  async deleteEntity(id: string) {
     const exist = await this.roleRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Role with ID: ${id} was Not Found`);
@@ -51,7 +51,7 @@ export class RoleService {
     return this.roleRepository.softDelete(id);
   }
 
-  async eliminateEntity(id: number) {
+  async eliminateEntity(id: string) {
     const exist = await this.roleRepository.findOneBy({ id });
     if (!exist) {
       throw new NotFoundException(`The Role with ID: ${id} was Not Found`);

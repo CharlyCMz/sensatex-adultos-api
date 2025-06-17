@@ -10,7 +10,7 @@ export class CreateVariantAttributeDTO {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
-  readonly attributeId: number;
+  readonly attributeId: string;
 
   @IsOptional()
   @IsString()

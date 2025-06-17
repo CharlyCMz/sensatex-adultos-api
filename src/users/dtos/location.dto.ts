@@ -34,3 +34,9 @@ export class CreateLocationDTO {
 }
 
 export class UpdateLocationDTO extends PartialType(CreateLocationDTO) {}
+
+export class RejectedLocationDTO {
+  readonly location: CreateLocationDTO;
+
+  readonly reason: string;
+}
