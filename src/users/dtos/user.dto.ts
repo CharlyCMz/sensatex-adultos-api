@@ -18,9 +18,9 @@ export class CreateUserDTO {
   readonly person: CreatePersonDTO;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  readonly roleId: number;
+  readonly roleId: string;
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {}

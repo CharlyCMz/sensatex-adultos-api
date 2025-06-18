@@ -20,6 +20,7 @@ export class LabelService {
   async findOne(id: string) {
     const label = await this.labelRepository
       .createQueryBuilder('label')
+      .leftJoinAndSelect('label.category', 'category')
       .leftJoinAndSelect('label.products', 'products')
       .where('label.id = :id', { id })
       .getOne();
@@ -32,7 +33,7 @@ export class LabelService {
   async createEntity(payload: CreateLabelDTO) {
     const newLabel = this.labelRepository.create(payload);
     if (payload.categoryId) {
-      newLabel.category = await this.categoryService.findOne(
+      newLabel.category = await this.categoryService.findOneNoRelations(
         payload.categoryId,
       );
     }

@@ -29,6 +29,14 @@ export class CategoryService {
     return category;
   }
 
+  async findOneNoRelations(id: string) {
+    const category = await this.categoryRepository.findOneBy({ id });
+    if (!category) {
+      throw new NotFoundException(`The Category with ID: ${id} was Not Found`);
+    }
+    return category;
+  }
+
   createEntity(payload: CreateCategoryDTO) {
     const newCategory = this.categoryRepository.create(payload);
     return this.categoryRepository.save(newCategory);
