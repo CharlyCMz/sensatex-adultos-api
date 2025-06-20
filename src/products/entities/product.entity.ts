@@ -23,8 +23,8 @@ export class Product {
   @Column({ type: 'varchar', length: 256 })
   brand: string;
 
-  @Column({ type: 'varchar', length: 512 })
-  features: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  features: string[];
 
   @Column({ type: 'text' })
   description: string;

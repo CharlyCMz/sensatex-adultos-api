@@ -27,7 +27,8 @@ export class SellService {
       .leftJoinAndSelect('person.addresses', 'addresses')
       .leftJoinAndSelect('addresses.location', 'location')
       .leftJoinAndSelect('sell.inlineProducts', 'inlineProducts')
-      .leftJoinAndSelect('inlineProducts.product', 'product')
+      .leftJoinAndSelect('inlineProducts.productVariant', 'productVariant')
+      .leftJoinAndSelect('productVariant.product', 'product')
       .where('sell.id = :id', { id })
       .getOne();
     if (!sell) {

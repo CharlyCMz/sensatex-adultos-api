@@ -8,7 +8,7 @@ export class CreateVariantAttributeDTO {
   readonly value: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
   readonly attributeId: string;
 

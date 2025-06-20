@@ -19,10 +19,10 @@ export class CreateProductVariantDTO {
   @ApiProperty()
   readonly price: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  readonly discountPrice: string;
+  readonly discountPrice?: string;
 
   @IsNotEmpty()
   @IsBoolean()
@@ -36,8 +36,8 @@ export class CreateProductVariantDTO {
 
   @IsNotEmpty()
   @IsArray()
-  @ApiProperty({ type: [Number] })
-  readonly variantAttributeIds: number[];
+  @ApiProperty({ type: [String] })
+  readonly variantAttributeIds: string[];
 }
 
 export class UpdateProductVariantDTO extends PartialType(

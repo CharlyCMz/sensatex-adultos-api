@@ -13,10 +13,10 @@ export class CreateProductDTO {
   @ApiProperty()
   readonly brand: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly features: string;
+  @IsOptional()
+  @IsArray()
+  @ApiProperty({ type: [String], required: false })
+  readonly features?: string[];
 
   @IsNotEmpty()
   @IsString()
