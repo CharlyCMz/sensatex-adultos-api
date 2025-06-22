@@ -4,12 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Person } from './person.entity';
 import { Role } from './role.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class User {
@@ -19,6 +21,7 @@ export class User {
   @Column({ type: 'varchar', length: 156, unique: true })
   username: string;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 156, unique: false })
   password: string;
 
@@ -26,8 +29,7 @@ export class User {
   @JoinColumn()
   person: Person;
 
-  @OneToOne(() => Role, { nullable: false })
-  @JoinColumn()
+  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
   role: Role;
 
   @CreateDateColumn({

@@ -7,6 +7,7 @@ import { SalesModule } from './sales/sales.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UtilsModule } from './utils/utils.module';
+import { AuthModule } from './auth/auth.module';
 import AppConfig from './config';
 
 @Module({
@@ -20,6 +21,7 @@ import AppConfig from './config';
     SalesModule,
     DatabaseModule,
     UtilsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

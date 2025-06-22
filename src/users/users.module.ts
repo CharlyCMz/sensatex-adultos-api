@@ -39,6 +39,6 @@ import { Person } from './entities/person.entity';
     RoleService,
     UserService,
   ],
-  exports: [PersonService, AddressService],
+  exports: [PersonService, AddressService, UserService],
 })
 export class UsersModule {}
