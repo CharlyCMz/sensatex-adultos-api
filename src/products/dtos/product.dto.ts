@@ -35,8 +35,8 @@ export class CreateProductDTO {
 
   @IsNotEmpty()
   @IsArray()
-  @ApiProperty({ type: [Number] })
-  readonly labelIds: number[];
+  @ApiProperty({ type: [String] })
+  readonly labelIds: string[];
 
   @IsNotEmpty()
   @IsArray()

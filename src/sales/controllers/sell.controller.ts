@@ -25,34 +25,40 @@ export class SellController {
 
   @Post()
   async createEntity(@Body() payload: CreateSellDTO) {
-    const person = await this.personService.createEntity(payload.person);
+    let personId = await this.personService.findByDocumentNumber(
+      payload.person.docTypeId,
+      payload.person.document,
+    );
+    if (!personId) {
+      const newPerson = await this.personService.createEntity(payload.person);
+      personId = newPerson.id;
+    }
+
     const shippingAddress = await this.addressService.createEntity({
       ...payload.person.address,
-      personId: person.id,
+      personId,
     });
-    let billingAddress: Address;
-    if (payload.billingAddress) {
-      billingAddress = await this.addressService.createEntity({
-        ...payload.billingAddress,
-        personId: person.id,
-      });
-    } else {
-      billingAddress = shippingAddress;
-    }
+
+    const billingAddress = payload.billingAddress
+      ? await this.addressService.createEntity({
+          ...payload.billingAddress,
+          personId,
+        })
+      : shippingAddress;
+
     let sell = await this.sellService.createEntity(
-      person.id,
+      personId,
       shippingAddress.id,
-      payload.status,
       payload.billingAddress ? billingAddress.id : undefined,
     );
+
     for (const inlineProduct of payload.inlineProducts) {
-      const createdInlineProduct = await this.inlineProductService.createEntity(
-        {
-          ...inlineProduct,
-          sellId: sell.id,
-        },
-      );
+      await this.inlineProductService.createEntity({
+        ...inlineProduct,
+        sellId: sell.id,
+      });
     }
+
     sell = await this.sellService.updateEntity(sell.id);
     return sell;
   }

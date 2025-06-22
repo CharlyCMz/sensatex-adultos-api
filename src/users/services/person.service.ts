@@ -35,6 +35,21 @@ export class PersonService {
     return person;
   }
 
+  async findByDocumentNumber(
+    docTypeId: string,
+    document: string,
+  ) {
+    const person = await this.personRepository
+      .createQueryBuilder('person')
+      .leftJoinAndSelect('person.docType', 'docType')
+      .where('docType.id = :docTypeId', { docTypeId })
+      .andWhere('person.document = :document', {
+        document,
+      })
+      .getOne();
+    return person?.id ?? null;
+  }
+
   async createEntity(payload: CreatePersonDTO) {
     const docType = await this.docTypeService.findOne(payload.docTypeId);
     let newPerson = this.personRepository.create(payload);

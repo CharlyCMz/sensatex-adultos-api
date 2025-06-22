@@ -4,12 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocationService } from './location.service';
 import { CreateAddressDTO, UpdateAddressDTO } from '../dtos/address.dto';
+import { Person } from '../entities/person.entity';
 
 @Injectable()
 export class AddressService {
   constructor(
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
+    @InjectRepository(Person)
+    private personRepository: Repository<Person>,
     private locationService: LocationService,
   ) {}
 
@@ -33,7 +36,7 @@ export class AddressService {
   }
 
   async findOneToString(id: string) {
-    const address = await this.addressRepository.findOneBy({ id });
+    const address = await this.findOne(id);
     if (!address) {
       throw new NotFoundException(`The Address with ID: ${id} was Not Found`);
     }
@@ -41,8 +44,16 @@ export class AddressService {
   }
 
   async createEntity(payload: CreateAddressDTO) {
-    const location = await this.locationService.findOne(payload.locationId);
     const newAddress = this.addressRepository.create(payload);
+    const location = await this.locationService.findOne(payload.locationId);
+    if (payload.personId) {
+      const person = await this.personRepository.findOneBy({
+        id: payload.personId,
+      });
+      if (person) {
+        newAddress.person = person;
+      }
+    }
     newAddress.location = location;
     return this.addressRepository.save(newAddress);
   }

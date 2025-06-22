@@ -10,7 +10,7 @@ export class CreateInlineProductDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  readonly productvariantId: string;
+  readonly productVariantId: string;
 
   @IsOptional()
   @IsString()

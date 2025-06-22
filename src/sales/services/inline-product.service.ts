@@ -47,12 +47,13 @@ export class InlineProductService {
   async createEntity(payload: CreateInlineProductDTO) {
     const newInlineProduct = this.inlineProductRepository.create(payload);
     if (payload.sellId) {
-      newInlineProduct.sell = await this.sellService.findOne(payload.sellId);
+      newInlineProduct.sell = await this.sellService.findOneNoDetails(
+        payload.sellId,
+      );
     }
-    if (payload.productvariantId) {
-      newInlineProduct.productVariant =
-        await this.productVariantService.findOne(payload.productvariantId);
-    }
+    newInlineProduct.productVariant = await this.productVariantService.findOne(
+      payload.productVariantId,
+    );
     const unitPrice = new Decimal(newInlineProduct.productVariant.price);
     newInlineProduct.inlineTotal = unitPrice.mul(payload.quantity).toFixed(4);
     return await this.inlineProductRepository.save(newInlineProduct);

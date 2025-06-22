@@ -25,10 +25,10 @@ export class Sell {
   @Column({ type: 'numeric', precision: 10, scale: 4, nullable: true })
   total: string;
 
-  @Column({ type: 'varchar', length: 24, nullable: true })
+  @Column({ type: 'varchar', length: 256, nullable: true })
   billingAddress: string;
 
-  @Column({ type: 'varchar', length: 24, nullable: true })
+  @Column({ type: 'varchar', length: 256, nullable: true })
   shippingAddress: string;
 
   @Column({ type: 'varchar', length: 24, nullable: true })

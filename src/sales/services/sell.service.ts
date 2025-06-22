@@ -37,20 +37,35 @@ export class SellService {
     return sell;
   }
 
+  async findOneNoDetails(id: string) {
+    const sell = await this.sellRepository
+      .createQueryBuilder('sell')
+      .leftJoinAndSelect('sell.person', 'person')
+      .leftJoinAndSelect('person.addresses', 'addresses')
+      .leftJoinAndSelect('addresses.location', 'location')
+      .where('sell.id = :id', { id })
+      .getOne();
+    if (!sell) {
+      throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
+    }
+    return sell;
+  }
+
   async createEntity(
     personId: string,
     addressId: string,
-    status: string,
     billingAddressId?: string,
   ) {
     const newSell: Sell = new Sell();
-    newSell.status = status;
+    newSell.status = 'Pending';
     newSell.person = await this.personService.findOne(personId);
     newSell.shippingAddress =
       await this.addressService.findOneToString(addressId);
     if (billingAddressId) {
       newSell.billingAddress =
         await this.addressService.findOneToString(billingAddressId);
+    } else {
+      newSell.billingAddress = newSell.shippingAddress;
     }
     return await this.sellRepository.save(newSell);
   }

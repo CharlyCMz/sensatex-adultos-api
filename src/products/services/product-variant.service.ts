@@ -23,10 +23,10 @@ export class ProductVariantService {
     private productService: ProductService,
   ) {}
 
-  findAll() {
+  async findAll() {
     //TODO: Implement pagination and filtering if needed
-    return this.productVariantRepository.find({
-      relations: ['product', 'labels', 'categories'], // Confirm the relations are working as expected
+    return await this.productVariantRepository.find({
+      relations: { product: { labels: { category: true } } }, // Confirm the relations are working as expected
     });
   }
 
