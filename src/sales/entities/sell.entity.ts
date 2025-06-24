@@ -16,6 +16,9 @@ export class Sell {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'varchar', length: 64, nullable: true, unique: true })
+  trackingCode: string;
+
   @Column({ type: 'numeric', precision: 10, scale: 4, nullable: true })
   purchaseTotal: string;
 
@@ -33,6 +36,12 @@ export class Sell {
 
   @Column({ type: 'varchar', length: 24, nullable: true })
   status: string;
+
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  paymentLink: string;
+
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  mpPaymentId: string;
 
   @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.sell)
   inlineProducts: InlineProduct[];

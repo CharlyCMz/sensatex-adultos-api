@@ -12,7 +12,6 @@ import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import { InlineProductService } from '../services/inline-product.service';
-import { Address } from 'src/users/entities/address.entity';
 
 @Controller('sales')
 export class SellController {
@@ -20,7 +19,7 @@ export class SellController {
     private sellService: SellService,
     private personService: PersonService,
     private addressService: AddressService,
-    private readonly inlineProductService: InlineProductService,
+    private inlineProductService: InlineProductService,
   ) {}
 
   @Post()
