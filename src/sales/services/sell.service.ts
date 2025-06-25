@@ -9,6 +9,7 @@ import Decimal from 'decimal.js';
 import { customAlphabet } from 'nanoid';
 import { MercadopagoService } from 'src/utils/mercadopago/mercadopago.service';
 import { MpPreferenceData } from 'src/utils/mercadopago/dtos/mp-order.dto';
+import { MailerService } from 'src/utils/mailer/mailer.service';
 
 const generateTrackingCode = customAlphabet('1234567890', 10);
 @Injectable()
@@ -19,6 +20,7 @@ export class SellService {
     private personService: PersonService,
     private addressService: AddressService,
     private mercadoPagoService: MercadopagoService,
+    private mailerService: MailerService,
   ) {}
 
   findAll() {
@@ -62,7 +64,7 @@ export class SellService {
     billingAddressId?: string,
   ) {
     const newSell: Sell = new Sell();
-    newSell.status = 'Pending';
+    newSell.status = 'pending';
     newSell.person = await this.personService.findOne(personId);
     newSell.shippingAddress =
       await this.addressService.findOneToString(addressId);
@@ -79,6 +81,17 @@ export class SellService {
     const sell = await this.findOne(id);
     if (payload?.status) {
       sell.status = payload.status;
+      if (sell.status === 'approved') {
+        try {
+          await this.mailerService.sendConfirmationEmail(
+            sell.person.mail,
+            sell.trackingCode,
+            sell.total,
+          );
+        } catch (error) {
+          console.error('Error sending confirmation email:', error);
+        }
+      }
     }
     if (!sell) {
       throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
@@ -188,4 +201,5 @@ export class SellService {
     });
     return preferenceData;
   }
+  //#endregion
 }
