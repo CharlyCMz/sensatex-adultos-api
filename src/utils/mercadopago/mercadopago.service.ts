@@ -4,6 +4,7 @@ import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 import { MpPreferenceData } from './dtos/mp-order.dto';
 import { PreferenceResponse } from 'mercadopago/dist/clients/preference/commonTypes';
 import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
+import { PaymentDTO } from './dtos/payment.dto';
 
 @Injectable()
 export class MercadopagoService {
@@ -41,10 +42,13 @@ export class MercadopagoService {
     this.mpPayment = new Payment(this.mpClient);
     try {
       const response: PaymentResponse = await this.mpPayment.get({ id: paymentId });
-      return {
-        paymentId: response.id,
-        status: response.status,
-      };
+      const paymentInfo: PaymentDTO = {
+        externalReference: response.external_reference || '',
+        ipAddress: response.additional_info?.ip_address || '',
+        paymentMethod: response.payment_method?.type || '',
+        status: response.status || 'MP Status Error'
+      }
+      return paymentInfo;
     } catch (error) {
       console.error('Error processing Mercado Pago webhook payment:', error);
       throw new Error('Failed to process Mercado Pago webhook payment');

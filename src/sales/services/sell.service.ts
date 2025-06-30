@@ -115,6 +115,11 @@ export class SellService {
     return sell;
   }
 
+  async updateWebhookResponse(id: string) {
+    const payment = await this.mercadoPagoService.webhookPayment(id);
+    return this.webhookStatusUpdate(payment.externalReference, payment.status);
+  }
+
   async deleteEntity(id: string) {
     const exist = await this.sellRepository.findOneBy({ id });
     if (!exist) {
@@ -163,12 +168,16 @@ export class SellService {
     const preferenceData: MpPreferenceData = {
       items: [],
       back_urls: {
-        success: '',
-        failure: '',
-        pending: '',
+        success:
+          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/success',
+        failure:
+          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/failure',
+        pending:
+          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/pending',
       },
       auto_return: '',
-      notification_url: '',
+      notification_url:
+        'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/webhook',
       external_reference: sell.id,
       payer: {
         email: sell.person.mail,
@@ -200,6 +209,15 @@ export class SellService {
       unit_price: new Decimal(sell.shippingTotal).toNumber(),
     });
     return preferenceData;
+  }
+
+  async webhookStatusUpdate(id: string, status: string) {
+    const sell = await this.findOneNoDetails(id);
+    if (!sell) {
+      throw new NotFoundException(`Sell with ID: ${id} was not found`);
+    }
+    sell.status = status;
+    return await this.sellRepository.save(sell);
   }
   //#endregion
 }

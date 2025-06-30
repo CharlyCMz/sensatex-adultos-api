@@ -6,12 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { SellService } from '../services/sell.service';
 import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import { InlineProductService } from '../services/inline-product.service';
+import { WebhookDTO } from 'src/utils/mercadopago/dtos/webhook.dto';
 
 @Controller('sales')
 export class SellController {
@@ -67,9 +69,32 @@ export class SellController {
     return this.sellService.findAll();
   }
 
+  @Get('success')
+  success() {
+    console.log('Success endpoint hit');
+  }
+
+  @Get('failure')
+  failure() {
+    console.log('Failure endpoint hit');
+  }
+
+  @Get('pending')
+  pending(@Param('id') id: string) {
+    console.log('Pending endpoint hit');
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.sellService.findOne(id);
+  }
+
+  @Post('webhook')
+  webhookUpdate(@Body() payload: WebhookDTO) {
+    if (payload.topic === "payment" && payload.resource) {
+      return this.sellService.updateWebhookResponse(payload.resource);
+    }
+    return { received: true };
   }
 
   @Put(':id')
