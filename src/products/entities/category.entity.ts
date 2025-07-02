@@ -25,7 +25,7 @@ export class Category {
   imageUrl: string;
 
   @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
-  subCategory: SubCategory[];
+  subCategories: SubCategory[];
 
   @CreateDateColumn({
     name: 'created_at',

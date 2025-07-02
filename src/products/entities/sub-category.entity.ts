@@ -22,7 +22,7 @@ export class SubCategory {
   @OneToMany(() => Label, (label) => label.subCategory)
   labels: Label[];
 
-  @ManyToOne(() => Category, (category) => category.subCategory)
+  @ManyToOne(() => Category, (category) => category.subCategories)
   category: Category;
 
   @CreateDateColumn({
