@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 } from 'typeorm';
 import { Label } from './label.entity';
 import { Category } from './category.entity';
+import { Product } from './product.entity';
 
 @Entity({ name: 'sub_categories' })
 export class SubCategory {
@@ -24,6 +26,9 @@ export class SubCategory {
 
   @ManyToOne(() => Category, (category) => category.subCategories)
   category: Category;
+
+  @ManyToMany(() => Product, (product) => product.subCategories)
+  products: Product[];
 
   @CreateDateColumn({
     name: 'created_at',

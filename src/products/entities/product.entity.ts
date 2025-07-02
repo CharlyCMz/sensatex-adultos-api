@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { ProductVariant } from './product-variant.entity';
 import { Label } from './label.entity';
+import { SubCategory } from './sub-category.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -41,6 +42,10 @@ export class Product {
   @ManyToMany(() => Label, (label) => label.products)
   @JoinTable({ name: 'products_labels' })
   labels: Label[];
+
+  @ManyToMany(() => SubCategory, (subCategory) => subCategory.products)
+  @JoinTable({ name: 'products_sub_categories' })
+  subCategories: SubCategory[];
 
   @CreateDateColumn({
     name: 'created_at',

@@ -66,4 +66,23 @@ export class ProductController {
   addLabel(@Param('id') id: string, @Param('labelId') labelId: string) {
     return this.productService.addLabelToProduct(id, labelId);
   }
+
+  @Delete(':id/sub-category/:subCategoryId')
+  deleteSubCategory(
+    @Param('id') id: string,
+    @Param('subCategoryId') subCategoryId: string,
+  ) {
+    return this.productService.removeSubCategoryFromProduct(
+      id,
+      subCategoryId,
+    );
+  }
+
+  @Put(':id/sub-category/:subCategoryId')
+  addSubCategory(
+    @Param('id') id: string,
+    @Param('subCategoryId') subCategoryId: string,
+  ) {
+    return this.productService.addSubCategoryToProduct(id, subCategoryId);
+  }
 }

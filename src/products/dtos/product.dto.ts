@@ -36,6 +36,11 @@ export class CreateProductDTO {
   @IsNotEmpty()
   @IsArray()
   @ApiProperty({ type: [String] })
+  readonly subCategoryIds: string[];
+
+  @IsNotEmpty()
+  @IsArray()
+  @ApiProperty({ type: [String] })
   readonly labelIds: string[];
 
   @IsNotEmpty()
