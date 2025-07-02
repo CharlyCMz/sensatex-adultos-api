@@ -11,6 +11,7 @@ build/
 .env.*.local
 .env.local
 config.yml
+config.prod.yml
 docker-compose.yml
 
 # Logs

@@ -3,27 +3,27 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Product } from './product.entity';
-import { SubCategory } from './sub-category.entity';
+import { Label } from './label.entity';
+import { Category } from './category.entity';
 
-@Entity({ name: 'labels' })
-export class Label {
+@Entity({ name: 'sub_categories' })
+export class SubCategory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar', length: 156, unique: true })
   title: string;
 
-  @ManyToOne(() => SubCategory, (subCategory) => subCategory.labels)
-  subCategory: SubCategory;
+  @OneToMany(() => Label, (label) => label.subCategory)
+  labels: Label[];
 
-  @ManyToMany(() => Product, (product) => product.labels)
-  products: Product[];
+  @ManyToOne(() => Category, (category) => category.subCategory)
+  category: Category;
 
   @CreateDateColumn({
     name: 'created_at',

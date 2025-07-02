@@ -21,6 +21,9 @@ import { Label } from './entities/label.entity';
 import { ProductVariant } from './entities/product-variant.entity';
 import { Product } from './entities/product.entity';
 import { VariantAttribute } from './entities/variant-attribute.entity';
+import { SubCategoryService } from './services/sub-category.service';
+import { SubCategoryController } from './controllers/sub-category.controller';
+import { SubCategory } from './entities/sub-category.entity';
 
 @Module({
   imports: [
@@ -32,6 +35,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
       ProductVariant,
       Product,
       VariantAttribute,
+      SubCategory
     ]),
   ],
   controllers: [
@@ -42,6 +46,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
     ProductVariantController,
     ProductController,
     VariantAttributeController,
+    SubCategoryController,
   ],
   providers: [
     AttributeService,
@@ -51,6 +56,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
     ProductVariantService,
     ProductService,
     VariantAttributeService,
+    SubCategoryService,
   ],
   exports: [ProductVariantService, ProductService],
 })

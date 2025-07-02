@@ -15,7 +15,7 @@ export class CreateLabelDTO {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  readonly categoryId?: string;
+  readonly subCategoryId?: string;
 }
 
 export class UpdateLabelDTO extends PartialType(CreateLabelDTO) {}

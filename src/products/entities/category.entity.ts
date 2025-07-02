@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Label } from './label.entity';
+import { SubCategory } from './sub-category.entity';
 
 @Entity({ name: 'categories' })
 export class Category {
@@ -23,8 +24,8 @@ export class Category {
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
 
-  @OneToMany(() => Label, (label) => label.category)
-  labels: Label[];
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
+  subCategory: SubCategory[];
 
   @CreateDateColumn({
     name: 'created_at',

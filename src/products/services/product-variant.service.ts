@@ -26,7 +26,7 @@ export class ProductVariantService {
   async findAll() {
     //TODO: Implement pagination and filtering if needed
     return await this.productVariantRepository.find({
-      relations: { product: { labels: { category: true } } }, // Confirm the relations are working as expected
+      relations: { product: { labels: { subCategory: { category: true } } } },
     });
   }
 

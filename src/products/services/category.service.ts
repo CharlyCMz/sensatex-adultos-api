@@ -11,16 +11,17 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  findAll() {
-    return this.categoryRepository.find({
-      relations: ['labels'],
+  async findAll() {
+    return await this.categoryRepository.find({
+      relations: ['subCategories', 'subCategories.labels'],
     });
   }
 
   async findOne(id: string) {
     const category = await this.categoryRepository
       .createQueryBuilder('category')
-      .leftJoinAndSelect('category.labels', 'labels')
+      .leftJoinAndSelect('category.subCategories', 'subCategories')
+      .leftJoinAndSelect('subCategories.labels', 'labels')
       .where('category.id = :id', { id })
       .getOne();
     if (!category) {
