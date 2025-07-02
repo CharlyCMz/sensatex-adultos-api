@@ -7,11 +7,6 @@ export class CreateLabelDTO {
   @ApiProperty()
   readonly title: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly description: string;
-
   @IsOptional()
   @IsString()
   @ApiProperty()
