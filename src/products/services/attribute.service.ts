@@ -12,7 +12,9 @@ export class AttributeService {
   ) {}
 
   findAll() {
-    return this.attributeRepository.find();
+    return this.attributeRepository.find({
+      relations: ['variantsAttributes']
+    });
   }
 
   async findOne(id: string) {
