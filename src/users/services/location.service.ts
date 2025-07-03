@@ -15,8 +15,19 @@ export class LocationService {
     private locationRepository: Repository<Location>,
   ) {}
 
-  findAll() {
-    return this.locationRepository.find();
+  findAll(stateName?: string) {
+    return this.locationRepository.find({
+      where: stateName ? { stateName } : {},
+    });
+  }
+
+  async findAllStates() {
+    return await this.locationRepository
+      .createQueryBuilder('location')
+      .select(['location.stateName'])
+      .distinct(true)
+      .getMany()
+      .then((results) => results.map((result) => result.stateName));
   }
 
   async findOne(id: string) {

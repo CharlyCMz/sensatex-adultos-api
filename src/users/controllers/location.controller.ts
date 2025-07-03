@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -28,8 +29,13 @@ export class LocationController {
   }
 
   @Get()
-  findAll() {
-    return this.locationService.findAll();
+  findAll(@Query('stateName') stateName?: string) {
+    return this.locationService.findAll(stateName);
+  }
+
+  @Get('states')
+  findAllStates() {
+    return this.locationService.findAllStates();
   }
 
   @Get(':id')
