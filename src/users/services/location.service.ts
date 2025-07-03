@@ -25,6 +25,7 @@ export class LocationService {
     return await this.locationRepository
     .createQueryBuilder('location')
     .select('DISTINCT location.stateName', 'stateName')
+    .orderBy('location.stateName', 'ASC')
     .getRawMany()
     .then((results) => results.map((result) => result.stateName));
   }
