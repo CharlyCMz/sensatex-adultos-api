@@ -23,11 +23,10 @@ export class LocationService {
 
   async findAllStates() {
     return await this.locationRepository
-      .createQueryBuilder('location')
-      .select(['location.stateName'])
-      .distinct(true)
-      .getMany()
-      .then((results) => results.map((result) => result.stateName));
+    .createQueryBuilder('location')
+    .select('DISTINCT location.stateName', 'stateName')
+    .getRawMany()
+    .then((results) => results.map((result) => result.stateName));
   }
 
   async findOne(id: string) {
