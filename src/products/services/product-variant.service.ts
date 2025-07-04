@@ -56,10 +56,13 @@ export class ProductVariantService {
       const product = await this.productService.findOne(payload.productId);
       newProductVariant.product = product;
     }
-    const variants = await this.variantAttributeRepository.findBy({
-      id: In(payload.variantAttributeIds),
-    });
-    newProductVariant.variantsAttributes = variants;
+    console.log('Creating Product Variant with payload:', payload);
+    if (payload.variantAttributeIds && payload.variantAttributeIds.length > 0) {
+      const variants = await this.variantAttributeRepository.findBy({
+        id: In(payload.variantAttributeIds),
+      });
+      newProductVariant.variantsAttributes = variants;
+    }
     return await this.productVariantRepository.save(newProductVariant);
   }
 
