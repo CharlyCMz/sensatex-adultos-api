@@ -18,7 +18,7 @@ export class UserService {
 
   findAll() {
     return this.userRepository.find({
-      relations: ['roles'],
+      relations: ['role'],
     });
   }
 
