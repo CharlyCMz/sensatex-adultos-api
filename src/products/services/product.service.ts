@@ -39,7 +39,7 @@ export class ProductService {
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .leftJoinAndSelect('product.labels', 'labels')
       .leftJoinAndSelect('labels.subCategory', 'subCategory')
-      .leftJoinAndSelect('subCategory.category', 'category')
+      .leftJoinAndSelect('subCategory.category', 'categoryRefference')
       .leftJoinAndSelect('product.subCategories', 'subCategories')
       .leftJoinAndSelect('subCategories.category', 'category')
       .where('product.id = :id', { id })
