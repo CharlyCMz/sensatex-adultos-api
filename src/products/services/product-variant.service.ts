@@ -52,6 +52,9 @@ export class ProductVariantService {
 
   async createEntity(payload: CreateProductVariantDTO) {
     const newProductVariant = this.productVariantRepository.create(payload);
+    if (newProductVariant.discountPrice === '') {
+      newProductVariant.discountPrice = '0';
+    }
     if (payload.productId) {
       const product = await this.productService.findOne(payload.productId);
       newProductVariant.product = product;
