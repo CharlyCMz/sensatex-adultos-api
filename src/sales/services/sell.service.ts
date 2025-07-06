@@ -10,6 +10,7 @@ import { customAlphabet } from 'nanoid';
 import { MercadopagoService } from 'src/utils/mercadopago/mercadopago.service';
 import { MpPreferenceData } from 'src/utils/mercadopago/dtos/mp-order.dto';
 import { MailerService } from 'src/utils/mailer/mailer.service';
+import { ProductVariantService } from 'src/products/services/product-variant.service';
 
 const generateTrackingCode = customAlphabet('1234567890', 10);
 @Injectable()
@@ -19,6 +20,7 @@ export class SellService {
     private sellRepository: Repository<Sell>,
     private personService: PersonService,
     private addressService: AddressService,
+    private productVariantService: ProductVariantService,
     private mercadoPagoService: MercadopagoService,
     private mailerService: MailerService,
   ) {}
@@ -79,10 +81,19 @@ export class SellService {
 
   async updateEntity(id: string, payload?: UpdateSellDTO) {
     const sell = await this.findOne(id);
+    if (!sell) {
+      throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
+    }
     if (payload?.status) {
       sell.status = payload.status;
       if (sell.status === 'approved') {
         try {
+          for (const inlineProduct of sell.inlineProducts) {
+            await this.productVariantService.updateSales(
+              inlineProduct.productVariant.id,
+              inlineProduct.quantity,
+            );
+          }
           await this.mailerService.sendConfirmationEmail(
             sell.person.mail,
             sell.trackingCode,
@@ -92,26 +103,24 @@ export class SellService {
           console.error('Error sending confirmation email:', error);
         }
       }
+    } else {
+      const shipping = new Decimal('8000');
+      const purchase = sell.inlineProducts.reduce(
+        (total, inlineProduct) =>
+          total.plus(new Decimal(inlineProduct.inlineTotal)),
+        new Decimal(0),
+      );
+      sell.shippingTotal = shipping.toFixed(4);
+      sell.purchaseTotal = purchase.toFixed(4);
+      sell.total = purchase.plus(shipping).toFixed(4);
+      if (!sell.trackingCode) {
+        sell.trackingCode = await this.trackingCodeHelper();
+      }
+      const mpPreferenceData = this.generateMpPreferenceData(sell);
+      sell.paymentLink =
+        await this.mercadoPagoService.createOrder(mpPreferenceData);
+      await this.sellRepository.save(sell);
     }
-    if (!sell) {
-      throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
-    }
-    const shipping = new Decimal('8000');
-    const purchase = sell.inlineProducts.reduce(
-      (total, inlineProduct) =>
-        total.plus(new Decimal(inlineProduct.inlineTotal)),
-      new Decimal(0),
-    );
-    sell.shippingTotal = shipping.toFixed(4);
-    sell.purchaseTotal = purchase.toFixed(4);
-    sell.total = purchase.plus(shipping).toFixed(4);
-    if (!sell.trackingCode) {
-      sell.trackingCode = await this.trackingCodeHelper();
-    }
-    const mpPreferenceData = this.generateMpPreferenceData(sell);
-    sell.paymentLink =
-      await this.mercadoPagoService.createOrder(mpPreferenceData);
-    await this.sellRepository.save(sell);
     return sell;
   }
 
@@ -217,7 +226,9 @@ export class SellService {
       throw new NotFoundException(`Sell with ID: ${id} was not found`);
     }
     sell.status = status;
-    return await this.sellRepository.save(sell);
+    return await this.updateEntity(sell.id, {
+      status: sell.status,
+    });
   }
   //#endregion
 }

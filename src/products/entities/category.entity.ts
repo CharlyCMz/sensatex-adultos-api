@@ -21,7 +21,7 @@ export class Category {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', name: 'image_url', nullable: true })
   imageUrl: string;
 
   @OneToMany(() => SubCategory, (subCategory) => subCategory.category)

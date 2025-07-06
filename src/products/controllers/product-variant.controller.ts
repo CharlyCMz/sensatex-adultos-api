@@ -27,6 +27,21 @@ export class ProductVariantController {
     return this.productVariantService.findAll();
   }
 
+  @Get('top-sales')
+  topSales() {
+    return this.productVariantService.findTopSales();
+  }
+
+  @Get('new-products')
+  newProducts() {
+    return this.productVariantService.findNewProducts();
+  }
+
+  @Get('similar-prodsucts/:id')
+  similarProducts(@Param('id') id: string) {
+    return this.productVariantService.findSimilarProducts(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productVariantService.findOne(id);

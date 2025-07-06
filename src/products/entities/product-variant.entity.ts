@@ -39,6 +39,9 @@ export class ProductVariant {
   @Column({ name: 'is_available', type: 'boolean', default: false })
   isAvailable: boolean;
 
+  @Column({ type: 'int', name: 'total_sales', default: 0 })
+  totalSales: number;
+
   @ManyToMany(
     () => VariantAttribute,
     (variantAttribute) => variantAttribute.productVariants,
