@@ -10,7 +10,12 @@ export class CreateImageDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  readonly productvariantId: string;
+  readonly url: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  readonly productVariantId: string;
 }
 
 export class UpdateImageDTO extends PartialType(CreateImageDTO) {}

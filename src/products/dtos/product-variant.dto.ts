@@ -38,6 +38,11 @@ export class CreateProductVariantDTO {
   @IsArray()
   @ApiProperty({ type: [String] })
   readonly variantAttributeIds: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ApiProperty({ type: [String] })
+  readonly imagesUrl?: string[];
 }
 
 export class UpdateProductVariantDTO extends PartialType(

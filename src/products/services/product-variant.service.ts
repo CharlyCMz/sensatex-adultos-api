@@ -12,6 +12,7 @@ import {
 } from '../dtos/product-variant.dto';
 import { ProductService } from './product.service';
 import { VariantAttribute } from '../entities/variant-attribute.entity';
+import { ImageService } from './image.service';
 
 @Injectable()
 export class ProductVariantService {
@@ -21,6 +22,7 @@ export class ProductVariantService {
     @InjectRepository(VariantAttribute)
     private variantAttributeRepository: Repository<VariantAttribute>,
     private productService: ProductService,
+    private imageService: ImageService,
   ) {}
 
   async findAll() {
@@ -61,7 +63,9 @@ export class ProductVariantService {
   }
 
   async findSimilarProducts(id: string) {
-    const productVariant = await this.productVariantRepository.findOneBy({ id });
+    const productVariant = await this.productVariantRepository.findOneBy({
+      id,
+    });
     if (!productVariant) {
       throw new NotFoundException(
         `The Product-Variant with ID: ${id} was Not Found`,
@@ -78,7 +82,9 @@ export class ProductVariantService {
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .leftJoinAndSelect('product.subCategory', 'subCategory')
       .leftJoinAndSelect('subCategory.category', 'category')
-      .where('category.id = :categoryId', { categoryId: productVariant.product.subCategories[0].category.id })
+      .where('category.id = :categoryId', {
+        categoryId: productVariant.product.subCategories[0].category.id,
+      })
       .orderBy('productVariant.totalSales', 'DESC')
       .limit(10)
       .getMany();
@@ -107,7 +113,7 @@ export class ProductVariantService {
   }
 
   async createEntity(payload: CreateProductVariantDTO) {
-    const newProductVariant = this.productVariantRepository.create(payload);
+    let newProductVariant: ProductVariant = this.productVariantRepository.create(payload);
     if (newProductVariant.discountPrice === '') {
       newProductVariant.discountPrice = '0';
     }
@@ -116,13 +122,24 @@ export class ProductVariantService {
       newProductVariant.product = product;
     }
     console.log('Creating Product Variant with payload:', payload);
+
     if (payload.variantAttributeIds && payload.variantAttributeIds.length > 0) {
       const variants = await this.variantAttributeRepository.findBy({
         id: In(payload.variantAttributeIds),
       });
       newProductVariant.variantsAttributes = variants;
     }
-    return await this.productVariantRepository.save(newProductVariant);
+    newProductVariant = await this.productVariantRepository.save(newProductVariant);
+    if (payload.imagesUrl && payload.imagesUrl.length > 0) {
+      for (const image of payload.imagesUrl) {
+        const newImage = await this.imageService.createEntity({
+          reference: `product-variant-${newProductVariant.id}`,
+          url: image,
+          productVariantId: newProductVariant.id,
+        });
+      }
+    }
+    return newProductVariant;
   }
 
   //TODO: Update logic depending on Admin panel requirements
