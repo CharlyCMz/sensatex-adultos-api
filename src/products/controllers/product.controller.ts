@@ -52,8 +52,8 @@ export class ProductController {
     return this.productService.findNewProducts();
   }
 
-  @Get('similar-prodsucts/:id')
-  similarProducts(@Param('id') id: string) {
+  @Get('related-products/:id')
+  relatedProducts(@Param('id') id: string) {
     return this.productService.findRelatedProducts(id);
   }
 
