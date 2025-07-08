@@ -22,9 +22,21 @@ export class ProductService {
   ) {}
 
   findAll() {
-    return this.productRepository.find({
-      relations: ['productVariants'],
-    });
+    return this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productVariants', 'productVariants')
+      .leftJoinAndSelect('productVariants.images', 'images')
+      .leftJoinAndSelect(
+        'productVariants.variantsAttributes',
+        'variantsAttributes',
+      )
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('product.labels', 'labels')
+      .leftJoinAndSelect('labels.subCategory', 'subCategory')
+      .leftJoinAndSelect('subCategory.category', 'categoryRefference')
+      .leftJoinAndSelect('product.subCategories', 'subCategories')
+      .leftJoinAndSelect('subCategories.category', 'category')
+      .getMany();
   }
 
   async findOne(id: string) {
@@ -148,10 +160,7 @@ export class ProductService {
   //#endregion
 
   //#region SubCategory Management
-  async removeSubCategoryFromProduct(
-    productId: string,
-    subCategoryId: string,
-  ) {
+  async removeSubCategoryFromProduct(productId: string, subCategoryId: string) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
       relations: ['subCategories'],
