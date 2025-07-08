@@ -121,8 +121,6 @@ export class ProductVariantService {
       const product = await this.productService.findOne(payload.productId);
       newProductVariant.product = product;
     }
-    console.log('Creating Product Variant with payload:', payload);
-
     if (payload.variantAttributeIds && payload.variantAttributeIds.length > 0) {
       const variants = await this.variantAttributeRepository.findBy({
         id: In(payload.variantAttributeIds),
@@ -131,6 +129,7 @@ export class ProductVariantService {
     }
     newProductVariant = await this.productVariantRepository.save(newProductVariant);
     if (payload.imagesUrls && payload.imagesUrls.length > 0) {
+      console.log('Creating images for product variant:', newProductVariant.id);
       for (const image of payload.imagesUrls) {
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${newProductVariant.id}`,
