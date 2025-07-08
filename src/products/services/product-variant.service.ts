@@ -127,7 +127,9 @@ export class ProductVariantService {
       });
       newProductVariant.variantsAttributes = variants;
     }
+    console.log('Creating Product Variant with payload:', payload.imagesUrls);
     newProductVariant = await this.productVariantRepository.save(newProductVariant);
+    console.log(' product variant:', newProductVariant.id);
     if (payload.imagesUrls && payload.imagesUrls.length > 0) {
       console.log('Creating images for product variant:', newProductVariant.id);
       for (const image of payload.imagesUrls) {
