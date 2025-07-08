@@ -130,11 +130,12 @@ export class ProductVariantService {
       newProductVariant.variantsAttributes = variants;
     }
     newProductVariant = await this.productVariantRepository.save(newProductVariant);
-    if (payload.imagesUrl && payload.imagesUrl.length > 0) {
-      for (const image of payload.imagesUrl) {
+    if (payload.imagesUrls && payload.imagesUrls.length > 0) {
+      for (const image of payload.imagesUrls) {
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${newProductVariant.id}`,
-          url: image,
+          isFrontImage: image.isFrontImage || false,
+          url: image.url,
           productVariantId: newProductVariant.id,
         });
       }

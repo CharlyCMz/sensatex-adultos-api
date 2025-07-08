@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { CreateImageDTO } from './image.dto';
 
 export class CreateProductVariantDTO {
   @IsNotEmpty()
@@ -41,8 +42,8 @@ export class CreateProductVariantDTO {
 
   @IsOptional()
   @IsArray()
-  @ApiProperty({ type: [String] })
-  readonly imagesUrl?: string[];
+  @ApiProperty({ type: [CreateImageDTO] })
+  readonly imagesUrls?: CreateImageDTO[];
 }
 
 export class UpdateProductVariantDTO extends PartialType(

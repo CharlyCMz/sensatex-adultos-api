@@ -4,22 +4,24 @@ import { Repository } from 'typeorm';
 import { CreateImageDTO, UpdateImageDTO } from '../dtos/image.dto';
 import { Image } from '../entities/image.entity';
 import { ProductVariantService } from './product-variant.service';
+import { ProductVariant } from '../entities/product-variant.entity';
 
 @Injectable()
 export class ImageService {
   constructor(
     @InjectRepository(Image)
     private imageRepository: Repository<Image>,
-    private poductVariantService: ProductVariantService,
+    @InjectRepository(ProductVariant)
+    private productVariantRepository: Repository<ProductVariant>,
   ) {}
 
-  findAll(productvariantId?: string) {
+  findAll(productVariantId?: string) {
     const query = this.imageRepository.createQueryBuilder('image');
 
-    if (productvariantId) {
+    if (productVariantId) {
       query
-        .leftJoin('image.productvariant', 'productvariant')
-        .where('productvariant.id = :id', { id: productvariantId });
+        .leftJoin('image.productVariant', 'productVariant')
+        .where('productVariant.id = :id', { id: productVariantId });
     }
 
     return query.getMany();
@@ -41,9 +43,9 @@ export class ImageService {
 
   async createEntity(payload: CreateImageDTO) {
     const newImage = this.imageRepository.create(payload);
-    newImage.productVariant = await this.poductVariantService.findOne(
-      payload.productvariantId,
-    );
+    newImage.productVariant = await this.productVariantRepository.findOneBy({
+      id: payload.productVariantId,
+    }) || undefined;
     //TODO: upload and join the imageUrl from cloud storage.
     return await this.imageRepository.save(newImage);
   }
@@ -53,10 +55,10 @@ export class ImageService {
     if (!image) {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);
     }
-    if (payload.productvariantId) {
-      image.productVariant = await this.poductVariantService.findOne(
-        payload.productvariantId,
-      );
+    if (payload.productVariantId) {
+      image.productVariant = await this.productVariantRepository.findOneBy({
+      id: payload.productVariantId,
+    }) || undefined
     }
     this.imageRepository.merge(image, payload);
     return this.imageRepository.save(image);
