@@ -20,7 +20,7 @@ export class Image {
   @Column({ type: 'boolean', name: 'is_front_image', default: false })
   isFrontImage: boolean;
 
-  @Column({ type: 'varchar', length: 156, unique: true })
+  @Column({ type: 'varchar', length: 1024, unique: true })
   url: string;
 
   @ManyToOne(() => ProductVariant, (productVariant) => productVariant.images)
