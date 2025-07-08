@@ -21,8 +21,8 @@ export class ProductService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  findAll() {
-    return this.productRepository
+  findAll(categoryId?: string, subCategoryId?: string, labelId?: string) {
+    const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
       .leftJoinAndSelect('productVariants.images', 'images')
@@ -35,7 +35,74 @@ export class ProductService {
       .leftJoinAndSelect('labels.subCategory', 'subCategory')
       .leftJoinAndSelect('subCategory.category', 'categoryRefference')
       .leftJoinAndSelect('product.subCategories', 'subCategories')
-      .leftJoinAndSelect('subCategories.category', 'category')
+      .leftJoinAndSelect('subCategories.category', 'category');
+    if (categoryId) {
+      query.andWhere('category.id = :categoryId', { categoryId });
+    }
+    if (subCategoryId) {
+      query.andWhere('subCategory.id = :subCategoryId', { subCategoryId });
+    }
+    if (labelId) {
+      query.andWhere('labels.id = :labelId', { labelId });
+    }
+    return query.getMany();
+  }
+
+  async findTopSales() {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productVariants', 'productVariants')
+      .leftJoinAndSelect('productVariants.images', 'images')
+      .leftJoinAndSelect(
+        'productVariants.variantsAttributes',
+        'variantsAttributes',
+      )
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
+      .orderBy('productVariants.totalSales', 'DESC')
+      .limit(10)
+      .getMany();
+  }
+
+  async findNewProducts() {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productVariants', 'productVariants')
+      .leftJoinAndSelect('productVariants.images', 'images')
+      .leftJoinAndSelect(
+        'productVariants.variantsAttributes',
+        'variantsAttributes',
+      )
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
+      .orderBy('productVariants.createdAt', 'DESC')
+      .limit(10)
+      .getMany();
+  }
+
+  async findRelatedProducts(id: string) {
+    const product = await this.productRepository.findOneBy({
+      id,
+    });
+    if (!product) {
+      throw new NotFoundException(
+        `The Product with ID: ${id} was Not Found`,
+      );
+    }
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productVariants', 'productVariants')
+      .leftJoinAndSelect('productVariants.images', 'images')
+      .leftJoinAndSelect(
+        'productVariants.variantsAttributes',
+        'variantsAttributes',
+      )
+      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('product.subCategory', 'subCategory')
+      .leftJoinAndSelect('subCategory.category', 'category')
+      .where('subCategory.id = :subCategoryId', {
+        subCategoryId: product.subCategories[0].id,
+      })
+      .orderBy('productVariants.totalSales', 'DESC')
+      .limit(10)
       .getMany();
   }
 

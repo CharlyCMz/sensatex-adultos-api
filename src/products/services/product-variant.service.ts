@@ -32,64 +32,6 @@ export class ProductVariantService {
     });
   }
 
-  async findTopSales() {
-    return await this.productVariantRepository
-      .createQueryBuilder('productVariant')
-      .leftJoinAndSelect('productVariant.product', 'product')
-      .leftJoinAndSelect('productVariant.images', 'images')
-      .leftJoinAndSelect(
-        'productVariant.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .orderBy('productVariant.totalSales', 'DESC')
-      .limit(10)
-      .getMany();
-  }
-
-  async findNewProducts() {
-    return await this.productVariantRepository
-      .createQueryBuilder('productVariant')
-      .leftJoinAndSelect('productVariant.product', 'product')
-      .leftJoinAndSelect('productVariant.images', 'images')
-      .leftJoinAndSelect(
-        'productVariant.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .orderBy('productVariant.createdAt', 'DESC')
-      .limit(10)
-      .getMany();
-  }
-
-  async findSimilarProducts(id: string) {
-    const productVariant = await this.productVariantRepository.findOneBy({
-      id,
-    });
-    if (!productVariant) {
-      throw new NotFoundException(
-        `The Product-Variant with ID: ${id} was Not Found`,
-      );
-    }
-    return await this.productVariantRepository
-      .createQueryBuilder('productVariant')
-      .leftJoinAndSelect('productVariant.product', 'product')
-      .leftJoinAndSelect('productVariant.images', 'images')
-      .leftJoinAndSelect(
-        'productVariant.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .leftJoinAndSelect('product.subCategory', 'subCategory')
-      .leftJoinAndSelect('subCategory.category', 'category')
-      .where('category.id = :categoryId', {
-        categoryId: productVariant.product.subCategories[0].category.id,
-      })
-      .orderBy('productVariant.totalSales', 'DESC')
-      .limit(10)
-      .getMany();
-  }
-
   async findOne(id: string) {
     const productVariant = await this.productVariantRepository
       .createQueryBuilder('productVariant')

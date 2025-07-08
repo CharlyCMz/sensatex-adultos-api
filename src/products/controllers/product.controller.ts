@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
@@ -33,8 +34,27 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(
+    @Query('categoryId') categoryId?: string,
+    @Query('subCategoryId') subCategoryId?: string,
+    @Query('labelId') labelId?: string,
+  ) {
+    return this.productService.findAll(categoryId, subCategoryId, labelId);
+  }
+
+  @Get('top-sales')
+  topSales() {
+    return this.productService.findTopSales();
+  }
+
+  @Get('new-products')
+  newProducts() {
+    return this.productService.findNewProducts();
+  }
+
+  @Get('similar-prodsucts/:id')
+  similarProducts(@Param('id') id: string) {
+    return this.productService.findRelatedProducts(id);
   }
 
   @Get(':id')
@@ -72,10 +92,7 @@ export class ProductController {
     @Param('id') id: string,
     @Param('subCategoryId') subCategoryId: string,
   ) {
-    return this.productService.removeSubCategoryFromProduct(
-      id,
-      subCategoryId,
-    );
+    return this.productService.removeSubCategoryFromProduct(id, subCategoryId);
   }
 
   @Put(':id/sub-category/:subCategoryId')
