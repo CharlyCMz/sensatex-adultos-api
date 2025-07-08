@@ -43,7 +43,7 @@ export class CreateProductVariantDTO {
   @IsOptional()
   @IsArray()
   @ApiProperty({ type: [CreateImageDTO] })
-  readonly imageUrls?: CreateImageDTO[];
+  readonly images?: CreateImageDTO[];
 }
 
 export class UpdateProductVariantDTO extends PartialType(
