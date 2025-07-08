@@ -127,12 +127,12 @@ export class ProductVariantService {
       });
       newProductVariant.variantsAttributes = variants;
     }
-    console.log('Creating Product Variant with payload:', payload.imageUrls);
+    console.log('Creating Product Variant with payload:', payload.images);
     newProductVariant = await this.productVariantRepository.save(newProductVariant);
     console.log(' product variant:', newProductVariant.id);
-    if (payload.imageUrls && payload.imageUrls.length > 0) {
+    if (payload.images && payload.images.length > 0) {
       console.log('Creating images for product variant:', newProductVariant.id);
-      for (const image of payload.imageUrls) {
+      for (const image of payload.images) {
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${newProductVariant.id}`,
           isFrontImage: image.isFrontImage || false,
