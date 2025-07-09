@@ -96,9 +96,9 @@ export class ProductService {
         'variantsAttributes',
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .leftJoinAndSelect('product.subCategory', 'subCategory')
-      .leftJoinAndSelect('subCategory.category', 'category')
-      .where('subCategory.id = :subCategoryId', {
+      .leftJoinAndSelect('product.subCategories', 'subCategories')
+      .leftJoinAndSelect('subCategories.category', 'category')
+      .where('subCategories.id = :subCategoryId', {
         subCategoryId: product.subCategories[0].id,
       })
       .orderBy('productVariants.totalSales', 'DESC')
