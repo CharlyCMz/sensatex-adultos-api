@@ -87,6 +87,8 @@ export class ProductService {
         `The Product with ID: ${id} was Not Found`,
       );
     }
+    console.log(product.subCategories);
+    console.log(product);
     return await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
