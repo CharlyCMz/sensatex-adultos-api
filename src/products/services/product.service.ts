@@ -32,21 +32,27 @@ export class ProductService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .leftJoinAndSelect('product.labels', 'labels')
-      .leftJoinAndSelect('labels.subCategory', 'subCategory')
-      .leftJoinAndSelect('subCategory.category', 'categoryRefference')
-      .leftJoinAndSelect('product.subCategories', 'subCategories')
-      .leftJoinAndSelect('subCategories.category', 'category')
+      .leftJoinAndSelect('labels.subCategory', 'labelSubCategory')
+      .leftJoinAndSelect('labelSubCategory.category', 'labelCategory')
+      .leftJoinAndSelect('product.subCategories', 'productSubCategories')
+      .leftJoinAndSelect('productSubCategories.category', 'productCategory')
       .orderBy('productVariants.createdAt', 'DESC')
       .addOrderBy('images.createdAt', 'ASC');
+
     if (categoryId) {
-      query.andWhere('category.id = :categoryId', { categoryId });
+      query.andWhere('productCategory.id = :categoryId', { categoryId });
     }
+
     if (subCategoryId) {
-      query.andWhere('subCategory.id = :subCategoryId', { subCategoryId });
+      query.andWhere('productSubCategories.id = :subCategoryId', {
+        subCategoryId,
+      });
     }
+
     if (labelId) {
       query.andWhere('labels.id = :labelId', { labelId });
     }
+
     return query.getMany();
   }
 
@@ -83,9 +89,7 @@ export class ProductService {
   async findRelatedProducts(id: string) {
     const product = await this.findOne(id);
     if (!product) {
-      throw new NotFoundException(
-        `The Product with ID: ${id} was Not Found`,
-      );
+      throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
     }
     return await this.productRepository
       .createQueryBuilder('product')
