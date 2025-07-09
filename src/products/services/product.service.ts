@@ -61,7 +61,6 @@ export class ProductService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .orderBy('productVariants.totalSales', 'DESC')
-      .addOrderBy('images.createdAt', 'ASC')
       .limit(10)
       .getMany();
   }
@@ -77,7 +76,6 @@ export class ProductService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .orderBy('productVariants.createdAt', 'DESC')
-      .addOrderBy('images.createdAt', 'ASC')
       .limit(10)
       .getMany();
   }
