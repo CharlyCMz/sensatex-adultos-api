@@ -74,6 +74,11 @@ export class SellController {
     return this.sellService.findOne(id);
   }
 
+  @Get(':id')
+  findOneByCode(@Param('code') code: string) {
+    return this.sellService.findOneByCode(code);
+  }
+
   @Post('webhook')
   webhookUpdate(@Body() payload: WebhookDTO) {
     if (payload.topic === "payment" && payload.resource) {

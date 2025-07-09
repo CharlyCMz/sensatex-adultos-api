@@ -60,6 +60,20 @@ export class SellService {
     return sell;
   }
 
+  async findOneByCode(code: string) {
+    const sell = await this.sellRepository
+      .createQueryBuilder('sell')
+      .leftJoinAndSelect('sell.person', 'person')
+      .leftJoinAndSelect('person.addresses', 'addresses')
+      .leftJoinAndSelect('addresses.location', 'location')
+      .where('sell.trackingCode = :code', { code })
+      .getOne();
+    if (!sell) {
+      throw new NotFoundException(`The Sell with Code: ${code} was Not Found`);
+    }
+    return sell;
+  }
+
   async createEntity(
     personId: string,
     addressId: string,
