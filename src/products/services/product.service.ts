@@ -79,9 +79,7 @@ export class ProductService {
   }
 
   async findRelatedProducts(id: string) {
-    const product = await this.productRepository.findOneBy({
-      id,
-    });
+    const product = await this.findOne(id);
     if (!product) {
       throw new NotFoundException(
         `The Product with ID: ${id} was Not Found`,
