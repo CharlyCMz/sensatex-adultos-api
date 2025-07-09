@@ -45,6 +45,7 @@ export class ProductVariantService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .where('productVariant.id = :id', { id })
+      .addOrderBy('images.createdAt', 'ASC')
       .getOne();
     if (!productVariant) {
       throw new NotFoundException(
@@ -69,11 +70,8 @@ export class ProductVariantService {
       });
       newProductVariant.variantsAttributes = variants;
     }
-    console.log('Creating Product Variant with payload:', payload.images);
     newProductVariant = await this.productVariantRepository.save(newProductVariant);
-    console.log(' product variant:', newProductVariant.id);
     if (payload.images && payload.images.length > 0) {
-      console.log('Creating images for product variant:', newProductVariant.id);
       for (const image of payload.images) {
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${newProductVariant.id}`,

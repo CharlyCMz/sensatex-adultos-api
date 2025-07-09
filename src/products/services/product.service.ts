@@ -35,7 +35,9 @@ export class ProductService {
       .leftJoinAndSelect('labels.subCategory', 'subCategory')
       .leftJoinAndSelect('subCategory.category', 'categoryRefference')
       .leftJoinAndSelect('product.subCategories', 'subCategories')
-      .leftJoinAndSelect('subCategories.category', 'category');
+      .leftJoinAndSelect('subCategories.category', 'category')
+      .orderBy('productVariants.createdAt', 'DESC')
+      .addOrderBy('images.createdAt', 'ASC');
     if (categoryId) {
       query.andWhere('category.id = :categoryId', { categoryId });
     }
@@ -59,6 +61,7 @@ export class ProductService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .orderBy('productVariants.totalSales', 'DESC')
+      .addOrderBy('images.createdAt', 'ASC')
       .limit(10)
       .getMany();
   }
@@ -74,6 +77,7 @@ export class ProductService {
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
       .orderBy('productVariants.createdAt', 'DESC')
+      .addOrderBy('images.createdAt', 'ASC')
       .limit(10)
       .getMany();
   }
@@ -85,8 +89,6 @@ export class ProductService {
         `The Product with ID: ${id} was Not Found`,
       );
     }
-    console.log(product.subCategories);
-    console.log(product);
     return await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -122,6 +124,8 @@ export class ProductService {
       .leftJoinAndSelect('product.subCategories', 'subCategories')
       .leftJoinAndSelect('subCategories.category', 'category')
       .where('product.id = :id', { id })
+      .orderBy('productVariants.createdAt', 'DESC')
+      .addOrderBy('images.createdAt', 'ASC')
       .getOne();
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);

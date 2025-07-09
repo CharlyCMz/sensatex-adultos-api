@@ -69,21 +69,6 @@ export class SellController {
     return this.sellService.findAll();
   }
 
-  @Get('success')
-  success() {
-    console.log('Success endpoint hit');
-  }
-
-  @Get('failure')
-  failure() {
-    console.log('Failure endpoint hit');
-  }
-
-  @Get('pending')
-  pending(@Param('id') id: string) {
-    console.log('Pending endpoint hit');
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.sellService.findOne(id);
