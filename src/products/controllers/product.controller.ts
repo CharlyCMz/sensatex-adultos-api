@@ -11,14 +11,18 @@ import {
 import { ProductService } from '../services/product.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { ProductVariantService } from '../services/product-variant.service';
-import { VariantAttributeService } from '../services/variant-attribute.service';
+import { CategoryService } from '../services/category.service';
+import { SubCategoryService } from '../services/sub-category.service';
+import { LabelService } from '../services/label.service';
 
 @Controller('products')
 export class ProductController {
   constructor(
     private productService: ProductService,
-    private readonly productVariantService: ProductVariantService,
-    private readonly variantAttributeService: VariantAttributeService,
+    private productVariantService: ProductVariantService,
+    private categoryService: CategoryService,
+    private subCategoryService: SubCategoryService,
+    private labelService: LabelService,
   ) {}
 
   @Post()
@@ -38,8 +42,9 @@ export class ProductController {
     @Query('categoryId') categoryId?: string,
     @Query('subCategoryId') subCategoryId?: string,
     @Query('labelId') labelId?: string,
+    @Query('nameFilter') nameFilter?: string,
   ) {
-    return this.productService.findAll(categoryId, subCategoryId, labelId);
+    return this.productService.findAll(categoryId, subCategoryId, labelId, nameFilter);
   }
 
   @Get('top-sales')
@@ -55,6 +60,17 @@ export class ProductController {
   @Get('related-products/:id')
   relatedProducts(@Param('id') id: string) {
     return this.productService.findRelatedProducts(id);
+  }
+
+  @Get('search-bar/:filter')
+  async searchBar(@Param('filter') filter: string) {
+    const searchBarResponse = {
+      category: await this.categoryService.findByName(filter),
+      subCategory: await this.subCategoryService.findByName(filter),
+      labels: await this.labelService.findByName(filter),
+      products: await this.productService.findByName(filter),
+    };
+    return searchBarResponse;
   }
 
   @Get(':id')

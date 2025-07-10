@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Label } from '../entities/label.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateLabelDTO, UpdateLabelDTO } from '../dtos/label.dto';
 import { SubCategoryService } from './sub-category.service';
 
@@ -15,6 +15,14 @@ export class LabelService {
 
   findAll() {
     return this.labelRepository.find();
+  }
+
+  async findByName(filter: string) {
+    return await this.labelRepository
+      .createQueryBuilder('label')
+      .select(['label.id', 'label.title'])
+      .where('LOWER(label.title) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .getOne();
   }
 
   async findOne(id: string) {

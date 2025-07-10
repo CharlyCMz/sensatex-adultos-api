@@ -6,15 +6,18 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const appConfig = app.get(ConfigService);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: [`${appConfig.get('sensatexAdultos').frontendUrl}`],
+    credentials: true,
+  });
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  const appConfig = app.get(ConfigService);
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Sensatex Adultos - API')
     .setDescription('REST API for e-commerce application')

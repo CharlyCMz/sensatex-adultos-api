@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { Label } from '../entities/label.entity';
 import { SubCategory } from '../entities/sub-category.entity';
@@ -21,7 +21,15 @@ export class ProductService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  findAll(categoryId?: string, subCategoryId?: string, labelId?: string) {
+  async findByName(filter: string) {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .select(['product.id', 'product.name'])
+      .where('LOWER(product.name) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .getOne();
+  }
+
+  findAll(categoryId?: string, subCategoryId?: string, labelId?: string, nameFilter?: string) {
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -51,6 +59,10 @@ export class ProductService {
 
     if (labelId) {
       query.andWhere('labels.id = :labelId', { labelId });
+    }
+
+    if (nameFilter) {
+      query.andWhere('LOWER(product.name) LIKE :nameFilter', { nameFilter: `%${nameFilter.toLowerCase()}%` });
     }
 
     return query.getMany();
