@@ -26,7 +26,7 @@ export class ProductService {
       .createQueryBuilder('product')
       .select(['product.id', 'product.name'])
       .where('LOWER(product.name) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
-      .getOne();
+      .getMany();
   }
 
   findAll(categoryId?: string, subCategoryId?: string, labelId?: string, nameFilter?: string) {
