@@ -36,8 +36,8 @@ export class ProductVariantService {
     const productVariant = await this.productVariantRepository
       .createQueryBuilder('productVariant')
       .leftJoinAndSelect('productVariant.product', 'product')
-      .leftJoinAndSelect('product.subCategory', 'subCategory')
-      .leftJoinAndSelect('subCategory.category', 'category')
+      .leftJoinAndSelect('product.subCategories', 'subCategories')
+      .leftJoinAndSelect('subCategories.category', 'category')
       .leftJoinAndSelect('productVariant.images', 'images')
       .leftJoinAndSelect(
         'productVariant.variantsAttributes',

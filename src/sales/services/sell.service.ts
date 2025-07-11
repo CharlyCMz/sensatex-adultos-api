@@ -50,6 +50,7 @@ export class SellService {
     const sell = await this.sellRepository
       .createQueryBuilder('sell')
       .leftJoinAndSelect('sell.person', 'person')
+      .leftJoinAndSelect('person.docType', 'docType')
       .leftJoinAndSelect('person.addresses', 'addresses')
       .leftJoinAndSelect('addresses.location', 'location')
       .where('sell.id = :id', { id })
@@ -118,7 +119,7 @@ export class SellService {
         }
       }
     } else {
-      const shipping = new Decimal('8000');
+      const shipping = sell.shippingAddress.includes('Villamaría') || sell.shippingAddress.includes('Manizales') ? new Decimal('8000') : new Decimal('12000');
       const purchase = sell.inlineProducts.reduce(
         (total, inlineProduct) =>
           total.plus(new Decimal(inlineProduct.inlineTotal)),
