@@ -45,7 +45,7 @@ export class Person {
   addresses: Address[];
 
   @OneToMany(() => Sell, (sell) => sell.person)
-  sells: Sell[];
+  sales: Sell[];
 
   @CreateDateColumn({
     name: 'created_at',

@@ -108,7 +108,7 @@ export class Sell {
   @OneToMany(() => InlineProduct, (inlineProduct) => inlineProduct.sell)
   inlineProducts: InlineProduct[];
 
-  @ManyToOne(() => Person, (person) => person.sells)
+  @ManyToOne(() => Person, (person) => person.sales)
   person: Person;
 
   @CreateDateColumn({
