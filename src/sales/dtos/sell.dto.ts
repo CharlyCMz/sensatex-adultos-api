@@ -21,6 +21,11 @@ export class CreateSellDTO {
   @IsOptional()
   @IsString()
   @ApiProperty()
+  readonly notes?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   readonly status?: string;
 }
 
