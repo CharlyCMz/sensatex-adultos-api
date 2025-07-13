@@ -59,6 +59,7 @@ export class ProductController {
 
   @Get('related-products/:id')
   relatedProducts(@Param('id') id: string) {
+    console.log('Fetching related products for ID:', id);
     return this.productService.findRelatedProducts(id);
   }
 

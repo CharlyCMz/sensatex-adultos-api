@@ -25,12 +25,19 @@ export class ProductService {
     return await this.productRepository
       .createQueryBuilder('product')
       .select(['product.id', 'product.name'])
-      .where('LOWER(product.name) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .where('LOWER(product.name) LIKE :filter', {
+        filter: `%${filter.toLowerCase()}%`,
+      })
       .limit(6)
       .getMany();
   }
 
-  findAll(categoryId?: string, subCategoryId?: string, labelId?: string, nameFilter?: string) {
+  findAll(
+    categoryId?: string,
+    subCategoryId?: string,
+    labelId?: string,
+    nameFilter?: string,
+  ) {
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -63,7 +70,9 @@ export class ProductService {
     }
 
     if (nameFilter) {
-      query.andWhere('LOWER(product.name) LIKE :nameFilter', { nameFilter: `%${nameFilter.toLowerCase()}%` });
+      query.andWhere('LOWER(product.name) LIKE :nameFilter', {
+        nameFilter: `%${nameFilter.toLowerCase()}%`,
+      });
     }
 
     return query.getMany();
@@ -104,7 +113,11 @@ export class ProductService {
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
     }
-    return await this.productRepository
+    console.log(
+      'Fetching related products for subCategoryId:',
+      product.subCategories[0].id,
+    );
+    const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
       .leftJoinAndSelect('productVariants.images', 'images')
@@ -113,14 +126,22 @@ export class ProductService {
         'variantsAttributes',
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('product.labels', 'labels')
       .leftJoinAndSelect('product.subCategories', 'subCategories')
       .leftJoinAndSelect('subCategories.category', 'category')
-      .where('subCategories.id = :subCategoryId', {
-        subCategoryId: product.subCategories[0].id,
-      })
       .orderBy('productVariants.totalSales', 'DESC')
-      .limit(10)
-      .getMany();
+      .limit(10);
+    if (product.subCategories.length > 0) {
+      query.andWhere('subCategories.id = :subCategoryId', {
+        subCategoryId: product.subCategories[0].id,
+      });
+    } else {
+      query.andWhere('labels.id = :labelId', {
+        labelId: product.labels[0]?.id,
+      });
+    }
+    console.log('Successfully fetched related products');
+    return query.getMany();
   }
 
   async findOne(id: string) {
