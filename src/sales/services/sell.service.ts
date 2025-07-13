@@ -131,6 +131,7 @@ export class SellService {
       if (!sell.trackingCode) {
         sell.trackingCode = await this.trackingCodeHelper();
       }
+      console.log('Sell total:', sell.total);
       const mpPreferenceData = this.generateMpPreferenceData(sell);
       sell.paymentLink =
         await this.mercadoPagoService.createOrder(mpPreferenceData);
@@ -232,6 +233,7 @@ export class SellService {
       quantity: 1,
       unit_price: new Decimal(sell.shippingTotal).toNumber(),
     });
+    console.log('Preference Data:', preferenceData);
     return preferenceData;
   }
 
