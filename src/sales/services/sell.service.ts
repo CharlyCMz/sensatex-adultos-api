@@ -211,7 +211,7 @@ export class SellService {
 
     for (const inlineProduct of sell.inlineProducts) {
       let unitPrice = 0;
-      if (inlineProduct.productVariant.discountPrice) {
+      if (inlineProduct.productVariant.discountPrice || inlineProduct.productVariant.discountPrice === '0') {
         unitPrice = new Decimal(
           inlineProduct.productVariant.discountPrice,
         ).toNumber();
