@@ -14,7 +14,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: [`${appConfig.get('sensatexAdultos').frontendUrl}`],
+    origin: [`${appConfig.get('sensatexAdultos').frontendUrl}`, 'http://localhost:4200'],
     credentials: true,
   });
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
