@@ -199,9 +199,9 @@ export class SellService {
         success:
           `https://sensatexadultos/purchase-status/success/${sell.id}`,
         failure:
-          `https://sensatexadultos/purchase-status/failure/${sell.id}`,
+          `https://sensatexadultos/purchase-status/failed/${sell.id}`,
         pending:
-          `https://sensatexadultos/purchase-status/pending/${sell.id}`,
+          `https://sensatexadultos/purchase-status/processing/${sell.id}`,
       },
       auto_return: '',
       notification_url:
