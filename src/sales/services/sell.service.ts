@@ -197,15 +197,15 @@ export class SellService {
       items: [],
       back_urls: {
         success:
-          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/success',
+          `https://sensatexadultos/purchase-status/success/${sell.id}`,
         failure:
-          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/failure',
+          `https://sensatexadultos/purchase-status/failure/${sell.id}`,
         pending:
-          'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/pending',
+          `https://sensatexadultos/purchase-status/pending/${sell.id}`,
       },
       auto_return: '',
       notification_url:
-        'https://d1ce-2800-484-8f78-be00-8997-4c82-8ad6-a8f4.ngrok-free.app/sales/webhook',
+        'https://sensatexadultos/api/sales/webhook',
       external_reference: sell.id,
       payer: {
         email: sell.person.mail,
