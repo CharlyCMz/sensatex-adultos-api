@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { SubCategory } from '../entities/sub-category.entity';
 import {
   CreateSubCategoryDTO,
@@ -26,7 +26,9 @@ export class SubCategoryService {
     return await this.subCategoryRepository
       .createQueryBuilder('subCategory')
       .select(['subCategory.id', 'subCategory.title'])
-      .where('LOWER(subCategory.title) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .where('LOWER(subCategory.title) LIKE :filter', {
+        filter: `%${filter.toLowerCase()}%`,
+      })
       .getOne();
   }
 

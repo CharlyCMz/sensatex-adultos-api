@@ -44,7 +44,9 @@ export class UserService {
       .getOne()
       .then((user) => {
         if (!user) {
-          throw new NotFoundException(`The User with Username: ${username} was Not Found`);
+          throw new NotFoundException(
+            `The User with Username: ${username} was Not Found`,
+          );
         }
         return user;
       });
@@ -59,7 +61,9 @@ export class UserService {
       .getOne()
       .then((user) => {
         if (!user) {
-          throw new NotFoundException(`The User with Email: ${email} was Not Found`);
+          throw new NotFoundException(
+            `The User with Email: ${email} was Not Found`,
+          );
         }
         return user;
       });

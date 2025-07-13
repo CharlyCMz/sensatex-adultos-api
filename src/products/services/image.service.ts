@@ -43,9 +43,10 @@ export class ImageService {
 
   async createEntity(payload: CreateImageDTO) {
     const newImage = this.imageRepository.create(payload);
-    newImage.productVariant = await this.productVariantRepository.findOneBy({
-      id: payload.productVariantId,
-    }) || undefined;
+    newImage.productVariant =
+      (await this.productVariantRepository.findOneBy({
+        id: payload.productVariantId,
+      })) || undefined;
     //TODO: upload and join the imageUrl from cloud storage.
     return await this.imageRepository.save(newImage);
   }
@@ -56,9 +57,10 @@ export class ImageService {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);
     }
     if (payload.productVariantId) {
-      image.productVariant = await this.productVariantRepository.findOneBy({
-      id: payload.productVariantId,
-    }) || undefined
+      image.productVariant =
+        (await this.productVariantRepository.findOneBy({
+          id: payload.productVariantId,
+        })) || undefined;
     }
     this.imageRepository.merge(image, payload);
     return this.imageRepository.save(image);

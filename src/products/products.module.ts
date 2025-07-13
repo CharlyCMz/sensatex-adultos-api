@@ -35,7 +35,7 @@ import { SubCategory } from './entities/sub-category.entity';
       ProductVariant,
       Product,
       VariantAttribute,
-      SubCategory
+      SubCategory,
     ]),
   ],
   controllers: [

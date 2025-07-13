@@ -13,7 +13,7 @@ export class AttributeService {
 
   findAll() {
     return this.attributeRepository.find({
-      relations: ['variantsAttributes']
+      relations: ['variantsAttributes'],
     });
   }
 

@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { SellService } from '../services/sell.service';
 import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
@@ -81,7 +80,7 @@ export class SellController {
 
   @Post('webhook')
   webhookUpdate(@Body() payload: WebhookDTO) {
-    if (payload.topic === "payment" && payload.resource) {
+    if (payload.topic === 'payment' && payload.resource) {
       return this.sellService.updateWebhookResponse(payload.resource);
     }
     return { received: true };

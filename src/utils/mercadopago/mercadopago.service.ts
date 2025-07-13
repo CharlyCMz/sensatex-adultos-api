@@ -41,13 +41,15 @@ export class MercadopagoService {
   async webhookPayment(paymentId: string) {
     this.mpPayment = new Payment(this.mpClient);
     try {
-      const response: PaymentResponse = await this.mpPayment.get({ id: paymentId });
+      const response: PaymentResponse = await this.mpPayment.get({
+        id: paymentId,
+      });
       const paymentInfo: PaymentDTO = {
         externalReference: response.external_reference || '',
         ipAddress: response.additional_info?.ip_address || '',
         paymentMethod: response.payment_method?.type || '',
-        status: response.status || 'MP Status Error'
-      }
+        status: response.status || 'MP Status Error',
+      };
       return paymentInfo;
     } catch (error) {
       console.error('Error processing Mercado Pago webhook payment:', error);

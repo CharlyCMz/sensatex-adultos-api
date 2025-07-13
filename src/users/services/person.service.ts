@@ -35,10 +35,7 @@ export class PersonService {
     return person;
   }
 
-  async findByDocumentNumber(
-    docTypeId: string,
-    document: string,
-  ) {
+  async findByDocumentNumber(docTypeId: string, document: string) {
     const person = await this.personRepository
       .createQueryBuilder('person')
       .leftJoinAndSelect('person.docType', 'docType')

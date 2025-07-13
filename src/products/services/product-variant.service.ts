@@ -56,7 +56,8 @@ export class ProductVariantService {
   }
 
   async createEntity(payload: CreateProductVariantDTO) {
-    let newProductVariant: ProductVariant = this.productVariantRepository.create(payload);
+    let newProductVariant: ProductVariant =
+      this.productVariantRepository.create(payload);
     if (newProductVariant.discountPrice === '') {
       newProductVariant.discountPrice = '0';
     }
@@ -70,7 +71,8 @@ export class ProductVariantService {
       });
       newProductVariant.variantsAttributes = variants;
     }
-    newProductVariant = await this.productVariantRepository.save(newProductVariant);
+    newProductVariant =
+      await this.productVariantRepository.save(newProductVariant);
     if (payload.images && payload.images.length > 0) {
       for (const image of payload.images) {
         const newImage = await this.imageService.createEntity({

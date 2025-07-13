@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { CreateSubCategoryDTO, UpdateSubCategoryDTO } from '../dtos/sub-category.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import {
+  CreateSubCategoryDTO,
+  UpdateSubCategoryDTO,
+} from '../dtos/sub-category.dto';
 import { SubCategoryService } from '../services/sub-category.service';
 
 @Controller('sub-categories')

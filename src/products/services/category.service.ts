@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCategoryDTO, UpdateCategoryDTO } from '../dtos/category.dto';
 
 @Injectable()
@@ -21,7 +21,9 @@ export class CategoryService {
     return await this.categoryRepository
       .createQueryBuilder('category')
       .select(['category.id', 'category.title'])
-      .where('LOWER(category.title) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .where('LOWER(category.title) LIKE :filter', {
+        filter: `%${filter.toLowerCase()}%`,
+      })
       .getOne();
   }
 

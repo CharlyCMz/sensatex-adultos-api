@@ -119,7 +119,11 @@ export class SellService {
         }
       }
     } else {
-      const shipping = sell.shippingAddress.includes('Villamaría') || sell.shippingAddress.includes('Manizales') ? new Decimal('8000') : new Decimal('12000');
+      const shipping =
+        sell.shippingAddress.includes('Villamaría') ||
+        sell.shippingAddress.includes('Manizales')
+          ? new Decimal('8000')
+          : new Decimal('12000');
       const purchase = sell.inlineProducts.reduce(
         (total, inlineProduct) =>
           total.plus(new Decimal(inlineProduct.inlineTotal)),
@@ -210,8 +214,14 @@ export class SellService {
 
     for (const inlineProduct of sell.inlineProducts) {
       let unitPrice = 0;
-      if (inlineProduct.productVariant.discountPrice && inlineProduct.productVariant.discountPrice != '0.0000') {
-        console.log('Discount Price:', inlineProduct.productVariant.discountPrice);
+      if (
+        inlineProduct.productVariant.discountPrice &&
+        inlineProduct.productVariant.discountPrice != '0.0000'
+      ) {
+        console.log(
+          'Discount Price:',
+          inlineProduct.productVariant.discountPrice,
+        );
         unitPrice = new Decimal(
           inlineProduct.productVariant.discountPrice,
         ).toNumber();

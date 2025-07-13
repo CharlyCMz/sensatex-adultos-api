@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Like, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { Label } from '../entities/label.entity';
 import { SubCategory } from '../entities/sub-category.entity';
@@ -109,7 +109,6 @@ export class ProductService {
   }
 
   async findRelatedProducts(id: string) {
-    console.log('Service call related products for ID:', id);
     const product = await this.findOne(id);
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
@@ -137,7 +136,6 @@ export class ProductService {
         labelId: product.labels[0]?.id,
       });
     }
-    console.log('Successfully fetched related products');
     return query.getMany();
   }
 

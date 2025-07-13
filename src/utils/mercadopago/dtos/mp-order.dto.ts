@@ -4,7 +4,6 @@ import {
   IsString,
   IsEmail,
   IsNumber,
-  IsObject,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 

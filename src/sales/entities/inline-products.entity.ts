@@ -18,7 +18,13 @@ export class InlineProduct {
   @Column({ type: 'int', nullable: false })
   quantity: number;
 
-  @Column({ type: 'numeric', name: 'inline_total', precision: 10, scale: 4, nullable: false })
+  @Column({
+    type: 'numeric',
+    name: 'inline_total',
+    precision: 10,
+    scale: 4,
+    nullable: false,
+  })
   inlineTotal: string;
 
   @ManyToOne(() => Sell, (sell) => sell.inlineProducts)

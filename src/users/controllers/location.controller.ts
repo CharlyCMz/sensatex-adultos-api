@@ -67,10 +67,8 @@ export class LocationController {
         message: 'This request needs .csv file',
       });
     }
-    const newUpload = await this.csvProcessorService.processCsvBuffer(
-      file.buffer,
-      'location',
-    );
+    const newUpload: CreateLocationDTO[] =
+      await this.csvProcessorService.processCsvBuffer(file.buffer, 'location');
     return await this.locationService.massiveUpload(newUpload);
   }
 }

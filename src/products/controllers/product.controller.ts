@@ -44,7 +44,12 @@ export class ProductController {
     @Query('labelId') labelId?: string,
     @Query('nameFilter') nameFilter?: string,
   ) {
-    return this.productService.findAll(categoryId, subCategoryId, labelId, nameFilter);
+    return this.productService.findAll(
+      categoryId,
+      subCategoryId,
+      labelId,
+      nameFilter,
+    );
   }
 
   @Get('top-sales')
@@ -59,7 +64,6 @@ export class ProductController {
 
   @Get('related-products/:id')
   relatedProducts(@Param('id') id: string) {
-    console.log('Fetching related products for ID:', id);
     return this.productService.findRelatedProducts(id);
   }
 

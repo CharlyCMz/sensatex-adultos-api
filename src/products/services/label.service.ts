@@ -21,7 +21,9 @@ export class LabelService {
     return await this.labelRepository
       .createQueryBuilder('label')
       .select(['label.id', 'label.title'])
-      .where('LOWER(label.title) LIKE :filter', { filter: `%${filter.toLowerCase()}%` })
+      .where('LOWER(label.title) LIKE :filter', {
+        filter: `%${filter.toLowerCase()}%`,
+      })
       .getOne();
   }
 

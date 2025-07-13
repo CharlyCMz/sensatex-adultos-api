@@ -7,7 +7,7 @@ export class MailerService {
   private transporter: nodemailer.Transporter;
 
   constructor(private configService: ConfigService) {
-      this.transporter = nodemailer.createTransport({
+    this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('sensatexAdultos.mailer.host'),
       port: this.configService.get<number>('sensatexAdultos.mailer.port'),
       secure: false,
@@ -18,7 +18,11 @@ export class MailerService {
     });
   }
 
-  async sendConfirmationEmail(to: string, orderId: string, total: string): Promise<void> {
+  async sendConfirmationEmail(
+    to: string,
+    orderId: string,
+    total: string,
+  ): Promise<void> {
     const mailOptions: nodemailer.SendMailOptions = {
       from: this.configService.get<string>('sensatexAdultos.mailer.from'),
       to,
@@ -36,10 +40,8 @@ export class MailerService {
     };
 
     try {
-       return await this.transporter.sendMail(mailOptions);
-      //this.logger.log(`Correo enviado a ${to} para la orden ${orderId}`);
+      return await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      //this.logger.error(`Error al enviar correo a ${to}: ${error.message}`, error.stack);
       throw error;
     }
   }

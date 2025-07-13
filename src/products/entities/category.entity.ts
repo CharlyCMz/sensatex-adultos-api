@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Label } from './label.entity';
 import { SubCategory } from './sub-category.entity';
 
 @Entity({ name: 'categories' })
