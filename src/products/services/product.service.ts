@@ -109,14 +109,11 @@ export class ProductService {
   }
 
   async findRelatedProducts(id: string) {
+    console.log('Service call related products for ID:', id);
     const product = await this.findOne(id);
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
     }
-    console.log(
-      'Fetching related products for subCategoryId:',
-      product.subCategories[0].id,
-    );
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
