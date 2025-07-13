@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { RoleService } from '../services/role.service';
 import { CreateRoleDTO, UpdateRoleDTO } from '../dtos/role.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('roles')
 export class RoleController {
   constructor(private roleService: RoleService) {}

@@ -9,13 +9,17 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { LocationService } from '../services/location.service';
 import { CreateLocationDTO, UpdateLocationDTO } from '../dtos/location.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { CsvProcessorService } from 'src/utils/csv-processor/csv-processor.service';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('locations')
 export class LocationController {
   constructor(
@@ -29,11 +33,13 @@ export class LocationController {
   }
 
   @Get()
+  @Public()
   findAll(@Query('stateName') stateName?: string) {
     return this.locationService.findAll(stateName);
   }
 
   @Get('states')
+  @Public()
   findAllStates() {
     return this.locationService.findAllStates();
   }

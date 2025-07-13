@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
@@ -14,7 +15,10 @@ import { ProductVariantService } from '../services/product-variant.service';
 import { CategoryService } from '../services/category.service';
 import { SubCategoryService } from '../services/sub-category.service';
 import { LabelService } from '../services/label.service';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@UseGuards(CustomAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(
@@ -38,6 +42,7 @@ export class ProductController {
   }
 
   @Get()
+  @Public()
   findAll(
     @Query('categoryId') categoryId?: string,
     @Query('subCategoryId') subCategoryId?: string,
@@ -53,21 +58,25 @@ export class ProductController {
   }
 
   @Get('top-sales')
+  @Public()
   topSales() {
     return this.productService.findTopSales();
   }
 
   @Get('new-products')
+  @Public()
   newProducts() {
     return this.productService.findNewProducts();
   }
 
   @Get('related-products/:id')
+  @Public()
   relatedProducts(@Param('id') id: string) {
     return this.productService.findRelatedProducts(id);
   }
 
   @Get('search-bar/:filter')
+  @Public()
   async searchBar(@Param('filter') filter: string) {
     const searchBarResponse = {
       category: await this.categoryService.findByName(filter),
@@ -79,6 +88,7 @@ export class ProductController {
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
   }

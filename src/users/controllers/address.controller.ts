@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AddressService } from '../services/address.service';
 import { CreateAddressDTO, UpdateAddressDTO } from '../dtos/address.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('addresses')
 export class AddressController {
   constructor(private addressService: AddressService) {}

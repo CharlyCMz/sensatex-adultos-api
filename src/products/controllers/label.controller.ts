@@ -6,10 +6,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { LabelService } from '../services/label.service';
 import { CreateLabelDTO, UpdateLabelDTO } from '../dtos/label.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@UseGuards(CustomAuthGuard)
 @Controller('labels')
 export class LabelController {
   constructor(private labelService: LabelService) {}
@@ -25,6 +29,7 @@ export class LabelController {
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.labelService.findOne(id);
   }

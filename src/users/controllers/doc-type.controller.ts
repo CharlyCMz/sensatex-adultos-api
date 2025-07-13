@@ -6,10 +6,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { DocTypeService } from '../services/doc-type.service';
 import { CreateDocTypeDTO, UpdateDocTypeDTO } from '../dtos/doc-type.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('doc-types')
 export class DocTypeController {
   constructor(private docTypeService: DocTypeService) {}
@@ -20,6 +24,7 @@ export class DocTypeController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.docTypeService.findAll();
   }

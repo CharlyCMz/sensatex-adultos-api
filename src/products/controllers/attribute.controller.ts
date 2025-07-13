@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AttributeService } from '../services/attribute.service';
 import { CreateAttributeDTO, UpdateAttributeDTO } from '../dtos/attribute.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('attributes')
 export class AttributeController {
   constructor(private attributeService: AttributeService) {}

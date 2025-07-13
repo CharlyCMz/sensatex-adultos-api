@@ -6,13 +6,17 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CreateSubCategoryDTO,
   UpdateSubCategoryDTO,
 } from '../dtos/sub-category.dto';
 import { SubCategoryService } from '../services/sub-category.service';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@UseGuards(CustomAuthGuard)
 @Controller('sub-categories')
 export class SubCategoryController {
   constructor(private subCategoryService: SubCategoryService) {}
@@ -28,6 +32,7 @@ export class SubCategoryController {
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.subCategoryService.findOne(id);
   }

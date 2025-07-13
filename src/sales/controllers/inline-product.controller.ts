@@ -6,13 +6,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { InlineProductService } from '../services/inline-product.service';
 import {
   CreateInlineProductDTO,
   UpdateInlineProductDTO,
 } from '../dtos/inline-product.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('inline-products')
 export class InlineProductController {
   constructor(private inlineProductService: InlineProductService) {}

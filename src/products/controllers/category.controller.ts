@@ -6,10 +6,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from '../services/category.service';
 import { CreateCategoryDTO, UpdateCategoryDTO } from '../dtos/category.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@UseGuards(CustomAuthGuard)
 @Controller('categories')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
@@ -20,11 +24,13 @@ export class CategoryController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }

@@ -6,13 +6,17 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductVariantService } from '../services/product-variant.service';
 import {
   CreateProductVariantDTO,
   UpdateProductVariantDTO,
 } from '../dtos/product-variant.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@UseGuards(CustomAuthGuard)
 @Controller('product-variants')
 export class ProductVariantController {
   constructor(private productVariantService: ProductVariantService) {}
@@ -28,6 +32,7 @@ export class ProductVariantController {
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.productVariantService.findOne(id);
   }

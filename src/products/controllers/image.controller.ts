@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ImageService } from '../services/image.service';
 import { CreateImageDTO, UpdateImageDTO } from '../dtos/image.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('images')
 export class ImageController {
   constructor(private imageService: ImageService) {}

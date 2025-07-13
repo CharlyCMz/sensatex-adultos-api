@@ -6,13 +6,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { VariantAttributeService } from '../services/variant-attribute.service';
 import {
   CreateVariantAttributeDTO,
   UpdateVariantAttributeDTO,
 } from '../dtos/variant-attribute.dto';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('variant-attributes')
 export class VariantAttributeController {
   constructor(private variantAttributeService: VariantAttributeService) {}

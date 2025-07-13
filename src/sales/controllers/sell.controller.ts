@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { SellService } from '../services/sell.service';
 import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
@@ -13,7 +14,10 @@ import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import { InlineProductService } from '../services/inline-product.service';
 import { WebhookDTO } from 'src/utils/mercadopago/dtos/webhook.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('sales')
 export class SellController {
   constructor(
@@ -24,6 +28,7 @@ export class SellController {
   ) {}
 
   @Post()
+  @Public()
   async createEntity(@Body() payload: CreateSellDTO) {
     let personId = await this.personService.findByDocumentNumber(
       payload.person.docTypeId,
@@ -64,21 +69,25 @@ export class SellController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.sellService.findAll();
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.sellService.findOne(id);
   }
 
   @Get(':id')
+  @Public()
   findOneByCode(@Param('code') code: string) {
     return this.sellService.findOneByCode(code);
   }
 
   @Post('webhook')
+  @Public()
   webhookUpdate(@Body() payload: WebhookDTO) {
     if (payload.topic === 'payment' && payload.resource) {
       return this.sellService.updateWebhookResponse(payload.resource);
