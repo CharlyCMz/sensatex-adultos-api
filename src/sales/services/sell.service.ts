@@ -216,7 +216,9 @@ export class SellService {
           inlineProduct.productVariant.discountPrice,
         ).toNumber();
       } else {
+        console.log('Product Variant Price:', inlineProduct.productVariant.price);
         unitPrice = new Decimal(inlineProduct.productVariant.price).toNumber();
+        console.log('Unit Price:', unitPrice);
       }
       preferenceData.items.push({
         id: inlineProduct.productVariant.id,
