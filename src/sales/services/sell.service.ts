@@ -131,7 +131,6 @@ export class SellService {
       if (!sell.trackingCode) {
         sell.trackingCode = await this.trackingCodeHelper();
       }
-      console.log('Sell total:', sell.total);
       const mpPreferenceData = this.generateMpPreferenceData(sell);
       sell.paymentLink =
         await this.mercadoPagoService.createOrder(mpPreferenceData);
@@ -211,16 +210,12 @@ export class SellService {
 
     for (const inlineProduct of sell.inlineProducts) {
       let unitPrice = 0;
-      console.log('Product Variant Price:', inlineProduct.productVariant.price);
-      console.log('Product Variant Discount Price:', inlineProduct.productVariant.discountPrice);
       if (inlineProduct.productVariant.discountPrice && inlineProduct.productVariant.discountPrice != '0') {
         unitPrice = new Decimal(
           inlineProduct.productVariant.discountPrice,
         ).toNumber();
       } else {
-        console.log('Product Variant Price:', inlineProduct.productVariant.price);
         unitPrice = new Decimal(inlineProduct.productVariant.price).toNumber();
-        console.log('Unit Price:', unitPrice);
       }
       preferenceData.items.push({
         id: inlineProduct.productVariant.id,
@@ -237,7 +232,6 @@ export class SellService {
       quantity: 1,
       unit_price: new Decimal(sell.shippingTotal).toNumber(),
     });
-    console.log('Preference Data:', preferenceData);
     return preferenceData;
   }
 
