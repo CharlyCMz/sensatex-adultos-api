@@ -37,6 +37,9 @@ export class ProductService {
     subCategoryId?: string,
     labelId?: string,
     nameFilter?: string,
+    brand?: string,
+    orderBy?: string,
+    order?: 'ASC' | 'DESC',
   ) {
     const query = this.productRepository
       .createQueryBuilder('product')
@@ -51,9 +54,27 @@ export class ProductService {
       .leftJoinAndSelect('labels.subCategory', 'labelSubCategory')
       .leftJoinAndSelect('labelSubCategory.category', 'labelCategory')
       .leftJoinAndSelect('product.subCategories', 'productSubCategories')
-      .leftJoinAndSelect('productSubCategories.category', 'productCategory')
-      .orderBy('productVariants.createdAt', 'DESC')
-      .addOrderBy('images.createdAt', 'ASC');
+      .leftJoinAndSelect('productSubCategories.category', 'productCategory');
+
+    if (orderBy) {
+      switch (orderBy) {
+        case 'name':
+          query.orderBy(`product.name`, order || 'ASC');
+          break;
+        case 'price':
+          query.orderBy(`productVariants.price`, order || 'ASC');
+          break;
+        case 'createdAt':
+          query.orderBy(`productVariants.createdAt`, order || 'ASC');
+          break;
+        case 'totalSales':
+          query.orderBy(`productVariants.totalSales`, order || 'ASC');
+          break;
+        default:
+          query.orderBy('product.createdAt', order || 'ASC');
+          break;
+      }
+    }
 
     if (categoryId) {
       query.andWhere('productCategory.id = :categoryId', { categoryId });
@@ -72,6 +93,11 @@ export class ProductService {
     if (nameFilter) {
       query.andWhere('LOWER(product.name) LIKE :nameFilter', {
         nameFilter: `%${nameFilter.toLowerCase()}%`,
+      });
+    }
+    if (brand) {
+      query.andWhere('LOWER(product.brand) LIKE :brand', {
+        brand: `%${brand.toLowerCase()}%`,
       });
     }
 

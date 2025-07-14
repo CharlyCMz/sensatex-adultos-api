@@ -48,12 +48,18 @@ export class ProductController {
     @Query('subCategoryId') subCategoryId?: string,
     @Query('labelId') labelId?: string,
     @Query('nameFilter') nameFilter?: string,
+    @Query('brand') brand?: string,
+    @Query('orderBy') orderBy?: string,
+    @Query('order') order?: 'ASC' | 'DESC',
   ) {
     return this.productService.findAll(
       categoryId,
       subCategoryId,
       labelId,
       nameFilter,
+      brand,
+      orderBy,
+      order,
     );
   }
 

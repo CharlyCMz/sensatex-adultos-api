@@ -80,7 +80,7 @@ export class SellController {
     return this.sellService.findOne(id);
   }
 
-  @Get(':id')
+  @Get('trackCode/:code')
   @Public()
   findOneByCode(@Param('code') code: string) {
     return this.sellService.findOneByCode(code);
