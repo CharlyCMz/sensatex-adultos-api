@@ -24,6 +24,8 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
 import { SubCategoryService } from './services/sub-category.service';
 import { SubCategoryController } from './controllers/sub-category.controller';
 import { SubCategory } from './entities/sub-category.entity';
+import { PostService } from './services/post.service';
+import { PostController } from './controllers/post.controller';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { SubCategory } from './entities/sub-category.entity';
     ProductController,
     VariantAttributeController,
     SubCategoryController,
+    PostController,
   ],
   providers: [
     AttributeService,
@@ -57,6 +60,7 @@ import { SubCategory } from './entities/sub-category.entity';
     ProductService,
     VariantAttributeService,
     SubCategoryService,
+    PostService,
   ],
   exports: [ProductVariantService, ProductService],
 })
