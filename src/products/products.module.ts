@@ -26,6 +26,7 @@ import { SubCategoryController } from './controllers/sub-category.controller';
 import { SubCategory } from './entities/sub-category.entity';
 import { PostService } from './services/post.service';
 import { PostController } from './controllers/post.controller';
+import { Post } from './entities/post.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PostController } from './controllers/post.controller';
       Category,
       Image,
       Label,
+      Post,
       ProductVariant,
       Product,
       VariantAttribute,
