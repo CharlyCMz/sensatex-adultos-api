@@ -6,7 +6,11 @@ import {
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { CreateProductDTO, PaginatedProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import {
+  CreateProductDTO,
+  PaginatedProductDTO,
+  UpdateProductDTO,
+} from '../dtos/product.dto';
 import { Label } from '../entities/label.entity';
 import { SubCategory } from '../entities/sub-category.entity';
 
@@ -43,7 +47,18 @@ export class ProductService {
     page: number = 1,
     limit: number = 20,
   ) {
-    console.log('QueryParameters:', page, limit, categoryId, subCategoryId, labelId, nameFilter, brand, orderBy, order);
+    console.log(
+      'QueryParameters:',
+      page,
+      limit,
+      categoryId,
+      subCategoryId,
+      labelId,
+      nameFilter,
+      brand,
+      orderBy,
+      order,
+    );
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -58,26 +73,6 @@ export class ProductService {
       .leftJoinAndSelect('labelSubCategory.category', 'labelCategory')
       .leftJoinAndSelect('product.subCategories', 'productSubCategories')
       .leftJoinAndSelect('productSubCategories.category', 'productCategory');
-
-    if (orderBy) {
-      switch (orderBy) {
-        case 'name':
-          query.orderBy(`product.name`, order || 'ASC');
-          break;
-        case 'price':
-          query.orderBy(`productVariants.price`, order || 'ASC');
-          break;
-        case 'createdAt':
-          query.orderBy(`productVariants.createdAt`, order || 'ASC');
-          break;
-        case 'totalSales':
-          query.orderBy(`productVariants.totalSales`, order || 'ASC');
-          break;
-        default:
-          query.orderBy('product.createdAt', order || 'ASC');
-          break;
-      }
-    }
 
     if (categoryId) {
       query.andWhere('productCategory.id = :categoryId', { categoryId });
@@ -104,10 +99,31 @@ export class ProductService {
       });
     }
 
+    switch (orderBy) {
+      case 'name':
+        query.orderBy(`product.name`, order || 'ASC');
+        break;
+      case 'price':
+        query.orderBy(`productVariants.price`, order || 'ASC');
+        break;
+      case 'createdAt':
+        query.orderBy(`productVariants.createdAt`, order || 'ASC');
+        break;
+      case 'totalSales':
+        query.orderBy(`productVariants.totalSales`, order || 'ASC');
+        break;
+      default:
+        query.orderBy('product.createdAt', order || 'ASC');
+        break;
+    }
+
     const [items, totalItems] = await query
       .take(limit)
       .skip((page - 1) * limit)
       .getManyAndCount();
+
+    console.log('Total Items:', totalItems);
+    console.log('Items:', items);
 
     const totalPages = Math.ceil(totalItems / limit);
 
