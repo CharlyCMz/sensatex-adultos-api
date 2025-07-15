@@ -51,13 +51,6 @@ export class ProductService {
       'QueryParameters:',
       page,
       limit,
-      categoryId,
-      subCategoryId,
-      labelId,
-      nameFilter,
-      brand,
-      orderBy,
-      order,
     );
     const query = this.productRepository
       .createQueryBuilder('product')
@@ -123,7 +116,6 @@ export class ProductService {
       .getManyAndCount();
 
     console.log('Total Items:', totalItems);
-    console.log('Items:', items);
 
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -137,6 +129,8 @@ export class ProductService {
       hasNextPage: page < totalPages,
       hasPreviousPage: page > 1,
     };
+
+    console.log('Paginated Products:', paginatedProducts.currentPage, paginatedProducts.totalPages);
 
     return paginatedProducts;
   }
