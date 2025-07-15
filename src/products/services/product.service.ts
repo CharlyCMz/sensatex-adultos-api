@@ -6,7 +6,7 @@ import {
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { CreateProductDTO, PaginatedProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { Label } from '../entities/label.entity';
 import { SubCategory } from '../entities/sub-category.entity';
 
@@ -32,7 +32,7 @@ export class ProductService {
       .getMany();
   }
 
-  findAll(
+  async findAll(
     categoryId?: string,
     subCategoryId?: string,
     labelId?: string,
@@ -40,6 +40,8 @@ export class ProductService {
     brand?: string,
     orderBy?: string,
     order?: 'ASC' | 'DESC',
+    page: number = 1,
+    limit: number = 20,
   ) {
     const query = this.productRepository
       .createQueryBuilder('product')
@@ -101,7 +103,25 @@ export class ProductService {
       });
     }
 
-    return query.getMany();
+    const [items, totalItems] = await query
+      .take(limit)
+      .skip((page - 1) * limit)
+      .getManyAndCount();
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const paginatedProducts: PaginatedProductDTO = {
+      data: items,
+      totalCount: totalItems,
+      currentPage: page,
+      totalPages,
+      nextPage: page < totalPages ? page + 1 : null,
+      previousPage: page > 1 ? page - 1 : null,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    return paginatedProducts;
   }
 
   async findTopSales() {

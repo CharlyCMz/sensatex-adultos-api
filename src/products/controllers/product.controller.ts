@@ -51,6 +51,8 @@ export class ProductController {
     @Query('brand') brand?: string,
     @Query('orderBy') orderBy?: string,
     @Query('order') order?: 'ASC' | 'DESC',
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 20,
   ) {
     return this.productService.findAll(
       categoryId,
@@ -60,6 +62,8 @@ export class ProductController {
       brand,
       orderBy,
       order,
+      page,
+      limit,
     );
   }
 

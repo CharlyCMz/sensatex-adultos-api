@@ -1,6 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CreateProductVariantDTO } from './product-variant.dto';
+import { Product } from '../entities/product.entity';
 
 export class CreateProductDTO {
   @IsNotEmpty()
@@ -50,3 +51,29 @@ export class CreateProductDTO {
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
+
+export class PaginatedProductDTO {
+  @ApiProperty({ type: [Product] })
+  readonly data: Product[];
+
+  @ApiProperty()
+  readonly totalCount: number;
+
+  @ApiProperty()
+  readonly currentPage: number;
+
+  @ApiProperty()
+  readonly totalPages: number;
+
+  @ApiProperty()
+  readonly nextPage: number | null;
+
+  @ApiProperty()
+  readonly previousPage: number | null;
+
+  @ApiProperty()
+  readonly hasNextPage: boolean;
+
+  @ApiProperty()
+  readonly hasPreviousPage: boolean;
+}
