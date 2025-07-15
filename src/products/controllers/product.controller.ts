@@ -51,11 +51,15 @@ export class ProductController {
     @Query('brand') brand?: string,
     @Query('orderBy') orderBy?: string,
     @Query('order') order?: 'ASC' | 'DESC',
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
   ) {
     console.log('QueryParameters:', page, limit);
+    const pageNumber = parseInt(page || '1', 10);
+    const limitNumber = parseInt(limit || '20', 10);
     return this.productService.findAll(
+      pageNumber,
+      limitNumber,
       categoryId,
       subCategoryId,
       labelId,
@@ -63,8 +67,6 @@ export class ProductController {
       brand,
       orderBy,
       order,
-      page,
-      limit,
     );
   }
 

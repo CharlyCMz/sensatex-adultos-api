@@ -37,6 +37,8 @@ export class ProductService {
   }
 
   async findAll(
+    page: number,
+    limit: number,
     categoryId?: string,
     subCategoryId?: string,
     labelId?: string,
@@ -44,14 +46,8 @@ export class ProductService {
     brand?: string,
     orderBy?: string,
     order?: 'ASC' | 'DESC',
-    page: number = 1,
-    limit: number = 20,
   ) {
-    console.log(
-      'QueryParameters Service:',
-      page,
-      limit
-    );
+    console.log('QueryParameters Service:', page, limit);
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -130,7 +126,11 @@ export class ProductService {
       hasPreviousPage: page > 1,
     };
 
-    console.log('Paginated Products:', paginatedProducts.currentPage, paginatedProducts.totalPages);
+    console.log(
+      'Paginated Products:',
+      paginatedProducts.currentPage,
+      paginatedProducts.totalPages,
+    );
 
     return paginatedProducts;
   }
