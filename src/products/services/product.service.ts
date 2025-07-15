@@ -43,6 +43,7 @@ export class ProductService {
     page: number = 1,
     limit: number = 20,
   ) {
+    console.log('QueryParameters:', page, limit, categoryId, subCategoryId, labelId, nameFilter, brand, orderBy, order);
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
