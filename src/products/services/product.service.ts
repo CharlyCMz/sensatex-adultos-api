@@ -48,9 +48,9 @@ export class ProductService {
     limit: number = 20,
   ) {
     console.log(
-      'QueryParameters:',
+      'QueryParameters Service:',
       page,
-      limit,
+      limit
     );
     const query = this.productRepository
       .createQueryBuilder('product')

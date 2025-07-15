@@ -54,6 +54,7 @@ export class ProductController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
+    console.log('QueryParameters:', page, limit);
     return this.productService.findAll(
       categoryId,
       subCategoryId,
