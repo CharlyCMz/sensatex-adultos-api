@@ -247,7 +247,9 @@ export class SellService {
     if (!sell) {
       throw new NotFoundException(`Sell with ID: ${id} was not found`);
     }
+    console.log(status)
     sell.status = status;
+    console.log(sell.status)
     return await this.updateEntity(sell.id, {
       status: sell.status,
     });
