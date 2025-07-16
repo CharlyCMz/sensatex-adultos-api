@@ -47,7 +47,6 @@ export class ProductService {
     orderBy?: string,
     order?: 'ASC' | 'DESC',
   ) {
-    console.log('QueryParameters Service:', page, limit);
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -111,8 +110,6 @@ export class ProductService {
       .skip((page - 1) * limit)
       .getManyAndCount();
 
-    console.log('Total Items:', totalItems);
-
     const totalPages = Math.ceil(totalItems / limit);
 
     const paginatedProducts: PaginatedProductDTO = {
@@ -125,12 +122,6 @@ export class ProductService {
       hasNextPage: page < totalPages,
       hasPreviousPage: page > 1,
     };
-
-    console.log(
-      'Paginated Products:',
-      paginatedProducts.currentPage,
-      paginatedProducts.totalPages,
-    );
 
     return paginatedProducts;
   }

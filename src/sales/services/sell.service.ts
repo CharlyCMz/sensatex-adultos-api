@@ -218,15 +218,10 @@ export class SellService {
         inlineProduct.productVariant.discountPrice &&
         inlineProduct.productVariant.discountPrice != '0.0000'
       ) {
-        console.log(
-          'Discount Price:',
-          inlineProduct.productVariant.discountPrice,
-        );
         unitPrice = new Decimal(
           inlineProduct.productVariant.discountPrice,
         ).toNumber();
       } else {
-        console.log('Correct Way', inlineProduct.productVariant.price);
         unitPrice = new Decimal(inlineProduct.productVariant.price).toNumber();
       }
       preferenceData.items.push({

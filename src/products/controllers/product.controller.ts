@@ -54,7 +54,6 @@ export class ProductController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ) {
-    console.log('QueryParameters:', page, limit);
     const pageNumber = parseInt(page || '1', 10);
     const limitNumber = parseInt(limit || '20', 10);
     return this.productService.findAll(
