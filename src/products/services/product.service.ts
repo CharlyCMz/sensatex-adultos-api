@@ -145,7 +145,7 @@ export class ProductService {
       .getRawMany();
     console.log('====================', productIds.length);
     const ids = productIds.map((p) => p.product_id); // Ajusta según alias
-
+    console.log('====================', ids.length);
     const result = await this.productRepository.find({
       where: { id: In(ids) },
       relations: {
@@ -157,7 +157,7 @@ export class ProductService {
         },
       },
     });
-
+    console.log('====================', result.length);
     return result;
   }
 
