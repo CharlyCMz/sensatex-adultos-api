@@ -162,27 +162,29 @@ export class ProductService {
   }
 
   async findNewProducts() {
-    const result = await this.productRepository
+    // Paso 1: Obtener los 10 productos más recientes según variante
+    const productIds = await this.productRepository
       .createQueryBuilder('product')
-      .leftJoinAndSelect('product.productVariants', 'productVariants')
-      .leftJoinAndSelect('productVariants.images', 'images')
-      .leftJoinAndSelect(
-        'productVariants.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .where((qb) => {
-        const subQuery = qb
-          .subQuery()
-          .select('DISTINCT product.id')
-          .from(Product, 'product')
-          .leftJoin('product.productVariants', 'pv')
-          .orderBy('pv.createdAt', 'DESC')
-          .limit(10)
-          .getQuery();
-        return 'product.id IN ' + subQuery;
-      })
-      .getMany();
+      .leftJoin('product.productVariants', 'productVariants')
+      .select('product.id')
+      .orderBy('productVariants.createdAt', 'DESC')
+      .limit(10)
+      .getRawMany();
+
+    const ids = productIds.map((p) => p.product_id); // Ajusta según alias
+
+    // Paso 2: Obtener los productos completos con relaciones
+    const result = await this.productRepository.find({
+      where: { id: In(ids) },
+      relations: {
+        productVariants: {
+          images: true,
+          variantsAttributes: {
+            attribute: true,
+          },
+        },
+      },
+    });
 
     return result;
   }
