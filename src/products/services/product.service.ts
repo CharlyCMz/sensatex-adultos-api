@@ -160,7 +160,7 @@ export class ProductService {
         'variantsAttributes',
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .orderBy('productVariants.createdAt', 'DESC')
+      .orderBy('product.createdAt', 'DESC')
       .limit(10)
       .getMany();
     console.log('New Products:', result);
