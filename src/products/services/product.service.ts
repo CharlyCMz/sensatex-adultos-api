@@ -143,7 +143,7 @@ export class ProductService {
       .orderBy('productVariants.totalSales', 'DESC')
       .limit(10)
       .getRawMany();
-
+    console.log('====================', productIds.length);
     const ids = productIds.map((p) => p.product_id); // Ajusta según alias
 
     const result = await this.productRepository.find({
