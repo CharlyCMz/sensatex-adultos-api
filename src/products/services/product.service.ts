@@ -151,14 +151,14 @@ export class ProductService {
     const productIds = await this.productRepository
       .createQueryBuilder('product')
       .leftJoin('product.productVariants', 'productVariants')
-      .select(['product.id AS id', 'productVariants.createdAt as createdAt'])
+      .select(['product.id AS id', 'product.createdAt as createdAt'])
       .distinct(true)
-      .orderBy('productVariants.createdAt', 'DESC')
+      .orderBy('product.createdAt', 'DESC')
       .limit(10)
       .getRawMany();
 
     const ids = productIds.map((p) => p.id);
-
+    console.log('=============>', ids)
     const result = await this.productRepository.find({
       where: { id: In(ids) },
       relations: {
@@ -170,7 +170,7 @@ export class ProductService {
         },
       },
     });
-
+    console.log('==============>', result.length)
     return result;
   }
 
