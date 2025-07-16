@@ -136,33 +136,32 @@ export class ProductService {
   }
 
   async findTopSales() {
-    const result = await this.productRepository
+    const productIds = await this.productRepository
       .createQueryBuilder('product')
-      .leftJoinAndSelect('product.productVariants', 'productVariants')
-      .leftJoinAndSelect('productVariants.images', 'images')
-      .leftJoinAndSelect(
-        'productVariants.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .where((qb) => {
-        const subQuery = qb
-          .subQuery()
-          .select('DISTINCT product.id')
-          .from(Product, 'product')
-          .leftJoin('product.productVariants', 'pv')
-          .orderBy('pv.totalSales', 'DESC')
-          .limit(10)
-          .getQuery();
-        return 'product.id IN ' + subQuery;
-      })
-      .getMany();
+      .leftJoin('product.productVariants', 'productVariants')
+      .select('product.id')
+      .orderBy('productVariants.totalSales', 'DESC')
+      .limit(10)
+      .getRawMany();
+
+    const ids = productIds.map((p) => p.product_id); // Ajusta según alias
+
+    const result = await this.productRepository.find({
+      where: { id: In(ids) },
+      relations: {
+        productVariants: {
+          images: true,
+          variantsAttributes: {
+            attribute: true,
+          },
+        },
+      },
+    });
 
     return result;
   }
 
   async findNewProducts() {
-    // Paso 1: Obtener los 10 productos más recientes según variante
     const productIds = await this.productRepository
       .createQueryBuilder('product')
       .leftJoin('product.productVariants', 'productVariants')
@@ -173,7 +172,6 @@ export class ProductService {
 
     const ids = productIds.map((p) => p.product_id); // Ajusta según alias
 
-    // Paso 2: Obtener los productos completos con relaciones
     const result = await this.productRepository.find({
       where: { id: In(ids) },
       relations: {
@@ -194,30 +192,7 @@ export class ProductService {
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
     }
-    const query = this.productRepository
-      .createQueryBuilder('product')
-      .leftJoinAndSelect('product.productVariants', 'productVariants')
-      .leftJoinAndSelect('productVariants.images', 'images')
-      .leftJoinAndSelect(
-        'productVariants.variantsAttributes',
-        'variantsAttributes',
-      )
-      .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .leftJoinAndSelect('product.labels', 'labels')
-      .leftJoinAndSelect('product.subCategories', 'subCategories')
-      .leftJoinAndSelect('subCategories.category', 'category')
-      .orderBy('productVariants.totalSales', 'DESC')
-      .limit(10);
-    if (product.subCategories.length > 0) {
-      query.andWhere('subCategories.id = :subCategoryId', {
-        subCategoryId: product.subCategories[0].id,
-      });
-    } else {
-      query.andWhere('labels.id = :labelId', {
-        labelId: product.labels[0]?.id,
-      });
-    }
-    return query.getMany();
+
   }
 
   async findOne(id: string) {
