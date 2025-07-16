@@ -200,7 +200,7 @@ export class ProductService {
       .leftJoin('product.subCategories', 'subCategories')
       .select(['product.id AS id', 'productVariants.totalSales as totalSales'])
       .distinct(true)
-      .where('subCategory.id = :subCategoryId', { subCategoryId })
+      .where('subCategories.id = :subCategoryId', { subCategoryId })
       .orderBy('productVariants.totalSales', 'DESC')
       .limit(10)
       .getRawMany();
@@ -213,6 +213,7 @@ export class ProductService {
         },
       },
     });
+    return result;
   }
 
   async findOne(id: string) {
