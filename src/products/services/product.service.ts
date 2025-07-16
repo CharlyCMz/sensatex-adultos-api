@@ -136,7 +136,7 @@ export class ProductService {
   }
 
   async findTopSales() {
-    return await this.productRepository
+    const result = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
       .leftJoinAndSelect('productVariants.images', 'images')
@@ -145,9 +145,20 @@ export class ProductService {
         'variantsAttributes',
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .orderBy('productVariants.totalSales', 'DESC')
-      .limit(10)
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('DISTINCT product.id')
+          .from('product', 'product')
+          .leftJoin('product.productVariants', 'pv')
+          .orderBy('pv.totalSales', 'DESC')
+          .limit(10)
+          .getQuery();
+        return 'product.id IN ' + subQuery;
+      })
       .getMany();
+
+    return result;
   }
 
   async findNewProducts() {
@@ -160,10 +171,19 @@ export class ProductService {
         'variantsAttributes',
       )
       .leftJoinAndSelect('variantsAttributes.attribute', 'attribute')
-      .orderBy('product.createdAt', 'DESC')
-      .limit(10)
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('DISTINCT product.id')
+          .from('product', 'product')
+          .leftJoin('product.productVariants', 'pv')
+          .orderBy('pv.createdAt', 'DESC')
+          .limit(10)
+          .getQuery();
+        return 'product.id IN ' + subQuery;
+      })
       .getMany();
-    console.log('New Products:', result);
+
     return result;
   }
 
