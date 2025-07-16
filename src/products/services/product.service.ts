@@ -139,25 +139,20 @@ export class ProductService {
     const productIds = await this.productRepository
       .createQueryBuilder('product')
       .leftJoin('product.productVariants', 'productVariants')
-      .select('product.id')
+      .select(['product.id AS id', 'productVariants.totalSales AS totalSales'])
+      .distinct(true)
       .orderBy('productVariants.totalSales', 'DESC')
       .limit(10)
       .getRawMany();
-    console.log('====================', productIds.length);
-    const ids = productIds.map((p) => p.product_id); // Ajusta según alias
-    console.log('====================', ids.length);
+    const ids = productIds.map((p) => p.id);
     const result = await this.productRepository.find({
       where: { id: In(ids) },
       relations: {
         productVariants: {
           images: true,
-          variantsAttributes: {
-            attribute: true,
-          },
         },
       },
     });
-    console.log('====================', result.length);
     return result;
   }
 
@@ -165,12 +160,13 @@ export class ProductService {
     const productIds = await this.productRepository
       .createQueryBuilder('product')
       .leftJoin('product.productVariants', 'productVariants')
-      .select('product.id')
+      .select(['product.id AS id', 'productVariants.createdAt as createdAt'])
+      .distinct(true)
       .orderBy('productVariants.createdAt', 'DESC')
       .limit(10)
       .getRawMany();
 
-    const ids = productIds.map((p) => p.product_id); // Ajusta según alias
+    const ids = productIds.map((p) => p.id);
 
     const result = await this.productRepository.find({
       where: { id: In(ids) },
@@ -192,7 +188,31 @@ export class ProductService {
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
     }
-
+    let subCategoryId: string = '';
+    if (product.labels.length > 0) {
+      subCategoryId = product.labels[0].subCategory.id;
+    } else {
+      subCategoryId = product.subCategories[0].id;
+    }
+    const productIds = await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoin('product.productVariants', 'productVariants')
+      .leftJoin('product.subCategories', 'subCategories')
+      .select(['product.id AS id', 'productVariants.totalSales as totalSales'])
+      .distinct(true)
+      .where('subCategory.id = :subCategoryId', { subCategoryId })
+      .orderBy('productVariants.totalSales', 'DESC')
+      .limit(10)
+      .getRawMany();
+    const ids = productIds.map((p) => p.id);
+    const result = await this.productRepository.find({
+      where: { id: In(ids) },
+      relations: {
+        productVariants: {
+          images: true,
+        },
+      },
+    });
   }
 
   async findOne(id: string) {
