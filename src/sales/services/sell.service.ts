@@ -197,15 +197,15 @@ export class SellService {
       items: [],
       back_urls: {
         success:
-          `https://sensatexadultos/purchase-status/success/${sell.id}`,
+          `https://sensatexadultos.com/purchase-status/success/${sell.id}`,
         failure:
-          `https://sensatexadultos/purchase-status/failed/${sell.id}`,
+          `https://sensatexadultos.com/purchase-status/failed/${sell.id}`,
         pending:
-          `https://sensatexadultos/purchase-status/processing/${sell.id}`,
+          `https://sensatexadultos.com/purchase-status/processing/${sell.id}`,
       },
       auto_return: '',
       notification_url:
-        'https://sensatexadultos/api/sales/webhook',
+        'https://sensatexadultos.com/api/sales/webhook',
       external_reference: sell.id,
       payer: {
         email: sell.person.mail,

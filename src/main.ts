@@ -18,6 +18,7 @@ async function bootstrap() {
       `${appConfig.get('sensatexAdultos').frontendUrl}`,
       'http://localhost:4200',
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   });
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
