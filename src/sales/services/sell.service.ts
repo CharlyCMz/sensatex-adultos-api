@@ -196,16 +196,12 @@ export class SellService {
     const preferenceData: MpPreferenceData = {
       items: [],
       back_urls: {
-        success:
-          `https://sensatexadultos.com/purchase-status/success/${sell.id}`,
-        failure:
-          `https://sensatexadultos.com/purchase-status/failed/${sell.id}`,
-        pending:
-          `https://sensatexadultos.com/purchase-status/processing/${sell.id}`,
+        success: `https://sensatexadultos.com/purchase-status/success/${sell.id}`,
+        failure: `https://sensatexadultos.com/purchase-status/failed/${sell.id}`,
+        pending: `https://sensatexadultos.com/purchase-status/processing/${sell.id}`,
       },
       auto_return: '',
-      notification_url:
-        'https://sensatexadultos.com/api/sales/webhook',
+      notification_url: 'https://sensatexadultos.com/api/sales/webhook',
       external_reference: sell.id,
       payer: {
         email: sell.person.mail,
@@ -247,9 +243,21 @@ export class SellService {
     if (!sell) {
       throw new NotFoundException(`Sell with ID: ${id} was not found`);
     }
-    console.log(status)
-    sell.status = status;
-    console.log(sell.status)
+    switch (status) {
+      case 'approved':
+        sell.status = 'success';
+        await this.sellRepository.save(sell);
+        break;
+      case 'failed':
+        sell.status = 'failed';
+        await this.sellRepository.save(sell);
+        break;
+      default:
+        sell.status = 'processing';
+        await this.sellRepository.save(sell);
+        break;
+    }
+
     return await this.updateEntity(sell.id, {
       status: sell.status,
     });
