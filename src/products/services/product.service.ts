@@ -151,7 +151,7 @@ export class ProductService {
   }
 
   async findNewProducts() {
-    return await this.productRepository
+    const result = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
       .leftJoinAndSelect('productVariants.images', 'images')
@@ -163,6 +163,8 @@ export class ProductService {
       .orderBy('productVariants.createdAt', 'DESC')
       .limit(10)
       .getMany();
+    console.log('New Products:', result);
+    return result;
   }
 
   async findRelatedProducts(id: string) {
