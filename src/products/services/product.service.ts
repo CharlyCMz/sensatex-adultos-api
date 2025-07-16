@@ -102,7 +102,7 @@ export class ProductService {
         query.orderBy(`productVariants.totalSales`, order || 'ASC');
         break;
       default:
-        query.orderBy('product.createdAt', order || 'ASC');
+        query.orderBy('product.createdAt', order || 'DESC');
         break;
     }
 
