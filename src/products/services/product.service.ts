@@ -149,7 +149,7 @@ export class ProductService {
         const subQuery = qb
           .subQuery()
           .select('DISTINCT product.id')
-          .from('product', 'product')
+          .from(Product, 'product')
           .leftJoin('product.productVariants', 'pv')
           .orderBy('pv.totalSales', 'DESC')
           .limit(10)
@@ -175,7 +175,7 @@ export class ProductService {
         const subQuery = qb
           .subQuery()
           .select('DISTINCT product.id')
-          .from('product', 'product')
+          .from(Product, 'product')
           .leftJoin('product.productVariants', 'pv')
           .orderBy('pv.createdAt', 'DESC')
           .limit(10)
