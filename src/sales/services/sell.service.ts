@@ -243,13 +243,12 @@ export class SellService {
     if (!sell) {
       throw new NotFoundException(`Sell with ID: ${id} was not found`);
     }
-    console.log('============', status)
     switch (status) {
       case 'approved':
         sell.status = 'success';
         await this.sellRepository.save(sell);
         break;
-      case 'failed':
+      case 'rejected':
         sell.status = 'failed';
         await this.sellRepository.save(sell);
         break;

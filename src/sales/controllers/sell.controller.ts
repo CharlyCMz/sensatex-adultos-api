@@ -89,7 +89,6 @@ export class SellController {
   @Post('webhook')
   @Public()
   webhookUpdate(@Body() payload: WebhookDTO) {
-    console.log('Webhook hitted: ', payload);
     if (payload.topic === 'payment' && payload.resource) {
       return this.sellService.updateWebhookResponse(payload.resource);
     }

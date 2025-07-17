@@ -32,10 +32,10 @@ export class MailerService {
         <p>Hemos recibido tu pedido exitosamente.</p>
         <p><strong>ID del pedido:</strong> ${orderId}</p>
         <p><strong>Total:</strong> ${total}</p>
-        <p>Pronto recibirás un correo con el estado del envío.</p>
+        <p>Con el código de este correo podras consultar el estado del envío.</p>
         <br/>
         <p>Saludos,</p>
-        <p><em>El equipo de Tu Tienda</em></p>
+        <p><em>Sensatex Adultos</em></p>
       `,
     };
 
