@@ -26,7 +26,9 @@ export class SellService {
   ) {}
 
   findAll() {
-    return this.sellRepository.find();
+    return this.sellRepository.find({
+      relations: ['person']
+    });
   }
 
   async findOne(id: string) {
