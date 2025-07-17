@@ -44,6 +44,7 @@ export class ProductController {
   @Get()
   @Public()
   findAll(
+    @Query('status') status?: string,
     @Query('categoryId') categoryId?: string,
     @Query('subCategoryId') subCategoryId?: string,
     @Query('labelId') labelId?: string,
@@ -59,6 +60,7 @@ export class ProductController {
     return this.productService.findAll(
       pageNumber,
       limitNumber,
+      status,
       categoryId,
       subCategoryId,
       labelId,

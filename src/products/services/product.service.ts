@@ -39,6 +39,7 @@ export class ProductService {
   async findAll(
     page: number,
     limit: number,
+    status?: string,
     categoryId?: string,
     subCategoryId?: string,
     labelId?: string,
@@ -61,6 +62,10 @@ export class ProductService {
       .leftJoinAndSelect('labelSubCategory.category', 'labelCategory')
       .leftJoinAndSelect('product.subCategories', 'productSubCategories')
       .leftJoinAndSelect('productSubCategories.category', 'productCategory');
+
+    if (status) {
+      query.andWhere('product.status = :status', { status });
+    }
 
     if (categoryId) {
       query.andWhere('productCategory.id = :categoryId', { categoryId });
