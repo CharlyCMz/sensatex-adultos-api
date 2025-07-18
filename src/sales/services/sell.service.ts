@@ -157,8 +157,10 @@ export class SellService {
         `The Sell with ID: ${id} was Not Found`,
       );
     }
+    console.log('Service tring to update: ')
     this.sellRepository.merge(sell, payload);
-    await this.sellRepository.save(sell);
+    console.log(sell)
+    return await this.sellRepository.save(sell);
   }
 
   async updateWebhookResponse(id: string) {

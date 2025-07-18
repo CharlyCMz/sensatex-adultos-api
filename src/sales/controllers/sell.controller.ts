@@ -97,6 +97,7 @@ export class SellController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: AdminUpdateSellDTO) {
+    console.log('Entramos a Controller: ', payload)
     return this.sellService.adminUpdateEntity(id, payload);
   }
 
