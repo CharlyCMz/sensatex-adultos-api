@@ -27,6 +27,33 @@ export class CreateSellDTO {
   @IsString()
   @ApiProperty()
   readonly status?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  readonly transporter?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  readonly transporterTracking?: string;
 }
 
 export class UpdateSellDTO extends PartialType(CreateSellDTO) {}
+
+export class AdminUpdateSellDTO {
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  transporter?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  transporterTracking?: string;
+}

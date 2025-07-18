@@ -67,7 +67,7 @@ export class InlineProductService {
       );
     }
     this.inlineProductRepository.merge(inlineProduct, payload);
-    return this.inlineProductRepository.save(inlineProduct);
+    return await this.inlineProductRepository.save(inlineProduct);
   }
 
   async deleteEntity(id: string) {

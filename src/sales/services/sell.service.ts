@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Sell } from '../entities/sell.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateSellDTO } from '../dtos/sell.dto';
+import { AdminUpdateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import Decimal from 'decimal.js';
@@ -35,6 +35,7 @@ export class SellService {
     const sell = await this.sellRepository
       .createQueryBuilder('sell')
       .leftJoinAndSelect('sell.person', 'person')
+      .leftJoinAndSelect('person.docType', 'docType')
       .leftJoinAndSelect('person.addresses', 'addresses')
       .leftJoinAndSelect('addresses.location', 'location')
       .leftJoinAndSelect('sell.inlineProducts', 'inlineProducts')
@@ -147,6 +148,17 @@ export class SellService {
       await this.sellRepository.save(sell);
     }
     return sell;
+  }
+
+  async adminUpdateEntity(id: string, payload: AdminUpdateSellDTO) {
+    const sell = await this.sellRepository.findOneBy({ id});
+    if (!sell) {
+      throw new NotFoundException(
+        `The Sell with ID: ${id} was Not Found`,
+      );
+    }
+    this.sellRepository.merge(sell, payload);
+    await this.sellRepository.save(sell);
   }
 
   async updateWebhookResponse(id: string) {

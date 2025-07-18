@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SellService } from '../services/sell.service';
-import { CreateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
+import { AdminUpdateSellDTO, CreateSellDTO } from '../dtos/sell.dto';
 import { PersonService } from 'src/users/services/person.service';
 import { AddressService } from 'src/users/services/address.service';
 import { InlineProductService } from '../services/inline-product.service';
@@ -96,8 +96,8 @@ export class SellController {
   }
 
   @Put(':id')
-  updateEntity(@Param('id') id: string, @Body() payload: UpdateSellDTO) {
-    return this.sellService.updateEntity(id, payload);
+  updateEntity(@Param('id') id: string, @Body() payload: AdminUpdateSellDTO) {
+    return this.sellService.adminUpdateEntity(id, payload);
   }
 
   @Delete(':id')
