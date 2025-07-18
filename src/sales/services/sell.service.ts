@@ -67,6 +67,10 @@ export class SellService {
     const sell = await this.sellRepository
       .createQueryBuilder('sell')
       .leftJoinAndSelect('sell.person', 'person')
+      .leftJoinAndSelect('sell.inlineProducts', 'inlineProducts')
+      .leftJoinAndSelect('inlineProducts.productVariant', 'productVariant')
+      .leftJoinAndSelect('productVariant.images', 'images')
+      .leftJoinAndSelect('productVariant.product', 'product')
       .leftJoinAndSelect('person.addresses', 'addresses')
       .leftJoinAndSelect('addresses.location', 'location')
       .where('sell.trackingCode = :code', { code })
