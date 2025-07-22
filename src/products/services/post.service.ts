@@ -12,7 +12,9 @@ export class PostService {
   ) {}
 
   findAll(isBanner?: boolean, isPost?: boolean) {
-    const query = this.postRepository.createQueryBuilder('post');
+    const query = this.postRepository
+      .createQueryBuilder('post')
+      .orderBy('post.createdAt', 'DESC')
     if (isBanner !== undefined) {
       query.andWhere('post.isBanner = :isBanner', { isBanner }).take(5);
     }
