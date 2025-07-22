@@ -25,7 +25,7 @@ export class CreatePostDTO {
   @IsNotEmpty()
   @IsBoolean()
   @ApiProperty()
-  readonly isMovile: boolean;
+  readonly isMobile: boolean;
 
   @IsNotEmpty()
   @IsBoolean()
