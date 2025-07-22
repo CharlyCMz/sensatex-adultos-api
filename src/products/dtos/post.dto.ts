@@ -25,12 +25,12 @@ export class CreatePostDTO {
   @IsNotEmpty()
   @IsBoolean()
   @ApiProperty()
-  readonly isPost: boolean;
+  readonly isMovile: boolean;
 
-  @IsOptional()
-  @IsString()
+  @IsNotEmpty()
+  @IsBoolean()
   @ApiProperty()
-  readonly productVariantId?: string;
+  readonly isPost: boolean;
 }
 
 export class UpdatePostDTO extends PartialType(CreatePostDTO) {}
