@@ -11,12 +11,15 @@ export class PostService {
     private postRepository: Repository<Post>,
   ) {}
 
-  findAll(isBanner?: boolean, isPost?: boolean) {
+  findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
     const query = this.postRepository
       .createQueryBuilder('post')
-      .orderBy('post.createdAt', 'DESC')
-    if (isBanner !== undefined) {
-      query.andWhere('post.isBanner = :isBanner', { isBanner }).take(5);
+      .orderBy('post.createdAt', 'DESC');
+    if (isBanner !== undefined && isMovile !== undefined) {
+      query
+        .andWhere('post.isBanner = :isBanner', { isBanner })
+        .andWhere('post.isMovile = :isMovile', { isMovile })
+        .take(5);
     }
     if (isPost !== undefined) {
       query.andWhere('post.isPost = :isPost', { isPost }).take(10);

@@ -35,6 +35,9 @@ export class Post {
   @Column({ type: 'boolean', name: 'is_banner', default: false })
   isBanner: boolean;
 
+  @Column({ type: 'boolean', name: 'is_movile', default: false })
+  isMovile: boolean;
+
   @Column({ type: 'boolean', name: 'is_post', default: false })
   isPost: boolean;
 
