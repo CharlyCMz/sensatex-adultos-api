@@ -28,7 +28,7 @@ export class Post {
     type: 'varchar',
     name: 'redirection_url',
     length: 1024,
-    unique: true,
+    unique: false,
   })
   redirectionUrl: string;
 
