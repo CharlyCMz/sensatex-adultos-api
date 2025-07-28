@@ -46,6 +46,7 @@ export class ProductService {
     nameFilter?: string,
     brand?: string,
     sku?: string,
+    isAvailable?: boolean,
     orderBy?: string,
     order?: 'ASC' | 'DESC',
   ) {
@@ -95,6 +96,11 @@ export class ProductService {
     if (sku) {
       query.andWhere('LOWER(product.sku) LIKE :sku', {
         sku: `%${sku.toLowerCase()}%`,
+      });
+    }
+    if (isAvailable) {
+      query.andWhere('productVariants.isAvailable) = :isAvailable', {
+        isAvailable,
       });
     }
 

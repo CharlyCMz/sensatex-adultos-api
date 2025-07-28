@@ -51,6 +51,7 @@ export class ProductController {
     @Query('nameFilter') nameFilter?: string,
     @Query('brand') brand?: string,
     @Query('sku') sku?: string,
+    @Query('isAvailable') isAvailable?: boolean,
     @Query('orderBy') orderBy?: string,
     @Query('order') order?: 'ASC' | 'DESC',
     @Query('page') page?: string,
@@ -68,6 +69,7 @@ export class ProductController {
       nameFilter,
       brand,
       sku,
+      isAvailable,
       orderBy,
       order,
     );
