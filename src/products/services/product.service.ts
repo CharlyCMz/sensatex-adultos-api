@@ -99,7 +99,7 @@ export class ProductService {
       });
     }
     if (isAvailable) {
-      query.andWhere('productVariants.isAvailable) = :isAvailable', {
+      query.andWhere('productVariants.isAvailable = :isAvailable', {
         isAvailable,
       });
     }
