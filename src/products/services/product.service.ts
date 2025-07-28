@@ -45,6 +45,7 @@ export class ProductService {
     labelId?: string,
     nameFilter?: string,
     brand?: string,
+    sku?: string,
     orderBy?: string,
     order?: 'ASC' | 'DESC',
   ) {
@@ -89,6 +90,11 @@ export class ProductService {
     if (brand) {
       query.andWhere('LOWER(product.brand) LIKE :brand', {
         brand: `%${brand.toLowerCase()}%`,
+      });
+    }
+    if (sku) {
+      query.andWhere('LOWER(product.sku) LIKE :sku', {
+        sku: `%${sku.toLowerCase()}%`,
       });
     }
 

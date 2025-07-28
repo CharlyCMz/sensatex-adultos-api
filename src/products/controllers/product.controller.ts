@@ -50,6 +50,7 @@ export class ProductController {
     @Query('labelId') labelId?: string,
     @Query('nameFilter') nameFilter?: string,
     @Query('brand') brand?: string,
+    @Query('sku') sku?: string,
     @Query('orderBy') orderBy?: string,
     @Query('order') order?: 'ASC' | 'DESC',
     @Query('page') page?: string,
@@ -66,6 +67,7 @@ export class ProductController {
       labelId,
       nameFilter,
       brand,
+      sku,
       orderBy,
       order,
     );
