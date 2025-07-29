@@ -12,14 +12,12 @@ export class PostService {
   ) {}
 
   async findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
-    console.log(isBanner, isMovile, isPost);
     const query = this.postRepository
       .createQueryBuilder('post')
       .orderBy('post.createdAt', 'DESC');
-    if (isBanner !== undefined && isMovile !== undefined) {
+    if (isBanner !== undefined) {
       query
         .andWhere('post.isBanner = :isBanner', { isBanner })
-        .andWhere('post.isMovile = :isMovile', { isMovile })
         .take(5);
     }
     if (isPost !== undefined) {
