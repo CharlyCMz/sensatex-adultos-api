@@ -11,7 +11,7 @@ export class PostService {
     private postRepository: Repository<Post>,
   ) {}
 
-  findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
+  async findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
     console.log(isBanner, isMovile, isPost);
     const query = this.postRepository
       .createQueryBuilder('post')
@@ -25,7 +25,7 @@ export class PostService {
     if (isPost !== undefined) {
       query.andWhere('post.isPost = :isPost', { isPost }).take(10);
     }
-    const result= query.getMany();
+    const result = await query.getMany();
     console.log(result);
     return result;
   }
