@@ -94,7 +94,7 @@ export class ProductService {
       });
     }
     if (sku) {
-      query.andWhere('LOWER(product.sku) LIKE :sku', {
+      query.andWhere('LOWER(productVariants.sku) LIKE :sku', {
         sku: `%${sku.toLowerCase()}%`,
       });
     }
