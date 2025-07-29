@@ -14,7 +14,9 @@ export class LabelService {
   ) {}
 
   findAll() {
-    return this.labelRepository.find();
+    return this.labelRepository.find({
+      relations: ['subCategory']
+    });
   }
 
   async findByName(filter: string) {
