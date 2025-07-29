@@ -12,6 +12,7 @@ export class PostService {
   ) {}
 
   findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
+    console.log(isBanner, isMovile, isPost);
     const query = this.postRepository
       .createQueryBuilder('post')
       .orderBy('post.createdAt', 'DESC');
@@ -24,7 +25,8 @@ export class PostService {
     if (isPost !== undefined) {
       query.andWhere('post.isPost = :isPost', { isPost }).take(10);
     }
-    return query.getMany();
+    const result= query.getMany();
+    return result;
   }
 
   async findOne(id: string) {
