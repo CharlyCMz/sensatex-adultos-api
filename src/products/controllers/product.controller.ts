@@ -40,7 +40,7 @@ export class ProductController {
         throw new BadRequestException(`Variant witth SKU: ${variant.sku} already exist, with product: ${variantExist.product.name}`);
       }
     }
-
+    console.log('Payload Pass:');
     const newProduct = await this.productService.createEntity(payload);
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({
