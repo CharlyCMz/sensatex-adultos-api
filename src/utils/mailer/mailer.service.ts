@@ -39,12 +39,12 @@ export class MailerService {
       {
         email: mail,
         data: {
-          name: '',
+          name: name,
           order: {
-            total: '',
-            shipping: '',
-            subtotal: '',
-            trackingCode: '',
+            total: sell?.total || '',
+            shipping: sell?.shippingTotal || '',
+            subtotal: sell?.purchaseTotal || '',
+            trackingCode: sell?.trackingCode || '',
           },
         },
       },

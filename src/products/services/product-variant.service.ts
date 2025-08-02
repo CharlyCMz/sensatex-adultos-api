@@ -116,7 +116,8 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    await this.productVariantRepository.increment(
+    console.log(`Incrementing sales for Product-Variant ID: ${id} by ${quantity}`);
+    return await this.productVariantRepository.increment(
       { id },
       'totalSales',
       quantity,

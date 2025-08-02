@@ -27,7 +27,7 @@ export class SellService {
 
   findAll() {
     return this.sellRepository.find({
-      relations: ['person']
+      relations: ['person'],
     });
   }
 
@@ -117,9 +117,16 @@ export class SellService {
             );
           }
           await this.mailerService.sendConfirmationEmail(
+            sell.person.name,
             sell.person.mail,
-            sell.trackingCode,
-            sell.total,
+            'Confirmación de Compra',
+            sell,
+          );
+          await this.mailerService.sendConfirmationEmail(
+            'Sandra',
+            'sensatexgroupsas@gmail.com',
+            'Se ha realizado una Compra',
+            sell,
           );
         } catch (error) {
           console.error('Error sending confirmation email:', error);
@@ -151,15 +158,13 @@ export class SellService {
   }
 
   async adminUpdateEntity(id: string, payload: AdminUpdateSellDTO) {
-    const sell = await this.sellRepository.findOneBy({ id});
+    const sell = await this.sellRepository.findOneBy({ id });
     if (!sell) {
-      throw new NotFoundException(
-        `The Sell with ID: ${id} was Not Found`,
-      );
+      throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
     }
-    console.log('Service tring to update: ')
+    console.log('Service tring to update: ');
     this.sellRepository.merge(sell, payload);
-    console.log(sell)
+    console.log(sell);
     return await this.sellRepository.save(sell);
   }
 

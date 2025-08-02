@@ -67,4 +67,9 @@ export class ProductVariantController {
   addVariant(@Param('id') id: string, @Param('variantId') variantId: string) {
     return this.productVariantService.addVariantToProduct(id, variantId);
   }
+
+  @Get('increment-sales/:id')
+  incrementSales(@Param('id') id: string) {
+    return this.productVariantService.updateSales(id, 3);
+  }
 }
