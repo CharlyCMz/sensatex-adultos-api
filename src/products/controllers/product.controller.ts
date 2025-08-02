@@ -37,7 +37,11 @@ export class ProductController {
         variant.sku,
       );
       if (variantExist) {
-        throw new BadRequestException(`Variant witth SKU: ${variant.sku} already exist, with product: ${variantExist.product.name}`);
+        throw new BadRequestException({
+      message: `Variant with SKU: ${variant.sku} already exist`,
+      product: variantExist.product.name,
+      statusCode: 400
+    });
       }
     }
     console.log('Payload Pass:');
