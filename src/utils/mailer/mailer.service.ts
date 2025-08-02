@@ -1,48 +1,65 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
+import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
+import { Sell } from 'src/sales/entities/sell.entity';
 
 @Injectable()
 export class MailerService {
-  private transporter: nodemailer.Transporter;
+  private mailerSend: MailerSend;
 
   constructor(private configService: ConfigService) {
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('sensatexAdultos.mailer.host'),
-      port: this.configService.get<number>('sensatexAdultos.mailer.port'),
-      secure: false,
-      auth: {
-        user: this.configService.get<string>('sensatexAdultos.mailer.user'),
-        pass: this.configService.get<string>('sensatexAdultos.mailer.pass'),
-      },
+    // this.transporter = nodemailer.createTransport({
+    //   host: this.configService.get<string>('sensatexAdultos.mailer.host'),
+    //   port: this.configService.get<number>('sensatexAdultos.mailer.port'),
+    //   secure: false,
+    //   auth: {
+    //     user: this.configService.get<string>('sensatexAdultos.mailer.user'),
+    //     pass: this.configService.get<string>('sensatexAdultos.mailer.pass'),
+    //   },
+    // });
+
+    this.mailerSend = new MailerSend({
+      apiKey:
+        this.configService.get<string>('sensatexAdultos.mailer.token') || '',
     });
   }
 
   async sendConfirmationEmail(
-    to: string,
-    orderId: string,
-    total: string,
-  ): Promise<void> {
-    const mailOptions: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('sensatexAdultos.mailer.from'),
-      to,
-      subject: 'Confirmación de tu compra',
-      html: `
-        <h1>¡Gracias por tu compra!</h1>
-        <p>Hemos recibido tu pedido exitosamente.</p>
-        <p><strong>ID del pedido:</strong> ${orderId}</p>
-        <p><strong>Total:</strong> ${total}</p>
-        <p>Con el código de este correo podras consultar el estado del envío.</p>
-        <br/>
-        <p>Saludos,</p>
-        <p><em>Sensatex Adultos</em></p>
-      `,
-    };
+    name: string,
+    mail: string,
+    subject: string,
+    sell?: Sell,
+  ) {
+    const sentFrom = new Sender('info@sensatexadultos.com', 'Sensatex Adultos');
 
-    try {
-      return await this.transporter.sendMail(mailOptions);
-    } catch (error) {
-      throw error;
-    }
+    const recipients = [new Recipient(mail, name)];
+
+    const personalization = [
+      {
+        email: mail,
+        data: {
+          name: '',
+          order: {
+            total: '',
+            shipping: '',
+            subtotal: '',
+            trackingCode: '',
+          },
+        },
+      },
+    ];
+
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setReplyTo(sentFrom)
+      .setSubject(subject)
+      .setTemplateId('3z0vkloj20pg7qrx')
+      .setPersonalization(personalization);
+
+    await this.mailerSend.email.send(emailParams);
+
+    return true;
   }
 }

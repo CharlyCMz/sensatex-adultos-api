@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -31,6 +32,15 @@ export class ProductController {
 
   @Post()
   async createEntity(@Body() payload: CreateProductDTO) {
+    for (const variant of payload.productVariants) {
+      const variantExist = await this.productVariantService.findOneBySku(
+        variant.sku,
+      );
+      if (variantExist) {
+        throw new BadRequestException(`Variant witth SKU: ${variant.sku} already exist, with product: ${variantExist.product.name}`);
+      }
+    }
+
     const newProduct = await this.productService.createEntity(payload);
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({

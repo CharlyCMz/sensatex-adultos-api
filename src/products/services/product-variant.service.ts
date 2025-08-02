@@ -55,6 +55,13 @@ export class ProductVariantService {
     return productVariant;
   }
 
+  async findOneBySku(sku: string) {
+    return await this.productVariantRepository.findOne({
+      where: { sku},
+      relations: ['product'],
+    });
+  }
+
   async createEntity(payload: CreateProductVariantDTO) {
     let newProductVariant: ProductVariant =
       this.productVariantRepository.create(payload);
