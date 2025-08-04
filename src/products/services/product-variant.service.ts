@@ -95,6 +95,7 @@ export class ProductVariantService {
 
   //TODO: Update logic depending on Admin panel requirements
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
+    console.log('Update Payload: ', payload);
     const productVariant = await this.productVariantRepository.findOneBy({
       id,
     });
@@ -103,6 +104,7 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
+    console.log('Product Variant Found: ', productVariant);
     this.productVariantRepository.merge(productVariant, payload);
     return this.productVariantRepository.save(productVariant);
   }
@@ -116,7 +118,6 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    console.log(`Incrementing sales for Product-Variant ID: ${id} by ${quantity}`);
     return await this.productVariantRepository.increment(
       { id },
       'totalSales',

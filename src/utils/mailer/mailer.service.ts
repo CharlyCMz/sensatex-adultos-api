@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
 import { Sell } from 'src/sales/entities/sell.entity';
+import { create } from 'domain';
 
 @Injectable()
 export class MailerService {
@@ -44,6 +45,7 @@ export class MailerService {
             total: sell?.total || '',
             shipping: sell?.shippingTotal || '',
             subtotal: sell?.purchaseTotal || '',
+            createdAt: sell?.createdAt || '',
             trackingCode: sell?.trackingCode || '',
           },
         },
@@ -55,8 +57,13 @@ export class MailerService {
       .setTo(recipients)
       .setReplyTo(sentFrom)
       .setSubject(subject)
-      .setTemplateId('3z0vkloj20pg7qrx')
       .setPersonalization(personalization);
+
+    if (subject === 'Confirmación de Compra') {
+      emailParams.setTemplateId('3z0vkloj20pg7qrx');
+    } else if (subject === 'Se ha realizado una Compra') {
+      emailParams.setTemplateId('pq3enl6ymw0g2vwr');
+    }
 
     await this.mailerSend.email.send(emailParams);
 

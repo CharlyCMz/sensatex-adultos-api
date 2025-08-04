@@ -24,7 +24,6 @@ export class PostService {
       query.andWhere('post.isPost = :isPost', { isPost }).take(10);
     }
     const result = await query.getMany();
-    console.log(result);
     return result;
   }
 

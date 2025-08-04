@@ -162,9 +162,7 @@ export class SellService {
     if (!sell) {
       throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
     }
-    console.log('Service tring to update: ');
     this.sellRepository.merge(sell, payload);
-    console.log(sell);
     return await this.sellRepository.save(sell);
   }
 
