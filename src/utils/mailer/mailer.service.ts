@@ -47,6 +47,9 @@ export class MailerService {
             subtotal: sell?.purchaseTotal || '',
             createdAt: sell?.createdAt || '',
             trackingCode: sell?.trackingCode || '',
+            transporter: sell?.transporter || '',
+            shippingAddress: sell?.shippingAddress || '',
+            transporterTracking: sell?.transporterTracking || '',
           },
         },
       },
@@ -59,10 +62,16 @@ export class MailerService {
       .setSubject(subject)
       .setPersonalization(personalization);
 
-    if (subject === 'Confirmación de Compra') {
-      emailParams.setTemplateId('3z0vkloj20pg7qrx');
-    } else if (subject === 'Se ha realizado una Compra') {
-      emailParams.setTemplateId('pq3enl6ymw0g2vwr');
+    switch (subject) {
+      case 'Confirmación de Compra':
+        emailParams.setTemplateId('3z0vkloj20pg7qrx');
+        break;
+      case 'Se ha realizado una Compra':
+        emailParams.setTemplateId('pq3enl6ymw0g2vwr');
+        break;
+      case 'Tu pedido ha sido enviado':
+        emailParams.setTemplateId('3vz9dlejpz64kj50');
+        break;
     }
 
     await this.mailerSend.email.send(emailParams);

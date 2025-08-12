@@ -133,3 +133,12 @@ export class Sell {
   })
   deletedAt: Date;
 }
+
+export enum SellStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  SUCCESS = 'success',
+  SENT = 'sent',
+  FAILED = 'failed',
+  COMPLETED = 'completed',
+}

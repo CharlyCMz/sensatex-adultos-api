@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Sell } from '../entities/sell.entity';
+import { Sell, SellStatus } from '../entities/sell.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdminUpdateSellDTO, UpdateSellDTO } from '../dtos/sell.dto';
@@ -163,6 +163,14 @@ export class SellService {
       throw new NotFoundException(`The Sell with ID: ${id} was Not Found`);
     }
     this.sellRepository.merge(sell, payload);
+    if (payload.status === SellStatus.SENT) {
+      await this.mailerService.sendConfirmationEmail(
+        sell.person.name,
+        sell.person.mail,
+        'Tu pedido ha sido enviado',
+        sell,
+      );
+    }
     return await this.sellRepository.save(sell);
   }
 
