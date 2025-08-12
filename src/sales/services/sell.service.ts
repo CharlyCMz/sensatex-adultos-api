@@ -108,7 +108,7 @@ export class SellService {
     }
     if (payload?.status) {
       sell.status = payload.status;
-      if (sell.status === 'approved') {
+      if (sell.status === SellStatus.SUCCESS) {
         try {
           for (const inlineProduct of sell.inlineProducts) {
             await this.productVariantService.updateSales(
