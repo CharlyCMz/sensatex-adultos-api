@@ -32,7 +32,7 @@ export class ProductVariant {
     precision: 10,
     scale: 4,
     nullable: true,
-    default: null,
+    default: '0',
   })
   discountPrice: string;
 
