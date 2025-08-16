@@ -16,7 +16,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       `${appConfig.get('sensatexAdultos').frontendUrl}`,
-      `www.${appConfig.get('sensatexAdultos').frontendUrl}`,
+      `https://www.sensatexadultos.com`,
       'http://localhost:4200',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
