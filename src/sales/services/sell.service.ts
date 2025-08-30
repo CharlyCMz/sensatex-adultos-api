@@ -28,6 +28,9 @@ export class SellService {
   findAll() {
     return this.sellRepository.find({
       relations: ['person'],
+      order: {
+        createdAt: 'DESC'
+      }
     });
   }
 
