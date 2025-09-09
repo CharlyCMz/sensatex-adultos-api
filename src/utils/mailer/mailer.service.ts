@@ -1,25 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
 import { Sell } from 'src/sales/entities/sell.entity';
-import { create } from 'domain';
 
 @Injectable()
 export class MailerService {
   private mailerSend: MailerSend;
 
   constructor(private configService: ConfigService) {
-    // this.transporter = nodemailer.createTransport({
-    //   host: this.configService.get<string>('sensatexAdultos.mailer.host'),
-    //   port: this.configService.get<number>('sensatexAdultos.mailer.port'),
-    //   secure: false,
-    //   auth: {
-    //     user: this.configService.get<string>('sensatexAdultos.mailer.user'),
-    //     pass: this.configService.get<string>('sensatexAdultos.mailer.pass'),
-    //   },
-    // });
-
     this.mailerSend = new MailerSend({
       apiKey:
         this.configService.get<string>('sensatexAdultos.mailer.token') || '',
@@ -73,7 +61,7 @@ export class MailerService {
         emailParams.setTemplateId('3vz9dlejpz64kj50');
         break;
     }
-
+    console.log(emailParams);
     await this.mailerSend.email.send(emailParams);
 
     return true;
