@@ -61,7 +61,7 @@ export class MailerService {
         emailParams.setTemplateId('3vz9dlejpz64kj50');
         break;
     }
-    console.log(emailParams);
+
     await this.mailerSend.email.send(emailParams);
 
     return true;

@@ -127,7 +127,7 @@ export class SellService {
           );
           await this.mailerService.sendConfirmationEmail(
             'Sandra',
-            'ccorreamd@gmail.com',
+            'sensatexgroupssas@gmail.com',
             'Se ha realizado una Compra',
             sell,
           );
