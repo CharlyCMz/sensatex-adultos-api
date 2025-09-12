@@ -18,7 +18,7 @@ export class PostService {
     if (isBanner !== undefined) {
       query
         .andWhere('post.isBanner = :isBanner', { isBanner })
-        .take(5);
+        .take(20);
     }
     if (isPost !== undefined) {
       query.andWhere('post.isPost = :isPost', { isPost }).take(10);
