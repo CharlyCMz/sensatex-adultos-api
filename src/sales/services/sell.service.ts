@@ -140,7 +140,7 @@ export class SellService {
         sell.shippingAddress.includes('Villamaría') ||
         sell.shippingAddress.includes('Manizales')
           ? new Decimal('8000')
-          : new Decimal('12000');
+          : new Decimal('16000');
       const purchase = sell.inlineProducts.reduce(
         (total, inlineProduct) =>
           total.plus(new Decimal(inlineProduct.inlineTotal)),
