@@ -32,6 +32,7 @@ export class ProductController {
 
   @Post()
   async createEntity(@Body() payload: CreateProductDTO) {
+    console.log('====== 1', payload)
     for (const variant of payload.productVariants) {
       const variantExist = await this.productVariantService.findOneBySku(
         variant.sku,
@@ -45,6 +46,7 @@ export class ProductController {
       }
     }
     const newProduct = await this.productService.createEntity(payload);
+    console.log('====== 2', newProduct)
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({
         ...variant,

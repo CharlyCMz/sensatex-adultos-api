@@ -63,6 +63,7 @@ export class ProductVariantService {
   }
 
   async createEntity(payload: CreateProductVariantDTO) {
+    console.log('====== 3')
     let newProductVariant: ProductVariant =
       this.productVariantRepository.create(payload);
     if (newProductVariant.discountPrice === '') {
