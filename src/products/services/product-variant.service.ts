@@ -57,13 +57,13 @@ export class ProductVariantService {
 
   async findOneBySku(sku: string) {
     return await this.productVariantRepository.findOne({
-      where: { sku},
+      where: { sku },
       relations: ['product'],
     });
   }
 
   async createEntity(payload: CreateProductVariantDTO) {
-    console.log('====== 3')
+    console.log('====== 3');
     let newProductVariant: ProductVariant =
       this.productVariantRepository.create(payload);
     if (newProductVariant.discountPrice === '') {
@@ -107,6 +107,16 @@ export class ProductVariantService {
     }
     console.log('Product Variant Found: ', productVariant);
     this.productVariantRepository.merge(productVariant, payload);
+    if (payload.images && payload.images.length > 0) {
+      for (const image of payload.images) {
+        const newImage = await this.imageService.createEntity({
+          reference: `product-variant-${productVariant.id}`,
+          isFrontImage: image.isFrontImage || false,
+          url: image.url,
+          productVariantId: productVariant.id,
+        });
+      }
+    }
     return this.productVariantRepository.save(productVariant);
   }
 
