@@ -39,7 +39,7 @@ export class ProductService {
   async findAll(
     page: number,
     limit: number,
-    status: string = 'publish',
+    status?: string,
     categoryId?: string,
     subCategoryId?: string,
     labelId?: string,
