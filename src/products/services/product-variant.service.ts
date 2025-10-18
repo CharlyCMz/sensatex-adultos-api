@@ -96,7 +96,6 @@ export class ProductVariantService {
 
   //TODO: Update logic depending on Admin panel requirements
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
-    console.log('Update Payload: ', payload);
     const productVariant = await this.productVariantRepository.findOneBy({
       id,
     });
@@ -109,14 +108,12 @@ export class ProductVariantService {
     this.productVariantRepository.merge(productVariant, payload);
     if (payload.images && payload.images.length > 0) {
       for (const image of payload.images) {
-        console.log('==========', image);
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${productVariant.id}`,
           isFrontImage: image.isFrontImage || false,
           url: image.url,
           productVariantId: productVariant.id,
         });
-        console.log('==========', newImage);
       }
     }
     return this.productVariantRepository.save(productVariant);

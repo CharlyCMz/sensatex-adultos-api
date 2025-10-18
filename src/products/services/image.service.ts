@@ -42,11 +42,14 @@ export class ImageService {
   //TODO: method to upload image to cloud storage
 
   async createEntity(payload: CreateImageDTO) {
+    console.log(payload);
     const newImage = this.imageRepository.create(payload);
     newImage.productVariant =
       (await this.productVariantRepository.findOneBy({
         id: payload.productVariantId,
       })) || undefined;
+    console.log(newImage);
+
     //TODO: upload and join the imageUrl from cloud storage.
     return await this.imageRepository.save(newImage);
   }
