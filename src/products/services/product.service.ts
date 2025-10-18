@@ -67,6 +67,8 @@ export class ProductService {
 
     if (status) {
       query.andWhere('product.status = :status', { status });
+    } else {
+      query.andWhere('product.status = publish');
     }
 
     if (categoryId) {
