@@ -39,7 +39,7 @@ export class ProductService {
   async findAll(
     page: number,
     limit: number,
-    status?: string,
+    status: string = 'publish',
     categoryId?: string,
     subCategoryId?: string,
     labelId?: string,
@@ -67,8 +67,6 @@ export class ProductService {
 
     if (status) {
       query.andWhere('product.status = :status', { status });
-    } else {
-      query.andWhere('product.status = publish');
     }
 
     if (categoryId) {
