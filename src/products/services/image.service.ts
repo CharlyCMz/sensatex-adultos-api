@@ -71,6 +71,13 @@ export class ImageService {
   }
 
   async updateFrontImage(productVariantId: string): Promise<void> {
+    const latest = await this.imageRepository.findOne({
+      where: { productVariant: { id: productVariantId } },
+      order: { createdAt: 'DESC' },
+    });
+
+    if (!latest) return;
+
     await this.imageRepository
       .createQueryBuilder()
       .update()
@@ -82,17 +89,7 @@ export class ImageService {
       .createQueryBuilder()
       .update()
       .set({ isFrontImage: true })
-      .where('id = (:latestId)', {
-        latestId: (qb) =>
-          qb
-            .subQuery()
-            .select('i.id')
-            .from('images', 'i')
-            .where('i.productVariantId = :id', { id: productVariantId })
-            .orderBy('i.createdAt', 'DESC')
-            .limit(1)
-            .getQuery(),
-      })
+      .where('id = :id', { id: latest.id })
       .execute();
   }
 
