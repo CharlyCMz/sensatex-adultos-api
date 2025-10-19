@@ -39,8 +39,6 @@ export class ImageService {
     return image;
   }
 
-  //TODO: method to upload image to cloud storage
-
   async createEntity(payload: CreateImageDTO) {
     const newImage = this.imageRepository.create({
       reference: payload.reference,
@@ -70,6 +68,32 @@ export class ImageService {
     }
     this.imageRepository.merge(image, payload);
     return this.imageRepository.save(image);
+  }
+
+  async updateFrontImage(productVariantId: string): Promise<void> {
+    await this.imageRepository
+      .createQueryBuilder()
+      .update()
+      .set({ isFrontImage: false })
+      .where('productVariantId = :id', { id: productVariantId })
+      .execute();
+
+    await this.imageRepository
+      .createQueryBuilder()
+      .update()
+      .set({ isFrontImage: true })
+      .where('id = (:latestId)', {
+        latestId: (qb) =>
+          qb
+            .subQuery()
+            .select('i.id')
+            .from('images', 'i')
+            .where('i.productVariantId = :id', { id: productVariantId })
+            .orderBy('i.createdAt', 'DESC')
+            .limit(1)
+            .getQuery(),
+      })
+      .execute();
   }
 
   async deleteEntity(id: string) {
