@@ -61,10 +61,9 @@ export class ImageService {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);
     }
     if (payload.productVariantId) {
-      image.productVariant =
-        (await this.productVariantRepository.findOneBy({
-          id: payload.productVariantId,
-        })) || undefined;
+      image.productVariant = {
+        id: payload.productVariantId,
+      } as ProductVariant;
     }
     this.imageRepository.merge(image, payload);
     return this.imageRepository.save(image);
