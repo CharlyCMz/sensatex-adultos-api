@@ -56,7 +56,10 @@ export class ImageService {
   }
 
   async updateEntity(id: string, payload: UpdateImageDTO) {
-    let image = await this.imageRepository.findOneBy({ id });
+    let image = await this.imageRepository.findOne({
+      where: { id },
+      relations: ['productVariant'],
+    });
     if (!image) {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);
     }
