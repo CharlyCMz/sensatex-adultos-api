@@ -115,7 +115,7 @@ export class ProductVariantService {
         });
       }
     }
-    await this.imageService.updateFrontImage(productVariant.id);
+    const updateFrontImg = await this.imageService.updateFrontImage(productVariant.id);
     const updatedImages = await this.imageService.findAll(productVariant.id);
     productVariant.images = updatedImages;
     return this.productVariantRepository.save(productVariant);

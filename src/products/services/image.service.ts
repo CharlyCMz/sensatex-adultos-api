@@ -69,13 +69,13 @@ export class ImageService {
     return this.imageRepository.save(image);
   }
 
-  async updateFrontImage(productVariantId: string): Promise<void> {
+  async updateFrontImage(productVariantId: string): Promise<boolean> {
     const latest = await this.imageRepository.findOne({
       where: { productVariant: { id: productVariantId }, isFrontImage: true },
       order: { createdAt: 'DESC' },
     });
     console.log(latest);
-    if (!latest) return;
+    if (!latest) return false;
 
     await this.imageRepository
       .createQueryBuilder()
@@ -91,6 +91,7 @@ export class ImageService {
       .where('id = :id', { id: latest.id })
       .execute();
     console.log('frontImage Updated');
+    return true;
   }
 
   async deleteEntity(id: string) {
