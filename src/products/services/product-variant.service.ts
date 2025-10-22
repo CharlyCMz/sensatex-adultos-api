@@ -104,7 +104,6 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    console.log('Product Variant Found: ', productVariant);
     this.productVariantRepository.merge(productVariant, payload);
     if (payload.images && payload.images.length > 0) {
       for (const image of payload.images) {

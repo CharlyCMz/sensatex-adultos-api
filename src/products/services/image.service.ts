@@ -71,7 +71,7 @@ export class ImageService {
 
   async updateFrontImage(productVariantId: string): Promise<void> {
     const latest = await this.imageRepository.findOne({
-      where: { productVariant: { id: productVariantId } },
+      where: { productVariant: { id: productVariantId }, isFrontImage: true },
       order: { createdAt: 'DESC' },
     });
 
