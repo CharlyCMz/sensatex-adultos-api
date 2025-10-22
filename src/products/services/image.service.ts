@@ -56,7 +56,7 @@ export class ImageService {
   }
 
   async updateEntity(id: string, payload: UpdateImageDTO) {
-    const image = await this.imageRepository.findOneBy({ id });
+    let image = await this.imageRepository.findOneBy({ id });
     if (!image) {
       throw new NotFoundException(`The Image with ID: ${id} was Not Found`);
     }
@@ -66,7 +66,11 @@ export class ImageService {
       } as ProductVariant;
     }
     this.imageRepository.merge(image, payload);
-    return this.imageRepository.save(image);
+    image = await this.imageRepository.save(image);
+    if (image.productVariant) {
+      await this.updateFrontImage(image.productVariant.id);
+    }
+    return image;
   }
 
   async updateFrontImage(productVariantId: string): Promise<boolean> {
