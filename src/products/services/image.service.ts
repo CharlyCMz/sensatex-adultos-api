@@ -68,7 +68,7 @@ export class ImageService {
     this.imageRepository.merge(image, payload);
     image = await this.imageRepository.save(image);
     if (image.productVariant) {
-      await this.updateFrontImage(image.productVariant.id);
+      const updateImgs = await this.updateFrontImage(image.productVariant.id);
     }
     return image;
   }
