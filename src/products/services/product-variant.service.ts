@@ -119,7 +119,6 @@ export class ProductVariantService {
       }
     }
     console.log('Holi 3');
-    const updateFrontImg = await this.imageService.updateFrontImage(productVariant.id);
     const updatedImages = await this.imageService.findAll(productVariant.id);
     productVariant.images = updatedImages;
     return this.productVariantRepository.save(productVariant);

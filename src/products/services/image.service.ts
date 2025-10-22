@@ -71,32 +71,20 @@ export class ImageService {
     this.imageRepository.merge(image, payload);
     image = await this.imageRepository.save(image);
     if (image.productVariant) {
-      const updateImgs = await this.updateFrontImage(image.productVariant.id);
+      const updateImgs = await this.updateFrontImage(image.productVariant.id, image.id);
     }
     return image;
   }
 
-  async updateFrontImage(productVariantId: string): Promise<boolean> {
-    const latest = await this.imageRepository.findOne({
-      where: { productVariant: { id: productVariantId }, isFrontImage: true },
-      order: { createdAt: 'DESC' },
-    });
-    console.log('==========', latest);
-    if (!latest) return false;
-
+  async updateFrontImage(productVariantId: string, imageId: string): Promise<boolean> {
     await this.imageRepository
       .createQueryBuilder()
       .update()
       .set({ isFrontImage: false })
       .where('productVariantId = :id', { id: productVariantId })
+      .andWhere('id <> :imageId', { imageId })
       .execute();
 
-    await this.imageRepository
-      .createQueryBuilder()
-      .update()
-      .set({ isFrontImage: true })
-      .where('id = :id', { id: latest.id })
-      .execute();
     console.log('frontImage Updated');
     return true;
   }
