@@ -96,6 +96,7 @@ export class ProductVariantService {
 
   //TODO: Update logic depending on Admin panel requirements
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
+    console.log('attempt service');
     const productVariant = await this.productVariantRepository.findOneBy({
       id,
     });
