@@ -81,7 +81,7 @@ export class ImageService {
       where: { productVariant: { id: productVariantId }, isFrontImage: true },
       order: { createdAt: 'DESC' },
     });
-    console.log(latest);
+    console.log('==========', latest);
     if (!latest) return false;
 
     await this.imageRepository
