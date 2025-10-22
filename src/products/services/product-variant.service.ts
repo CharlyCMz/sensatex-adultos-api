@@ -104,9 +104,11 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
+    console.log('Holi 1');
     this.productVariantRepository.merge(productVariant, payload);
     if (payload.images && payload.images.length > 0) {
       for (const image of payload.images) {
+        console.log('Holi 2 -> for cycle');
         const newImage = await this.imageService.createEntity({
           reference: `product-variant-${productVariant.id}`,
           isFrontImage: image.isFrontImage || false,
@@ -115,6 +117,7 @@ export class ProductVariantService {
         });
       }
     }
+    console.log('Holi 3');
     const updateFrontImg = await this.imageService.updateFrontImage(productVariant.id);
     const updatedImages = await this.imageService.findAll(productVariant.id);
     productVariant.images = updatedImages;
