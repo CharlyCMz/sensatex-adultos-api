@@ -74,7 +74,7 @@ export class ImageService {
       where: { productVariant: { id: productVariantId }, isFrontImage: true },
       order: { createdAt: 'DESC' },
     });
-
+    console.log(latest);
     if (!latest) return;
 
     await this.imageRepository
@@ -90,6 +90,7 @@ export class ImageService {
       .set({ isFrontImage: true })
       .where('id = :id', { id: latest.id })
       .execute();
+    console.log('frontImage Updated');
   }
 
   async deleteEntity(id: string) {
