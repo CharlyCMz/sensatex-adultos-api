@@ -94,33 +94,54 @@ export class ProductVariantService {
     return newProductVariant;
   }
 
-  //TODO: Update logic depending on Admin panel requirements
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
-    console.log('attempt service');
-    const productVariant = await this.productVariantRepository.findOneBy({
-      id,
+    const productVariant = await this.productVariantRepository.findOne({
+      where: { id },
+      relations: ['images', 'variantsAttributes'],
     });
+
     if (!productVariant) {
       throw new NotFoundException(
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    console.log('Holi 1');
+
     this.productVariantRepository.merge(productVariant, payload);
-    if (payload.images && payload.images.length > 0) {
-      for (const image of payload.images) {
-        console.log('Holi 2 -> for cycle');
-        const newImage = await this.imageService.createEntity({
-          reference: `product-variant-${productVariant.id}`,
-          isFrontImage: image.isFrontImage || false,
-          url: image.url,
-          productVariantId: productVariant.id,
-        });
-      }
+
+    if (payload.images?.length) {
+      await Promise.all(
+        payload.images.map((image) =>
+          this.imageService.createEntity({
+            reference: `product-variant-${productVariant.id}`,
+            isFrontImage: image.isFrontImage ?? false,
+            url: image.url,
+            productVariantId: productVariant.id,
+          }),
+        ),
+      );
+
+      productVariant.images = await this.imageService.findAll(
+        productVariant.id,
+      );
     }
-    console.log('Holi 3');
-    const updatedImages = await this.imageService.findAll(productVariant.id);
-    productVariant.images = updatedImages;
+
+    if (payload.variantAttributeIds?.length) {
+      const newVariants = await this.variantAttributeRepository.findBy({
+        id: In(payload.variantAttributeIds),
+      });
+
+      const currentIds =
+        productVariant.variantsAttributes?.map((v) => v.id) ?? [];
+      const variantsToAdd = newVariants.filter(
+        (v) => !currentIds.includes(v.id),
+      );
+
+      productVariant.variantsAttributes = [
+        ...productVariant.variantsAttributes,
+        ...variantsToAdd,
+      ];
+    }
+
     return this.productVariantRepository.save(productVariant);
   }
 
