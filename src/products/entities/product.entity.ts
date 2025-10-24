@@ -33,6 +33,9 @@ export class Product {
   @Column({ type: 'varchar', length: 256 })
   status: string;
 
+  @Column({ type: 'int', name: 'total_views', default: 0 })
+  totalViews: number;
+
   @Column({ type: 'text', array: true, nullable: true })
   cautions: string[];
 

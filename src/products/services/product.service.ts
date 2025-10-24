@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import {
   CreateProductDTO,
   PaginatedProductDTO,
@@ -129,9 +129,21 @@ export class ProductService {
 
     const totalPages = Math.ceil(totalItems / limit);
 
+    const [publishCount, draftCount, deletedCount] = await Promise.all([
+      this.productRepository.count({ where: { status: 'publish' } }),
+      this.productRepository.count({ where: { status: 'draft' } }),
+      this.productRepository.count({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    ]);
+
     const paginatedProducts: PaginatedProductDTO = {
       data: items,
       totalCount: totalItems,
+      publishCount,
+      draftCount,
+      recycleBinCount: deletedCount,
       currentPage: page,
       totalPages,
       nextPage: page < totalPages ? page + 1 : null,
@@ -162,6 +174,17 @@ export class ProductService {
       },
     });
     return result;
+  }
+
+  async findMostVisited() {
+    const products = await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.productVariants', 'productVariants')
+      .leftJoinAndSelect('productVariants.images', 'images')
+      .orderBy('product.totalViews', 'DESC')
+      .limit(10)
+      .getRawMany();
+    return products;
   }
 
   async findNewProducts() {
@@ -221,7 +244,7 @@ export class ProductService {
     return result;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, isView: boolean = false) {
     const product = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.productVariants', 'productVariants')
@@ -242,6 +265,9 @@ export class ProductService {
       .getOne();
     if (!product) {
       throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
+    }
+    if (isView) {
+      await this.updateViews(id);
     }
     return product;
   }
@@ -278,6 +304,20 @@ export class ProductService {
     }
     this.productRepository.merge(product, payload);
     return this.productRepository.save(product);
+  }
+
+  async updateViews(id: string, quantity: number = 1) {
+    const product = await this.productRepository.findOneBy({
+      id,
+    });
+    if (!product) {
+      throw new NotFoundException(`The Product with ID: ${id} was Not Found`);
+    }
+    return await this.productRepository.increment(
+      { id },
+      'totalViews',
+      quantity,
+    );
   }
 
   async deleteEntity(id: string) {

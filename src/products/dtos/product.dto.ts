@@ -60,6 +60,15 @@ export class PaginatedProductDTO {
   readonly totalCount: number;
 
   @ApiProperty()
+  readonly publishCount: number;
+
+  @ApiProperty()
+  readonly draftCount: number;
+
+  @ApiProperty()
+  readonly recycleBinCount: number;
+
+  @ApiProperty()
   readonly currentPage: number;
 
   @ApiProperty()

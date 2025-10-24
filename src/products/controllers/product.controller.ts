@@ -100,6 +100,12 @@ export class ProductController {
     return this.productVariantService.findSoldOut();
   }
 
+  @Get('most-visited')
+  @Public()
+  popular() {
+    return this.productService.findMostVisited();
+  }
+
   @Get('new-products')
   @Public()
   newProducts() {
@@ -127,7 +133,7 @@ export class ProductController {
   @Get(':id')
   @Public()
   findOne(@Param('id') id: string) {
-    return this.productService.findOne(id);
+    return this.productService.findOne(id, true);
   }
 
   @Put(':id')
