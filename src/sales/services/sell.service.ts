@@ -29,8 +29,17 @@ export class SellService {
     return this.sellRepository.find({
       relations: ['person'],
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
+    });
+  }
+
+  findLatestSales() {
+    return this.sellRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 5,
     });
   }
 
@@ -83,6 +92,31 @@ export class SellService {
       throw new NotFoundException(`The Sell with Code: ${code} was Not Found`);
     }
     return sell;
+  }
+
+  async getMonthlySalesReport() {
+    const result = await this.sellRepository
+      .createQueryBuilder('sell')
+      .select(
+        "TO_CHAR(sell.created_at, 'TMMonth-YYYY', 'lc_time=es_ES.utf8')",
+        'month',
+      ) // Nombre del mes + año en español
+      .addSelect('SUM(sell.total)::text', 'total') // Total vendido (como string)
+      .addSelect('COUNT(sell.id)', 'count') // Número de ventas
+      .where("sell.created_at >= NOW() - INTERVAL '6 months'")
+      .groupBy("TO_CHAR(sell.created_at, 'TMMonth-YYYY', 'lc_time=es_ES.utf8')")
+      .orderBy('MIN(sell.created_at)', 'ASC')
+      .getRawMany();
+
+    // Limpieza de formato y capitalización
+    return result.map((r) => ({
+      month: r.month
+        .trim()
+        .toLowerCase()
+        .replace(/\b\w/g, (c) => c.toUpperCase()), // Capitaliza el mes
+      total: r.total,
+      count: parseInt(r.count, 10),
+    }));
   }
 
   async createEntity(

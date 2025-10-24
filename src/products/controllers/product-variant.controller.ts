@@ -42,7 +42,6 @@ export class ProductVariantController {
     @Param('id') id: string,
     @Body() payload: UpdateProductVariantDTO,
   ) {
-    console.log('attempt controller', payload);
     return this.productVariantService.updateEntity(id, payload);
   }
 

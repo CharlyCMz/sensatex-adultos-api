@@ -161,6 +161,18 @@ export class ProductVariantService {
     );
   }
 
+async findSoldOut(limit: number = 5) {
+  return this.productVariantRepository
+    .createQueryBuilder('productVariant')
+    .leftJoinAndSelect('productVariant.product', 'product')
+    .leftJoinAndSelect('productVariant.images', 'images')
+    .where('productVariant.isAvailable = false')
+    .orderBy('productVariant.totalSales', 'DESC')
+    .limit(limit)
+    .getMany();
+}
+
+
   async deleteEntity(id: string) {
     const exist = await this.productVariantRepository.findOneBy({ id });
     if (!exist) {

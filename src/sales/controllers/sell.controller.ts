@@ -74,6 +74,18 @@ export class SellController {
     return this.sellService.findAll();
   }
 
+  @Get('latest')
+  @Public()
+  findLatest() {
+    return this.sellService.findLatestSales();
+  }
+
+  @Get('monthly-sales')
+  @Public()
+  monthlySales() {
+    return this.sellService.getMonthlySalesReport();
+  }
+
   @Get(':id')
   @Public()
   findOne(@Param('id') id: string) {

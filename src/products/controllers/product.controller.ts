@@ -32,7 +32,6 @@ export class ProductController {
 
   @Post()
   async createEntity(@Body() payload: CreateProductDTO) {
-    console.log('====== 1', payload)
     for (const variant of payload.productVariants) {
       const variantExist = await this.productVariantService.findOneBySku(
         variant.sku,
@@ -41,12 +40,11 @@ export class ProductController {
         throw new BadRequestException({
           message: `Variante de producto con SKU: ${variant.sku} ya existe`,
           product: variantExist.product.name,
-          statusCode: 400
+          statusCode: 400,
         });
       }
     }
     const newProduct = await this.productService.createEntity(payload);
-    console.log('====== 2', newProduct)
     for (const variant of payload.productVariants) {
       const newProductVariant = await this.productVariantService.createEntity({
         ...variant,
@@ -94,6 +92,12 @@ export class ProductController {
   @Public()
   topSales() {
     return this.productService.findTopSales();
+  }
+
+  @Get('sold-out')
+  @Public()
+  soldOut() {
+    return this.productVariantService.findSoldOut();
   }
 
   @Get('new-products')
