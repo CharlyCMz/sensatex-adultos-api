@@ -192,7 +192,7 @@ export class SellService {
       if (!sell.trackingCode) {
         sell.trackingCode = await this.trackingCodeHelper();
       }
-      if (payload?.paymentMethod === 'Addi') {
+      if (payload?.paymentMethod === 'addi') {
         const addiReferenceData = this.generateMpPreferenceData(sell);
         sell.paymentLink = (
           await this.addiService.createOnlineLoanApplication(addiReferenceData)
