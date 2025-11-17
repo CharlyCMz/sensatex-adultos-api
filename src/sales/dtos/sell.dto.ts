@@ -31,6 +31,11 @@ export class CreateSellDTO {
   @IsOptional()
   @IsString()
   @ApiProperty()
+  readonly paymentMethod?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   readonly transporter?: string;
 
   @IsOptional()

@@ -73,6 +73,15 @@ export class Sell {
 
   @Column({
     type: 'varchar',
+    name: 'payment_method',
+    length: 512,
+    default: 'mercado_pago',
+    nullable: true,
+  })
+  paymentMethod: string;
+
+  @Column({
+    type: 'varchar',
     name: 'payment_link',
     length: 512,
     nullable: true,

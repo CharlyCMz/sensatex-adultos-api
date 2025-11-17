@@ -52,4 +52,34 @@ export class WebhookDTO {
   @IsString()
   @IsOptional()
   user_id?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  orderId?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  applicationId?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  approvedAmount?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  currency?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  status?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  statusTimestamp?: string;
 }

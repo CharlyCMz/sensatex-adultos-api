@@ -16,6 +16,7 @@ import { InlineProductService } from '../services/inline-product.service';
 import { WebhookDTO } from 'src/utils/mercadopago/dtos/webhook.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { CustomAuthGuard } from 'src/auth/guards/custom-auth.guard';
+import { AddiCallbackResponse } from 'src/utils/addi/dtos/addi.dto';
 
 @UseGuards(CustomAuthGuard)
 @Controller('sales')
@@ -102,7 +103,16 @@ export class SellController {
   @Public()
   webhookUpdate(@Body() payload: WebhookDTO) {
     if (payload.topic === 'payment' && payload.resource) {
-      return this.sellService.updateWebhookResponse(payload.resource);
+      return this.sellService.updateWebhookMPResponse(payload.resource);
+    }
+    if (payload.orderId && payload.applicationId && payload.status && payload.approvedAmount) {
+      const addiResponse: AddiCallbackResponse = {
+        orderId: payload.orderId,
+        applicationId: payload.applicationId,
+        approvedAmount: payload.approvedAmount,
+        status: payload.status
+      }
+      return this.sellService.updateWebhookAddiResponse(addiResponse);
     }
     return { received: true };
   }

@@ -10,6 +10,7 @@ import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './auth/auth.module';
 import { ReportsModule } from './reports/reports.module';
 import AppConfig from './config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import AppConfig from './config';
     UtilsModule,
     AuthModule,
     ReportsModule,
+    HttpModule
   ],
   controllers: [AppController],
   providers: [AppService],

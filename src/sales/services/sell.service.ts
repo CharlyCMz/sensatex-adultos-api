@@ -11,6 +11,11 @@ import { MercadopagoService } from 'src/utils/mercadopago/mercadopago.service';
 import { MpPreferenceData } from 'src/utils/mercadopago/dtos/mp-order.dto';
 import { MailerService } from 'src/utils/mailer/mailer.service';
 import { ProductVariantService } from 'src/products/services/product-variant.service';
+import { AddiService } from 'src/utils/addi/addi.service';
+import {
+  AddiCallbackResponse,
+  AddiPreferenceData,
+} from 'src/utils/addi/dtos/addi.dto';
 
 const generateTrackingCode = customAlphabet('1234567890', 10);
 @Injectable()
@@ -22,6 +27,7 @@ export class SellService {
     private addressService: AddressService,
     private productVariantService: ProductVariantService,
     private mercadoPagoService: MercadopagoService,
+    private addiService: AddiService,
     private mailerService: MailerService,
   ) {}
 
@@ -186,9 +192,17 @@ export class SellService {
       if (!sell.trackingCode) {
         sell.trackingCode = await this.trackingCodeHelper();
       }
-      const mpPreferenceData = this.generateMpPreferenceData(sell);
-      sell.paymentLink =
-        await this.mercadoPagoService.createOrder(mpPreferenceData);
+      if (payload?.paymentMethod === 'Addi') {
+        const addiReferenceData = this.generateMpPreferenceData(sell);
+        sell.paymentLink = (
+          await this.addiService.createOnlineLoanApplication(addiReferenceData)
+        ).redirectUrl;
+      } else {
+        const mpPreferenceData = this.generateMpPreferenceData(sell);
+        sell.paymentLink =
+          await this.mercadoPagoService.createOrder(mpPreferenceData);
+      }
+
       await this.sellRepository.save(sell);
     }
     return sell;
@@ -211,9 +225,14 @@ export class SellService {
     return await this.sellRepository.save(sell);
   }
 
-  async updateWebhookResponse(id: string) {
+  async updateWebhookMPResponse(id: string) {
     const payment = await this.mercadoPagoService.webhookPayment(id);
     return this.webhookStatusUpdate(payment.externalReference, payment.status);
+  }
+
+  async updateWebhookAddiResponse(payload: AddiCallbackResponse) {
+    //TODO: approvedAmount != sell.total ??
+    return await this.webhookStatusUpdate(payload.orderId, payload.status);
   }
 
   async deleteEntity(id: string) {
@@ -258,6 +277,58 @@ export class SellService {
       const crashCode = generateTrackingCode();
       return `CRASH-CODE-${crashCode}`;
     }
+  }
+
+  generateAddiPreferenceData(sell: Sell): AddiPreferenceData {
+    const preferenceData: AddiPreferenceData = {
+      orderId: sell.id,
+      totalAmount: sell.total,
+      shippingAmount: parseFloat(sell.shippingTotal),
+      currency: 'COP',
+      items: [],
+      client: {
+        idType: 'CC',
+        idNumber: sell.person.document,
+        firstName: sell.person.name,
+        lastName: sell.person.lastname1,
+        email: sell.person.mail,
+        cellphone: sell.person.phone,
+        cellphoneCountryCode: '+57',
+        address: {
+          lineOne: sell.person.addresses[0].street,
+          city: sell.person.addresses[0].location.cityName,
+          country: sell.person.addresses[0].location.countryCode,
+        },
+      },
+      allyUrlRedirection: {
+        logoUrl: '',
+        callbackUrl: 'https://sensatexadultos.com/api/sales/webhook',
+        redirectionUrl: `https://sensatexadultos.com/purchase-status/processing/${sell.id}`,
+      },
+    };
+    for (const inlineProduct of sell.inlineProducts) {
+      let unitPrice = 0;
+      if (
+        inlineProduct.productVariant.discountPrice &&
+        inlineProduct.productVariant.discountPrice != '0.0000'
+      ) {
+        unitPrice = new Decimal(
+          inlineProduct.productVariant.discountPrice,
+        ).toNumber();
+      } else {
+        unitPrice = new Decimal(inlineProduct.productVariant.price).toNumber();
+      }
+      preferenceData.items.push({
+        sku: inlineProduct.productVariant.sku,
+        name: inlineProduct.productVariant.product.name,
+        quantity: inlineProduct.quantity.toString(),
+        unitPrice: unitPrice,
+        pictureUrl: inlineProduct.productVariant.images.find(
+          (img) => img.isFrontImage === true,
+        )?.url,
+      });
+    }
+    return preferenceData;
   }
 
   generateMpPreferenceData(sell: Sell): MpPreferenceData {
@@ -316,7 +387,15 @@ export class SellService {
         sell.status = 'success';
         await this.sellRepository.save(sell);
         break;
+      case 'APPROVED':
+        sell.status = 'success';
+        await this.sellRepository.save(sell);
+        break;
       case 'rejected':
+        sell.status = 'failed';
+        await this.sellRepository.save(sell);
+        break;
+      case 'REJECTED':
         sell.status = 'failed';
         await this.sellRepository.save(sell);
         break;
