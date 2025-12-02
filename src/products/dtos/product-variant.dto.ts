@@ -31,7 +31,7 @@ export class CreateProductVariantDTO {
   readonly isAvailable: boolean;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
   readonly productId?: string;
 
