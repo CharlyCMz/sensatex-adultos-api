@@ -84,8 +84,6 @@ export class ImageService {
       .where('productVariantId = :id', { id: productVariantId })
       .andWhere('id <> :imageId', { imageId })
       .execute();
-
-    console.log('frontImage Updated');
     return true;
   }
 

@@ -34,7 +34,6 @@ export class ImageController {
 
   @Put(':id')
   updateEntity(@Param('id') id: string, @Body() payload: UpdateImageDTO) {
-    console.log('attempt img controller', payload);
     return this.imageService.updateEntity(id, payload);
   }
 
