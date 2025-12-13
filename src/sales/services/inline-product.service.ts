@@ -46,16 +46,26 @@ export class InlineProductService {
 
   async createEntity(payload: CreateInlineProductDTO) {
     const newInlineProduct = this.inlineProductRepository.create(payload);
+
     if (payload.sellId) {
       newInlineProduct.sell = await this.sellService.findOneNoDetails(
         payload.sellId,
       );
     }
+
     newInlineProduct.productVariant = await this.productVariantService.findOne(
       payload.productVariantId,
     );
-    const unitPrice = new Decimal(newInlineProduct.productVariant.price);
+
+    const price = new Decimal(newInlineProduct.productVariant.price);
+    const discountPrice = new Decimal(
+      newInlineProduct.productVariant.discountPrice ?? 0,
+    );
+
+    const unitPrice = discountPrice.gt(0) ? discountPrice : price;
+
     newInlineProduct.inlineTotal = unitPrice.mul(payload.quantity).toFixed(4);
+
     return await this.inlineProductRepository.save(newInlineProduct);
   }
 
