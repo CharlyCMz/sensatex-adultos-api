@@ -178,7 +178,9 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    return this.productVariantRepository.softDelete(id);
+    exist.sku = exist.sku.replace('SA', 'DEL');
+    await this.productVariantRepository.save(exist);
+    return await this.productVariantRepository.softDelete(id);
   }
 
   async eliminateEntity(id: string) {
@@ -188,7 +190,7 @@ export class ProductVariantService {
         `The Product-Variant with ID: ${id} was Not Found`,
       );
     }
-    return this.productVariantRepository.delete(id);
+    return await this.productVariantRepository.delete(id);
   }
 
   //#region Variant Management
