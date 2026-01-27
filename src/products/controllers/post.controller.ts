@@ -28,9 +28,12 @@ export class PostController {
   @Public()
   findAll(
     @Query('isBanner') isBanner?: boolean,
+    @Query('isMovile') isMovile?: boolean,
     @Query('isPost') isPost?: boolean,
   ) {
-    return this.postService.findAll(isBanner, isPost);
+    console.log('Controller Payload: ==================');
+    console.log(isBanner, isMovile,isPost);
+    return this.postService.findAll(isBanner, isMovile, isPost);
   }
 
   @Get(':id')
