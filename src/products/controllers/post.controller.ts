@@ -31,8 +31,6 @@ export class PostController {
     @Query('isMovile') isMovile?: boolean,
     @Query('isPost') isPost?: boolean,
   ) {
-    console.log('Controller Payload: ==================');
-    console.log(isBanner, isMovile,isPost);
     return this.postService.findAll(isBanner, isMovile, isPost);
   }
 

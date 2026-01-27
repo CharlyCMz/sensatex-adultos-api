@@ -12,8 +12,6 @@ export class PostService {
   ) {}
 
   async findAll(isBanner?: boolean, isMovile?: boolean, isPost?: boolean) {
-    console.log('Service Payload: ==================');
-    console.log(isBanner, isMovile, isPost);
     const query = this.postRepository
       .createQueryBuilder('post')
       .orderBy('post.createdAt', 'DESC');
