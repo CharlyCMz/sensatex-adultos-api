@@ -13,6 +13,8 @@ import {
 import { ProductService } from './product.service';
 import { VariantAttribute } from '../entities/variant-attribute.entity';
 import { ImageService } from './image.service';
+import { DataSource } from 'typeorm';
+import { Image } from '../entities/image.entity';
 
 @Injectable()
 export class ProductVariantService {
@@ -23,6 +25,7 @@ export class ProductVariantService {
     private variantAttributeRepository: Repository<VariantAttribute>,
     private productService: ProductService,
     private imageService: ImageService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAll() {
@@ -94,7 +97,8 @@ export class ProductVariantService {
   }
 
   async updateEntity(id: string, payload: UpdateProductVariantDTO) {
-    const productVariant = await this.productVariantRepository.findOne({
+  return this.dataSource.transaction(async (manager) => {
+    const productVariant = await manager.findOne(ProductVariant, {
       where: { id },
       relations: ['images', 'variantsAttributes'],
     });
@@ -105,44 +109,50 @@ export class ProductVariantService {
       );
     }
 
-    this.productVariantRepository.merge(productVariant, payload);
+    manager.merge(ProductVariant, productVariant, payload);
 
-    if (payload.images?.length) {
-      await Promise.all(
-        payload.images.map((image) =>
-          this.imageService.createEntity({
-            reference: `product-variant-${productVariant.id}`,
-            isFrontImage: image.isFrontImage ?? false,
-            url: image.url,
-            productVariantId: productVariant.id,
-          }),
-        ),
-      );
-
-      productVariant.images = await this.imageService.findAll(
-        productVariant.id,
-      );
+    /* ---------------- IMAGES ---------------- */
+    if (payload.imagesToDelete?.length) {
+      await manager.delete(Image, {
+        id: In(payload.imagesToDelete),
+        productVariant: { id },
+      });
     }
 
-    if (payload.variantAttributeIds?.length) {
-      const newVariants = await this.variantAttributeRepository.findBy({
-        id: In(payload.variantAttributeIds),
+    if (payload.imagesToCreate?.length) {
+      const newImages = payload.imagesToCreate.map((image) =>
+        manager.create(Image, {
+          reference: `product-variant-${productVariant.id}`,
+          isFrontImage: image.isFrontImage ?? false,
+          url: image.url,
+          productVariant,
+        }),
+      );
+
+      await manager.save(Image, newImages);
+    }
+
+    productVariant.images = await manager.find(Image, {
+      where: { productVariant: { id } },
+    });
+
+    /* -------- VARIANT ATTRIBUTES -------- */
+    if (payload.variantAttributeIds) {
+      const attributes = await manager.find(VariantAttribute, {
+        where: { id: In(payload.variantAttributeIds) },
       });
 
-      const currentIds =
-        productVariant.variantsAttributes?.map((v) => v.id) ?? [];
-      const variantsToAdd = newVariants.filter(
-        (v) => !currentIds.includes(v.id),
-      );
+      if (attributes.length !== payload.variantAttributeIds.length) {
+        throw new NotFoundException('One or more variant attributes not found');
+      }
 
-      productVariant.variantsAttributes = [
-        ...productVariant.variantsAttributes,
-        ...variantsToAdd,
-      ];
+      productVariant.variantsAttributes = attributes;
     }
 
-    return this.productVariantRepository.save(productVariant);
-  }
+    return manager.save(ProductVariant, productVariant);
+  });
+}
+
 
   async updateSales(id: string, quantity: number) {
     const productVariant = await this.productVariantRepository.findOneBy({
